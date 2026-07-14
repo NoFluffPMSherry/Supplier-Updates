@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PartsCheck — Repairer Image Display (Concept)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#F0F2F5;color:#0F1923;font-size:13px;min-height:100vh}
+.nav{background:#0F1923;height:48px;display:flex;align-items:center;padding:0 20px;gap:28px}
+.logo{color:#fff;font-weight:900;font-size:14px;letter-spacing:-.3px;display:flex;align-items:center;gap:7px}
+.logo-mark{width:20px;height:20px;background:#18A058;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:900}
+.nav-items{display:flex;gap:2px;flex:1}
+.nav-item{color:rgba(255,255,255,.35);font-size:11px;font-weight:600;padding:5px 11px;border-radius:5px;letter-spacing:.05em;text-transform:uppercase}
+.nav-item.on{color:#18A058}
+.nav-r{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.35);font-size:11px}
+.avatar{width:26px;height:26px;background:#18A058;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:11px}
+.page{max-width:1320px;margin:0 auto;padding:16px 20px 60px}
+
+.banner{background:#EEF2FF;border:1px solid #C7D2FE;color:#3730A3;border-radius:10px;padding:10px 16px;font-size:12px;font-weight:600;margin-bottom:14px}
+
+.quote-hero{background:#fff;border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:20px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid #E8EAED}
+.qh-meta h1{font-size:16px;font-weight:800;color:#0F1923;letter-spacing:-.3px}
+.qh-meta p{font-size:12px;color:#6B7280;margin-top:2px}
+.qh-tabs{display:flex;gap:1px;background:#F0F2F5;border-radius:8px;padding:3px;margin-left:auto}
+.qh-tab{padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;color:#6B7280}
+.qh-tab.on{background:#fff;color:#0F1923;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+.panel{display:none}
+.panel.on{display:block}
+
+/* ===== PRICE / GRID PANEL ===== */
+.mode-bar{background:#fff;border:1px solid #E8EAED;border-radius:10px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.mode-label{font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.mode-opts{display:flex;gap:6px;flex-wrap:wrap}
+.mode-opt{padding:7px 12px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid #E8EAED;color:#374151;background:#fff}
+.mode-opt:hover{border-color:#9CA3AF}
+.mode-opt.on{border-color:#6366F1;background:#EEF2FF;color:#4338CA}
+.mode-desc{font-size:11px;color:#9CA3AF;margin-left:auto;max-width:260px;text-align:right;line-height:1.4}
+
+.grid-shell{background:#fff;border-radius:12px;border:1px solid #E8EAED;box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead th{padding:9px 12px;text-align:left;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.06em;background:#FAFAFA;border-bottom:1px solid #F3F4F6;white-space:nowrap}
+thead th.center{text-align:center}
+.sup-th{display:flex;flex-direction:column;align-items:center;gap:3px}
+.sup-avatar{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:800}
+.sup-name{font-size:9px;font-weight:600;color:#9CA3AF;text-align:center;line-height:1.2}
+td{padding:10px 12px;border-bottom:1px solid #F5F5F5;vertical-align:top}
+tbody tr:last-child > td{border-bottom:none}
+.part-name{font-size:12px;font-weight:700;color:#0F1923;display:flex;align-items:center;gap:6px}
+.part-num{font-size:10px;color:#9CA3AF;font-family:'IBM Plex Mono',monospace;margin-top:1px}
+.price-val{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:12px}
+.center{text-align:center}
+
+/* photo affordances shared */
+.cam-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:#4338CA;background:#EEF2FF;border:1px solid #C7D2FE;border-radius:20px;padding:3px 8px;cursor:pointer}
+.cam-badge:hover{background:#E0E7FF}
+.no-photo{color:#D1D5DB;font-size:11px}
+.mini-thumbs{display:flex;cursor:pointer}
+.mini-thumbs img{width:26px;height:26px;border-radius:6px;object-fit:cover;border:2px solid #fff;box-shadow:0 0 0 1px #E8EAED;margin-left:-8px}
+.mini-thumbs img:first-child{margin-left:0}
+.mini-count{font-size:9px;font-weight:800;color:#0F1923;background:#F3F4F6;border-radius:20px;padding:2px 6px;margin-left:4px}
+
+/* variant: expand row */
+.expand-toggle{cursor:pointer;color:#6B7280;font-size:10px}
+.expand-row td{background:#FAFBFC!important;padding:10px 12px 14px 12px}
+.expand-strip{display:flex;gap:16px;flex-wrap:wrap}
+.expand-group{display:flex;flex-direction:column;gap:4px}
+.expand-group-label{font-size:9px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.05em}
+.expand-group .mini-thumbs img{width:38px;height:38px;margin-left:-10px}
+
+/* variant: column badge */
+.col-photo-cell{width:64px}
+.col-photo-badge{width:38px;height:38px;border-radius:8px;position:relative;cursor:pointer;overflow:hidden;border:1px solid #E8EAED}
+.col-photo-badge img{width:100%;height:100%;object-fit:cover}
+.col-photo-badge .cnt{position:absolute;bottom:0;right:0;background:#0F1923;color:#fff;font-size:8px;font-weight:800;padding:1px 4px;border-radius:4px 0 0 0}
+.col-photo-empty{width:38px;height:38px;border-radius:8px;border:1.5px dashed #E5E7EB;color:#D1D5DB;display:flex;align-items:center;justify-content:center;font-size:14px}
+
+/* variant: always-visible strip in part cell */
+.strip-inline{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.strip-inline-row{display:flex;align-items:center;gap:5px}
+.strip-inline-row .sup-tag{font-size:8px;font-weight:800;color:#fff;border-radius:3px;padding:1px 4px}
+.strip-inline-row .mini-thumbs img{width:20px;height:20px;margin-left:-6px}
+
+/* ===== DOCUMENTS TAB ===== */
+.doc-flat-before{background:#fff;border:1px solid #E8EAED;border-radius:10px;margin-bottom:16px;overflow:hidden}
+.doc-flat-before .flat-head{padding:8px 14px;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;background:#FAFAFA;border-bottom:1px solid #F3F4F6}
+.doc-flat-before table td, .doc-flat-before table th{padding:8px 14px;font-size:12px;border-bottom:1px solid #F5F5F5}
+.doc-flat-before a{color:#2563EB}
+.section-label{font-size:11px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.06em;margin:18px 0 8px}
+
+.part-doc-group{background:#fff;border:1px solid #E8EAED;border-radius:12px;margin-bottom:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.pdg-head{padding:12px 16px;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:8px}
+.pdg-head .pn{font-size:13px;font-weight:800}
+.pdg-head .pnum{font-size:10px;color:#9CA3AF;font-family:'IBM Plex Mono',monospace}
+.pdg-body{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.pdg-supplier-row{display:flex;align-items:flex-start;gap:12px}
+.pdg-sup-chip{display:flex;align-items:center;gap:6px;min-width:130px;flex-shrink:0}
+.pdg-sup-dot{width:22px;height:22px;border-radius:6px;color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.pdg-thumb-row{display:flex;gap:8px;flex-wrap:wrap}
+.pdg-thumb{width:64px;height:64px;border-radius:8px;object-fit:cover;cursor:pointer;border:1px solid #E8EAED;transition:.15s}
+.pdg-thumb:hover{transform:scale(1.04);box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.pdg-none{font-size:11px;color:#D1D5DB;padding-top:4px}
+
+/* ===== LIGHTBOX ===== */
+.lb-overlay{position:fixed;inset:0;background:rgba(10,15,20,.92);z-index:999;display:none;align-items:center;justify-content:center}
+.lb-overlay.open{display:flex}
+.lb-close{position:absolute;top:18px;right:22px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none}
+.lb-wrap{display:flex;gap:18px;max-width:92vw;max-height:86vh}
+.lb-rail{display:flex;flex-direction:column;gap:8px;overflow-y:auto;width:170px;flex-shrink:0}
+.lb-rail-group{margin-bottom:6px}
+.lb-rail-label{font-size:9px;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;padding:0 2px}
+.lb-thumb{width:100%;height:60px;object-fit:cover;border-radius:6px;cursor:pointer;opacity:.55;border:2px solid transparent;margin-bottom:6px}
+.lb-thumb.on{opacity:1;border-color:#18A058}
+.lb-main{display:flex;align-items:center;justify-content:center;background:#000;border-radius:10px;overflow:hidden;flex:1;min-width:400px}
+.lb-main img{max-width:100%;max-height:80vh;object-fit:contain}
+.lb-caption{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;font-size:12px;font-weight:600;background:rgba(0,0,0,.5);padding:6px 14px;border-radius:20px}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="logo"><div class="logo-mark">✓</div>PARTSCHECK</div>
+  <div class="nav-items">
+    <div class="nav-item">Dashboard</div><div class="nav-item">Get Price</div>
+    <div class="nav-item on">Check Price</div><div class="nav-item">Orders</div><div class="nav-item">Credits</div>
+  </div>
+  <div class="nav-r"><div class="avatar">MJ</div><span>MotorOne Collision</span></div>
+</div>
+
+<div class="page">
+  <div class="banner">💡 Concept — Req 3: how supplier-attached photos display per part, across every competing supplier, on a single quote</div>
+
+  <div class="quote-hero">
+    <div class="qh-meta">
+      <h1>Quote #89734 — Toyota Corolla 2014</h1>
+      <p>B56-432 · Allianz · Collision · 4 parts requested</p>
+    </div>
+    <div class="qh-tabs">
+      <div class="qh-tab on" onclick="showTab('price')">Price</div>
+      <div class="qh-tab" onclick="showTab('info')">Info</div>
+      <div class="qh-tab" onclick="showTab('documents')">Documents</div>
+    </div>
+  </div>
+
+  <!-- PRICE PANEL -->
+  <div class="panel on" id="panel-price">
+    <div class="mode-bar">
+      <div class="mode-label">Grid photo display —<br>try each option</div>
+      <div class="mode-opts">
+        <div class="mode-opt on" data-mode="icon" onclick="setMode('icon')">① Row icon + compare lightbox</div>
+        <div class="mode-opt" data-mode="expand" onclick="setMode('expand')">② Expandable row</div>
+        <div class="mode-opt" data-mode="column" onclick="setMode('column')">③ Dedicated Photos column</div>
+        <div class="mode-opt" data-mode="strip" onclick="setMode('strip')">④ Always-visible strip</div>
+      </div>
+      <div class="mode-desc" id="modeDesc"></div>
+    </div>
+
+    <div class="grid-shell">
+      <table>
+        <thead>
+          <tr id="theadRow">
+            <th style="min-width:200px">Part</th>
+            <th class="center" style="min-width:100px"><div class="sup-th"><div class="sup-avatar" style="background:#6366F1">S2</div><div class="sup-name">Dealer OEM</div></div></th>
+            <th class="center" style="min-width:100px"><div class="sup-th"><div class="sup-avatar" style="background:#8B5CF6">S1</div><div class="sup-name">Cert Aftmkt</div></div></th>
+            <th class="center" style="min-width:100px"><div class="sup-th"><div class="sup-avatar" style="background:#10B981">S4</div><div class="sup-name">Used Parts</div></div></th>
+            <th class="col-photo-cell center" id="dedicatedColHead" style="display:none">Photos</th>
+          </tr>
+        </thead>
+        <tbody id="gridBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- INFO PANEL -->
+  <div class="panel" id="panel-info">
+    <div class="part-doc-group"><div class="pdg-body" style="padding:16px">
+      <div style="font-size:12px;color:#6B7280">Repairer's own reference photos already work well here today (thumbnail gallery + lightbox) — unchanged by this initiative. Out of scope: this concept focuses on <strong>supplier-submitted</strong> photos, currently buried in the Documents tab.</div>
+    </div></div>
+  </div>
+
+  <!-- DOCUMENTS PANEL -->
+  <div class="panel" id="panel-documents">
+    <div class="section-label">Today — flat, ungrouped table (img6)</div>
+    <div class="doc-flat-before">
+      <div class="flat-head">Documents</div>
+      <table style="width:100%">
+        <tr><th style="text-align:left;color:#9CA3AF;font-weight:700">Supplier</th><th style="text-align:left;color:#9CA3AF;font-weight:700">FileName</th><th style="text-align:left;color:#9CA3AF;font-weight:700">Download</th></tr>
+        <tr><td>Cert Aftmkt</td><td>IMG_4471.png</td><td><a>Download</a></td></tr>
+        <tr><td>Dealer OEM</td><td>bonnet_photo1.jpg</td><td><a>Download</a></td></tr>
+        <tr><td>Used Parts</td><td>Screenshot 2024-09-05 125647.png</td><td><a>Download</a></td></tr>
+      </table>
+      <div style="padding:10px 14px;font-size:11px;color:#9CA3AF">No previews, no grouping by part — repairer has to download each file to see what it is or who it's for.</div>
+    </div>
+
+    <div class="section-label">Concept — grouped by supplier, then by part, with previews</div>
+    <div id="docGroups"></div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lb-overlay" id="lbOverlay" onclick="if(event.target===this)closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <div class="lb-wrap">
+    <div class="lb-rail" id="lbRail"></div>
+    <div class="lb-main"><img id="lbMainImg" src=""><div class="lb-caption" id="lbCaption"></div></div>
+  </div>
+</div>
+
+<script>
+const SUPPLIERS = {
+  s2:{name:'Dealer OEM', color:'#6366F1', code:'S2'},
+  s1:{name:'Cert Aftmkt', color:'#8B5CF6', code:'S1'},
+  s4:{name:'Used Parts', color:'#10B981', code:'S4'}
+};
+const IMGS = [
+  'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=300&h=300&fit=crop',
+  'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=300&h=300&fit=crop',
+  'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=300&h=300&fit=crop',
+  'https://images.unsplash.com/photo-1518987048-93e29699e79a?w=300&h=300&fit=crop',
+  'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=300&h=300&fit=crop',
+  'https://images.unsplash.com/photo-1541348263662-e068662d82af?w=300&h=300&fit=crop'
+];
+const PARTS = [
+  {id:1, name:'Front Bumper Cover', num:'5211912977',
+    prices:{s2:'$345.16', s1:'$325.00', s4:'$224.00'},
+    photos:{s2:[IMGS[0],IMGS[1]], s1:[], s4:[IMGS[2]]}},
+  {id:2, name:'L/H/R Quarter Panel', num:'6160212B40',
+    prices:{s2:'$524.74', s1:'$129.00', s4:null},
+    photos:{s2:[], s1:[IMGS[3],IMGS[4],IMGS[0]], s4:[]}},
+  {id:3, name:'Bonnet', num:'5330112B10',
+    prices:{s2:'$267.49', s1:null, s4:'$185.60'},
+    photos:{s2:[IMGS[1]], s1:[], s4:[IMGS[2],IMGS[5]]}},
+  {id:4, name:'Clips', num:'99-466564-22',
+    prices:{s2:'$35.38', s1:null, s4:null},
+    photos:{s2:[], s1:[], s4:[]}}
+];
+
+let mode = 'icon';
+const MODE_DESC = {
+  icon: 'One small icon per part row — click to compare every supplier\'s photo(s) for that part in a single lightbox. No new column, works on tablet.',
+  expand: 'Click the row to expand a thumbnail strip beneath it, grouped by supplier. Keeps the grid clean until you want to look.',
+  column: 'A dedicated Photos column, consistent with existing grid columns. Most discoverable, but adds width — overlaps OD #23 (supplier column display, unresolved).',
+  strip: 'Thumbnails shown inline under the part name by default, no click needed. Fastest to scan; can get busy on RFQs with many parts/suppliers.'
+};
+
+function setMode(m){
+  mode = m;
+  document.querySelectorAll('.mode-opt').forEach(el=>el.classList.toggle('on', el.dataset.mode===m));
+  document.getElementById('modeDesc').textContent = MODE_DESC[m];
+  document.getElementById('dedicatedColHead').style.display = m==='column' ? '' : 'none';
+  renderGrid();
+}
+
+function photoCount(part){
+  return Object.values(part.photos).reduce((a,arr)=>a+arr.length,0);
+}
+
+function renderGrid(){
+  const body = document.getElementById('gridBody');
+  body.innerHTML = '';
+  PARTS.forEach(part => {
+    const total = photoCount(part);
+    const tr = document.createElement('tr');
+    let partCellHtml = `<div class="part-name">${part.name}${mode==='icon' && total>0 ? ` <span class="cam-badge" onclick="openCompareLightbox(${part.id})">📷 ${total}</span>` : ''}${mode==='expand' ? ` <span class="expand-toggle" onclick="toggleExpand(${part.id})">▾ ${total? total+' photos':'no photos'}</span>` : ''}</div><div class="part-num">${part.num}</div>`;
+    if(mode==='strip'){
+      partCellHtml += `<div class="strip-inline">` + Object.entries(part.photos).filter(([k,v])=>v.length).map(([k,v])=>{
+        const s = SUPPLIERS[k];
+        return `<div class="strip-inline-row"><span class="sup-tag" style="background:${s.color}">${s.code}</span><div class="mini-thumbs" onclick="openSupplierLightbox(${part.id},'${k}')">${v.slice(0,3).map(src=>`<img src="${src}">`).join('')}</div></div>`;
+      }).join('') + `</div>`;
+    }
+    let row = `<td>${partCellHtml}</td>`;
+    ['s2','s1','s4'].forEach(k=>{
+      const price = part.prices[k];
+      const photos = part.photos[k];
+      let cell = '';
+      if(price===null){
+        cell = `<div class="no-photo">—</div>`;
+      } else {
+        cell = `<div class="price-val">${price}</div>`;
+        if(mode!=='column' && mode!=='strip'){
+          if(photos.length){
+            cell += `<div class="mini-thumbs" style="margin-top:5px" onclick="openSupplierLightbox(${part.id},'${k}')">${photos.slice(0,2).map(src=>`<img src="${src}">`).join('')}${photos.length>1?`<span class="mini-count">${photos.length}</span>`:''}</div>`;
+          }
+        }
+      }
+      row += `<td class="center">${cell}</td>`;
+    });
+    tr.innerHTML = row;
+    body.appendChild(tr);
+
+    if(mode==='column'){
+      const colTd = document.createElement('td');
+      // shift: column mode needs its own td appended, handled via extra row rebuild below
+    }
+    if(mode==='expand'){
+      const exTr = document.createElement('tr');
+      exTr.className = 'expand-row';
+      exTr.id = `expand-${part.id}`;
+      exTr.style.display = 'none';
+      const groups = Object.entries(part.photos).filter(([k,v])=>v.length).map(([k,v])=>{
+        const s = SUPPLIERS[k];
+        return `<div class="expand-group"><div class="expand-group-label" style="color:${s.color}">${s.name}</div><div class="mini-thumbs" onclick="openSupplierLightbox(${part.id},'${k}')">${v.map(src=>`<img src="${src}">`).join('')}</div></div>`;
+      }).join('');
+      exTr.innerHTML = `<td colspan="4"><div class="expand-strip">${groups || '<span class=\"no-photo\">No photos attached by any supplier for this part yet</span>'}</div></td>`;
+      body.appendChild(exTr);
+    }
+  });
+
+  if(mode==='column'){
+    // rebuild rows with a trailing photos-summary column
+    Array.from(body.children).forEach(tr=>{
+      const partId = null;
+    });
+    rebuildColumnMode();
+  }
+}
+
+function rebuildColumnMode(){
+  const body = document.getElementById('gridBody');
+  body.innerHTML = '';
+  PARTS.forEach(part=>{
+    const tr = document.createElement('tr');
+    let row = `<td><div class="part-name">${part.name}</div><div class="part-num">${part.num}</div></td>`;
+    ['s2','s1','s4'].forEach(k=>{
+      const price = part.prices[k];
+      row += `<td class="center">${price===null?'<div class="no-photo">—</div>':`<div class="price-val">${price}</div>`}</td>`;
+    });
+    // dedicated column: one badge per supplier stacked
+    let photoCellHtml = `<div style="display:flex;gap:5px;justify-content:center;flex-wrap:wrap">`;
+    ['s2','s1','s4'].forEach(k=>{
+      const photos = part.photos[k];
+      const s = SUPPLIERS[k];
+      if(photos.length){
+        photoCellHtml += `<div class="col-photo-badge" onclick="openSupplierLightbox(${part.id},'${k}')" title="${s.name}"><img src="${photos[0]}"><div class="cnt">${photos.length}</div></div>`;
+      } else if(part.prices[k]!==null){
+        photoCellHtml += `<div class="col-photo-empty" title="${s.name} — no photo">–</div>`;
+      }
+    });
+    photoCellHtml += `</div>`;
+    row += `<td class="col-photo-cell center">${photoCellHtml}</td>`;
+    tr.innerHTML = row;
+    body.appendChild(tr);
+  });
+}
+
+function toggleExpand(partId){
+  const row = document.getElementById(`expand-${partId}`);
+  row.style.display = row.style.display==='none' ? '' : 'none';
+}
+
+// ===== LIGHTBOX =====
+function buildRail(entries, activeIdx){
+  const rail = document.getElementById('lbRail');
+  rail.innerHTML = '';
+  entries.forEach((group, gi)=>{
+    const wrap = document.createElement('div');
+    wrap.className = 'lb-rail-group';
+    wrap.innerHTML = `<div class="lb-rail-label" style="color:${group.color}">${group.label}</div>` +
+      group.images.map((src,ii)=>`<img class="lb-thumb ${gi===activeIdx.g && ii===activeIdx.i?'on':''}" src="${src}" onclick="setLightboxImg(${gi},${ii})">`).join('');
+    rail.appendChild(wrap);
+  });
+}
+let lbEntries = [];
+function setLightboxImg(g,i){
+  const entry = lbEntries[g];
+  document.getElementById('lbMainImg').src = entry.images[i];
+  document.getElementById('lbCaption').textContent = `${entry.label} — photo ${i+1} of ${entry.images.length}`;
+  buildRail(lbEntries, {g,i});
+}
+function openCompareLightbox(partId){
+  const part = PARTS.find(p=>p.id===partId);
+  lbEntries = Object.entries(part.photos).filter(([k,v])=>v.length).map(([k,v])=>({label:SUPPLIERS[k].name, color:SUPPLIERS[k].color, images:v}));
+  if(!lbEntries.length) return;
+  document.getElementById('lbOverlay').classList.add('open');
+  setLightboxImg(0,0);
+}
+function openSupplierLightbox(partId, supKey){
+  const part = PARTS.find(p=>p.id===partId);
+  const all = Object.entries(part.photos).filter(([k,v])=>v.length).map(([k,v])=>({label:SUPPLIERS[k].name, color:SUPPLIERS[k].color, images:v}));
+  const idx = all.findIndex(e=>e.label===SUPPLIERS[supKey].name);
+  lbEntries = all;
+  document.getElementById('lbOverlay').classList.add('open');
+  setLightboxImg(Math.max(idx,0), 0);
+}
+function closeLightbox(){ document.getElementById('lbOverlay').classList.remove('open'); }
+
+// ===== TABS =====
+function showTab(name){
+  document.querySelectorAll('.qh-tab').forEach(t=>t.classList.remove('on'));
+  event.target.classList.add('on');
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.getElementById(`panel-${name}`).classList.add('on');
+}
+
+// ===== DOCUMENTS TAB (grouped concept) =====
+function renderDocGroups(){
+  const wrap = document.getElementById('docGroups');
+  wrap.innerHTML = '';
+  Object.entries(SUPPLIERS).forEach(([key, sup])=>{
+    const partsWithPhotos = PARTS.filter(p => p.photos[key] && p.photos[key].length);
+    const respondedAtAll = PARTS.some(p => p.prices[key] !== null);
+    if(!respondedAtAll) return;
+    const group = document.createElement('div');
+    group.className = 'part-doc-group';
+    let rows = partsWithPhotos.map(part=>{
+      return `<div class="pdg-supplier-row">
+        <div class="pdg-sup-chip" style="min-width:190px"><span style="font-weight:700;font-size:12px">${part.name}</span><br><span style="font-size:10px;color:#9CA3AF;font-family:'IBM Plex Mono',monospace">${part.num}</span></div>
+        <div class="pdg-thumb-row">${part.photos[key].map(src=>`<img class="pdg-thumb" src="${src}" onclick="openSupplierLightbox(${part.id},'${key}')">`).join('')}</div>
+      </div>`;
+    }).join('');
+    if(!rows) rows = `<div class="pdg-none">No photos attached by this supplier yet</div>`;
+    group.innerHTML = `<div class="pdg-head"><div class="pdg-sup-dot" style="background:${sup.color}">${sup.code}</div><span class="pn">${sup.name}</span></div><div class="pdg-body">${rows}</div>`;
+    wrap.appendChild(group);
+  });
+}
+
+setMode('icon');
+renderDocGroups();
+</script>
+</body>
+</html>

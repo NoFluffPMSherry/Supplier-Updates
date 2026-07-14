@@ -1,0 +1,54 @@
+# Image and Documents from Supplier and Repairer Side — Design Brief
+
+**Owner:** Shereen
+**Status:** Draft — design direction, not yet a PRD (`challenge:` and `prd:` still to run)
+**Source:** [Notion — INTERNAL Initiative: Repairer/Supplier Image Upload](https://app.notion.com/p/39cfbd28812a803a8674c31cf6f2f589)
+**Mockups:** `Mockups/supplier-upload-mockup.html`, `Mockups/repairer-image-display-mockup.html`
+
+---
+
+## Problem
+
+Suppliers responding to an RFQ on PartsCheck are capped at exactly three file uploads per quote, via a legacy "Attach Files to Quote" modal with no drag-and-drop, no previews, and no way to say *which part* a photo belongs to. On the other side, when a repairer reviews a quote, supplier-submitted photos land in the Documents tab as a flat `Supplier / FileName / Download` table — no thumbnails, no grouping by part, nothing the repairer can act on without downloading each file individually. When multiple suppliers respond to the same RFQ, there is currently no way to see, per part, what each competing supplier actually attached.
+
+## Requirements
+
+1. **Supplier — remove the 3-file cap and modernise the upload experience.**
+2. **Supplier — allow photos to be attached to an individual part/line item**, not just to the quote as one undifferentiated bundle. This is a data-model change (photo → part), not a restyle — it's what makes Requirement 3 possible.
+3. **Repairer — properly categorise and display photos from multiple suppliers against the same part**, so they're easy to actually view during quote comparison, not dumped in an undifferentiated list.
+
+## Current state (screenshots reviewed)
+
+| Screenshot | What it shows |
+|---|---|
+| Legacy "Attach Files to Quote" modal | Exactly three `Choose File` rows, no previews, no part association — the literal cap in Req 1 |
+| FlexiQuote "Quote Options" toolbar | `Photos` is already a distinct concept from `Attach File` on the repairer's own quote-creation screen |
+| Repairer's photo lightbox | Thumbnail rail + zoomed main image — an existing, working pattern worth reusing rather than reinventing |
+| PartsCheck quote view, INFO tab | Repairer's own photos shown as a clean thumbnail gallery ("IMAGES (5 attached)") |
+| PartsCheck quote view, DOCUMENTS tab | Supplier-submitted files as a flat table — no previews, no part grouping. This is the core pain point Req 3 fixes. |
+
+## Design direction
+
+**Supplier upload (Req 1 + 2):** The mockup deliberately keeps today's actual supplier quote screen unchanged (Quote Status bar, Purchaser Notes, Quote Options toolbar, parts table with Type Requested/Notes/Alt columns) — only the "Attach File" flow and a new per-row "Photos" column are new, so this reads as an incremental upgrade to a screen suppliers already know, not a redesigned product. The new flow: uncapped drag-and-drop / multi-select uploader, thumbnail grid with per-photo remove and upload progress, and a part-tag selector (defaulting to "whole quote — general" or the specific part the supplier clicked "Attach photos" from). See `supplier-upload-mockup.html` — includes a live toggle back to the legacy 3-slot modal for direct before/after comparison.
+
+**Repairer display (Req 3):** Two places this lands:
+- **Documents tab** — replace the flat table with photos grouped first by supplier, then by part within each supplier, using the existing lightbox pattern. Supplier-first because the Documents tab is naturally "what did each supplier send me" — the part-first comparison view lives on the grid screen instead. Straightforward, no grid changes.
+- **Grid screen** (comparing multiple suppliers' responses to one RFQ, part by part — the highest-value UI moment in PartsCheck's core workflow) — `repairer-image-display-mockup.html` includes a live toggle between **four** interaction patterns rather than committing to one upfront:
+  1. **Row icon → cross-supplier lightbox** — one small icon per part row, opens a single lightbox grouped by supplier. No new grid column, works without hover (tablet-friendly).
+  2. **Expandable row** — click the row to reveal a thumbnail strip grouped by supplier underneath it.
+  3. **Dedicated Photos column** — a photo-count badge per supplier per part, consistent with other grid columns. Most discoverable, but adds grid width.
+  4. **Always-visible inline strip** — thumbnails shown by default under the part name, no click required.
+
+## Open questions
+
+- **OD #23 overlap** — the "dedicated Photos column" option adds grid width and directly overlaps the still-unresolved supplier-column-display decision (cap / rank / customise). If that pattern is preferred, it should be resolved together with OD #23, not separately.
+- **Engineering — data model** — per-part photo tagging (Req 2) requires a photo → part_id relationship that doesn't exist today. Needs sizing with Mat Roggenkamp before this becomes a committed scope item.
+- **FlexiQuote dependency** — FIU-1 (critical photo-persistence bug in FlexiQuote's own uploader) is unrelated to this PartsCheck-side work, but if repairer-sourced photos (uploaded upstream in FlexiQuote) are expected to flow through cleanly into what's redesigned here, that dependency is worth naming to Aju/engineering rather than assuming it's solved.
+- **Which grid pattern to commit to** — recommend reviewing all four live in the mockup before picking; they trade off discoverability, grid density, and tablet/touch friendliness differently (see mockup's inline descriptions per option).
+
+## Product Thinking Lens flags
+
+- **Insurer sensitivity:** none — no pricing or rules exposure.
+- **Leakage risk:** low. Better part-level photo visibility reduces disputes about what was actually quoted rather than creating a new off-platform pathway — but worth a one-line mitigation note if this ever surfaces full-resolution originals or contact metadata.
+- **Adoption risk:** low. Suppliers already attach photos today, just capped at three — removing the cap is a pure win with no new behaviour required. Per-part tagging (Req 2) adds one extra decision per upload for suppliers, worth user-testing before committing to it as mandatory vs. optional.
+- **Repairer friction:** net reduction — replaces a download-per-file workflow with inline previews.
