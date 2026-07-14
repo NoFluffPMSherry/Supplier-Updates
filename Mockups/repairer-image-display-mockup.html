@@ -31,14 +31,6 @@ body{font-family:'Inter',sans-serif;background:#F0F2F5;color:#0F1923;font-size:1
 .panel.on{display:block}
 
 /* ===== PRICE / GRID PANEL ===== */
-.mode-bar{background:#fff;border:1px solid #E8EAED;border-radius:10px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.mode-label{font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
-.mode-opts{display:flex;gap:6px;flex-wrap:wrap}
-.mode-opt{padding:7px 12px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid #E8EAED;color:#374151;background:#fff}
-.mode-opt:hover{border-color:#9CA3AF}
-.mode-opt.on{border-color:#6366F1;background:#EEF2FF;color:#4338CA}
-.mode-desc{font-size:11px;color:#9CA3AF;margin-left:auto;max-width:260px;text-align:right;line-height:1.4}
-
 .grid-shell{background:#fff;border-radius:12px;border:1px solid #E8EAED;box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden}
 table{width:100%;border-collapse:collapse}
 thead th{padding:9px 12px;text-align:left;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.06em;background:#FAFAFA;border-bottom:1px solid #F3F4F6;white-space:nowrap}
@@ -53,35 +45,12 @@ tbody tr:last-child > td{border-bottom:none}
 .price-val{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:12px}
 .center{text-align:center}
 
-/* photo affordances shared */
-.cam-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:#4338CA;background:#EEF2FF;border:1px solid #C7D2FE;border-radius:20px;padding:3px 8px;cursor:pointer}
-.cam-badge:hover{background:#E0E7FF}
+/* photo affordances */
 .no-photo{color:#D1D5DB;font-size:11px}
 .mini-thumbs{display:flex;cursor:pointer}
 .mini-thumbs img{width:26px;height:26px;border-radius:6px;object-fit:cover;border:2px solid #fff;box-shadow:0 0 0 1px #E8EAED;margin-left:-8px}
 .mini-thumbs img:first-child{margin-left:0}
 .mini-count{font-size:9px;font-weight:800;color:#0F1923;background:#F3F4F6;border-radius:20px;padding:2px 6px;margin-left:4px}
-
-/* variant: expand row */
-.expand-toggle{cursor:pointer;color:#6B7280;font-size:10px}
-.expand-row td{background:#FAFBFC!important;padding:10px 12px 14px 12px}
-.expand-strip{display:flex;gap:16px;flex-wrap:wrap}
-.expand-group{display:flex;flex-direction:column;gap:4px}
-.expand-group-label{font-size:9px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.05em}
-.expand-group .mini-thumbs img{width:38px;height:38px;margin-left:-10px}
-
-/* variant: column badge */
-.col-photo-cell{width:64px}
-.col-photo-badge{width:38px;height:38px;border-radius:8px;position:relative;cursor:pointer;overflow:hidden;border:1px solid #E8EAED}
-.col-photo-badge img{width:100%;height:100%;object-fit:cover}
-.col-photo-badge .cnt{position:absolute;bottom:0;right:0;background:#0F1923;color:#fff;font-size:8px;font-weight:800;padding:1px 4px;border-radius:4px 0 0 0}
-.col-photo-empty{width:38px;height:38px;border-radius:8px;border:1.5px dashed #E5E7EB;color:#D1D5DB;display:flex;align-items:center;justify-content:center;font-size:14px}
-
-/* variant: always-visible strip in part cell */
-.strip-inline{display:flex;flex-direction:column;gap:4px;margin-top:6px}
-.strip-inline-row{display:flex;align-items:center;gap:5px}
-.strip-inline-row .sup-tag{font-size:8px;font-weight:800;color:#fff;border-radius:3px;padding:1px 4px}
-.strip-inline-row .mini-thumbs img{width:20px;height:20px;margin-left:-6px}
 
 /* ===== DOCUMENTS TAB ===== */
 .doc-flat-before{background:#fff;border:1px solid #E8EAED;border-radius:10px;margin-bottom:16px;overflow:hidden}
@@ -146,26 +115,14 @@ tbody tr:last-child > td{border-bottom:none}
 
   <!-- PRICE PANEL -->
   <div class="panel on" id="panel-price">
-    <div class="mode-bar">
-      <div class="mode-label">Grid photo display —<br>try each option</div>
-      <div class="mode-opts">
-        <div class="mode-opt on" data-mode="icon" onclick="setMode('icon')">① Row icon + compare lightbox</div>
-        <div class="mode-opt" data-mode="expand" onclick="setMode('expand')">② Expandable row</div>
-        <div class="mode-opt" data-mode="column" onclick="setMode('column')">③ Dedicated Photos column</div>
-        <div class="mode-opt" data-mode="strip" onclick="setMode('strip')">④ Always-visible strip</div>
-      </div>
-      <div class="mode-desc" id="modeDesc"></div>
-    </div>
-
     <div class="grid-shell">
       <table>
         <thead>
-          <tr id="theadRow">
+          <tr>
             <th style="min-width:200px">Part</th>
             <th class="center" style="min-width:100px"><div class="sup-th"><div class="sup-avatar" style="background:#6366F1">S2</div><div class="sup-name">Dealer OEM</div></div></th>
             <th class="center" style="min-width:100px"><div class="sup-th"><div class="sup-avatar" style="background:#8B5CF6">S1</div><div class="sup-name">Cert Aftmkt</div></div></th>
             <th class="center" style="min-width:100px"><div class="sup-th"><div class="sup-avatar" style="background:#10B981">S4</div><div class="sup-name">Used Parts</div></div></th>
-            <th class="col-photo-cell center" id="dedicatedColHead" style="display:none">Photos</th>
           </tr>
         </thead>
         <tbody id="gridBody"></tbody>
@@ -237,40 +194,12 @@ const PARTS = [
     photos:{s2:[], s1:[], s4:[]}}
 ];
 
-let mode = 'icon';
-const MODE_DESC = {
-  icon: 'One small icon per part row — click to compare every supplier\'s photo(s) for that part in a single lightbox. No new column, works on tablet.',
-  expand: 'Click the row to expand a thumbnail strip beneath it, grouped by supplier. Keeps the grid clean until you want to look.',
-  column: 'A dedicated Photos column, consistent with existing grid columns. Most discoverable, but adds width — overlaps OD #23 (supplier column display, unresolved).',
-  strip: 'Thumbnails shown inline under the part name by default, no click needed. Fastest to scan; can get busy on RFQs with many parts/suppliers.'
-};
-
-function setMode(m){
-  mode = m;
-  document.querySelectorAll('.mode-opt').forEach(el=>el.classList.toggle('on', el.dataset.mode===m));
-  document.getElementById('modeDesc').textContent = MODE_DESC[m];
-  document.getElementById('dedicatedColHead').style.display = m==='column' ? '' : 'none';
-  renderGrid();
-}
-
-function photoCount(part){
-  return Object.values(part.photos).reduce((a,arr)=>a+arr.length,0);
-}
-
 function renderGrid(){
   const body = document.getElementById('gridBody');
   body.innerHTML = '';
   PARTS.forEach(part => {
-    const total = photoCount(part);
     const tr = document.createElement('tr');
-    let partCellHtml = `<div class="part-name">${part.name}${mode==='icon' && total>0 ? ` <span class="cam-badge" onclick="openCompareLightbox(${part.id})">📷 ${total}</span>` : ''}${mode==='expand' ? ` <span class="expand-toggle" onclick="toggleExpand(${part.id})">▾ ${total? total+' photos':'no photos'}</span>` : ''}</div><div class="part-num">${part.num}</div>`;
-    if(mode==='strip'){
-      partCellHtml += `<div class="strip-inline">` + Object.entries(part.photos).filter(([k,v])=>v.length).map(([k,v])=>{
-        const s = SUPPLIERS[k];
-        return `<div class="strip-inline-row"><span class="sup-tag" style="background:${s.color}">${s.code}</span><div class="mini-thumbs" onclick="openSupplierLightbox(${part.id},'${k}')">${v.slice(0,3).map(src=>`<img src="${src}">`).join('')}</div></div>`;
-      }).join('') + `</div>`;
-    }
-    let row = `<td>${partCellHtml}</td>`;
+    let row = `<td><div class="part-name">${part.name}</div><div class="part-num">${part.num}</div></td>`;
     ['s2','s1','s4'].forEach(k=>{
       const price = part.prices[k];
       const photos = part.photos[k];
@@ -279,75 +208,15 @@ function renderGrid(){
         cell = `<div class="no-photo">—</div>`;
       } else {
         cell = `<div class="price-val">${price}</div>`;
-        if(mode!=='column' && mode!=='strip'){
-          if(photos.length){
-            cell += `<div class="mini-thumbs" style="margin-top:5px" onclick="openSupplierLightbox(${part.id},'${k}')">${photos.slice(0,2).map(src=>`<img src="${src}">`).join('')}${photos.length>1?`<span class="mini-count">${photos.length}</span>`:''}</div>`;
-          }
+        if(photos.length){
+          cell += `<div class="mini-thumbs" style="margin-top:5px" onclick="openSupplierLightbox(${part.id},'${k}')">${photos.slice(0,2).map(src=>`<img src="${src}">`).join('')}${photos.length>1?`<span class="mini-count">${photos.length}</span>`:''}</div>`;
         }
       }
       row += `<td class="center">${cell}</td>`;
     });
     tr.innerHTML = row;
     body.appendChild(tr);
-
-    if(mode==='column'){
-      const colTd = document.createElement('td');
-      // shift: column mode needs its own td appended, handled via extra row rebuild below
-    }
-    if(mode==='expand'){
-      const exTr = document.createElement('tr');
-      exTr.className = 'expand-row';
-      exTr.id = `expand-${part.id}`;
-      exTr.style.display = 'none';
-      const groups = Object.entries(part.photos).filter(([k,v])=>v.length).map(([k,v])=>{
-        const s = SUPPLIERS[k];
-        return `<div class="expand-group"><div class="expand-group-label" style="color:${s.color}">${s.name}</div><div class="mini-thumbs" onclick="openSupplierLightbox(${part.id},'${k}')">${v.map(src=>`<img src="${src}">`).join('')}</div></div>`;
-      }).join('');
-      exTr.innerHTML = `<td colspan="4"><div class="expand-strip">${groups || '<span class=\"no-photo\">No photos attached by any supplier for this part yet</span>'}</div></td>`;
-      body.appendChild(exTr);
-    }
   });
-
-  if(mode==='column'){
-    // rebuild rows with a trailing photos-summary column
-    Array.from(body.children).forEach(tr=>{
-      const partId = null;
-    });
-    rebuildColumnMode();
-  }
-}
-
-function rebuildColumnMode(){
-  const body = document.getElementById('gridBody');
-  body.innerHTML = '';
-  PARTS.forEach(part=>{
-    const tr = document.createElement('tr');
-    let row = `<td><div class="part-name">${part.name}</div><div class="part-num">${part.num}</div></td>`;
-    ['s2','s1','s4'].forEach(k=>{
-      const price = part.prices[k];
-      row += `<td class="center">${price===null?'<div class="no-photo">—</div>':`<div class="price-val">${price}</div>`}</td>`;
-    });
-    // dedicated column: one badge per supplier stacked
-    let photoCellHtml = `<div style="display:flex;gap:5px;justify-content:center;flex-wrap:wrap">`;
-    ['s2','s1','s4'].forEach(k=>{
-      const photos = part.photos[k];
-      const s = SUPPLIERS[k];
-      if(photos.length){
-        photoCellHtml += `<div class="col-photo-badge" onclick="openSupplierLightbox(${part.id},'${k}')" title="${s.name}"><img src="${photos[0]}"><div class="cnt">${photos.length}</div></div>`;
-      } else if(part.prices[k]!==null){
-        photoCellHtml += `<div class="col-photo-empty" title="${s.name} — no photo">–</div>`;
-      }
-    });
-    photoCellHtml += `</div>`;
-    row += `<td class="col-photo-cell center">${photoCellHtml}</td>`;
-    tr.innerHTML = row;
-    body.appendChild(tr);
-  });
-}
-
-function toggleExpand(partId){
-  const row = document.getElementById(`expand-${partId}`);
-  row.style.display = row.style.display==='none' ? '' : 'none';
 }
 
 // ===== LIGHTBOX =====
@@ -368,13 +237,6 @@ function setLightboxImg(g,i){
   document.getElementById('lbMainImg').src = entry.images[i];
   document.getElementById('lbCaption').textContent = `${entry.label} — photo ${i+1} of ${entry.images.length}`;
   buildRail(lbEntries, {g,i});
-}
-function openCompareLightbox(partId){
-  const part = PARTS.find(p=>p.id===partId);
-  lbEntries = Object.entries(part.photos).filter(([k,v])=>v.length).map(([k,v])=>({label:SUPPLIERS[k].name, color:SUPPLIERS[k].color, images:v}));
-  if(!lbEntries.length) return;
-  document.getElementById('lbOverlay').classList.add('open');
-  setLightboxImg(0,0);
 }
 function openSupplierLightbox(partId, supKey){
   const part = PARTS.find(p=>p.id===partId);
@@ -416,7 +278,7 @@ function renderDocGroups(){
   });
 }
 
-setMode('icon');
+renderGrid();
 renderDocGroups();
 </script>
 </body>
