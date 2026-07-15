@@ -112,10 +112,12 @@ tbody tr:last-child > td{border-bottom:none}
 .mini-thumbs img:first-child{margin-left:0}
 .mini-count{font-size:9px;font-weight:800;color:#0F1923;background:#F3F4F6;border-radius:20px;padding:2px 6px;margin-left:4px;align-self:center}
 
-.cell-inner{cursor:pointer;border-radius:8px;padding:4px;margin:-4px}
+.cell-inner{cursor:pointer;border-radius:8px;padding:8px;margin:-8px;border:2px solid transparent;transition:border-color .15s,background .15s}
 .cell-inner:hover{background:#F9FAFB}
-.modify-bar{margin-top:7px;background:#18A058;color:#fff;font-size:9px;font-weight:800;letter-spacing:.03em;padding:5px 0;border-radius:6px;display:flex;align-items:center;justify-content:center;gap:4px}
+.cell-inner.active{border-color:#18A058;background:#F0FDF4}
+.modify-bar{display:none;margin-top:7px;background:#18A058;color:#fff;font-size:9px;font-weight:800;letter-spacing:.03em;padding:5px 0;border-radius:6px;align-items:center;justify-content:center;gap:4px}
 .modify-bar:hover{background:#16974e}
+.cell-inner.active .modify-bar{display:flex}
 /* top-right is reserved by the real product for the part-number-match indicator — using top-left instead */
 .photo-corner{position:absolute;top:8px;left:8px;cursor:pointer}
 .photo-corner img{width:24px;height:24px;border-radius:7px;object-fit:cover;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.25)}
@@ -446,12 +448,12 @@ function renderGrid(){
       if(price===null){
         cell = `<div class="no-photo">—</div>`;
       } else {
-        cell = `<div class="cell-inner" onclick="openModify('${part.name.replace(/'/g,"\\'")}','${sup.name}')">
+        cell = `<div class="cell-inner" onclick="toggleCellActive(this)">
             <div class="type-badge ${sup.badge}">${sup.type}</div>
             <div class="price-val">${price}</div>
             <div class="markup-val">${part.markup[k]}</div>
             <div class="etd-val">ETD ${part.etd[k]}</div>
-            <div class="modify-bar">✏ MODIFY</div>
+            <div class="modify-bar" onclick="event.stopPropagation(); openModify('${part.name.replace(/'/g,"\\'")}','${sup.name}')">✏ MODIFY</div>
           </div>`;
         if(photos.length){
           cell += `<div class="photo-corner" onclick="openSupplierLightbox(${part.id},'${k}')" title="${photos.length} photo${photos.length===1?'':'s'} from ${sup.name} — click to view">
@@ -564,6 +566,12 @@ function downloadAllFromSupplier(key){
 // never competes with it for the same click.
 function openModify(partName, supName){
   showToast(`Opens "Modify Part Number" for ${partName} — ${supName} (existing pricing workflow, unaffected by this concept)`);
+}
+// MODIFY stays hidden until the cell is clicked once — matches the real product's
+// selected-cell (green border) state rather than showing an action bar on every cell by default.
+function toggleCellActive(el){
+  document.querySelectorAll('.cell-inner.active').forEach(c => { if(c !== el) c.classList.remove('active'); });
+  el.classList.toggle('active');
 }
 
 // ===== TABS =====
