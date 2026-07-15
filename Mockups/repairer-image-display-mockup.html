@@ -122,10 +122,25 @@ tbody tr:last-child > td{border-bottom:none}
 .doc-flat-before a{color:#2563EB}
 .section-label{font-size:11px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.06em;margin:18px 0 8px}
 
-.part-doc-group{background:#fff;border:1px solid #E8EAED;border-radius:12px;margin-bottom:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.pdg-head{padding:12px 16px;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:8px}
+.part-doc-group{background:#fff;border:1px solid #E8EAED;border-radius:12px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);scroll-margin-top:16px}
+.pdg-head{padding:12px 16px;display:flex;align-items:center;gap:8px;cursor:pointer}
+.part-doc-group:not(.collapsed) .pdg-head{border-bottom:1px solid #F3F4F6}
 .pdg-head .pn{font-size:13px;font-weight:800}
+.pdg-head .pdg-count{font-size:10.5px;color:#9CA3AF;font-weight:700}
+.pdg-chevron{color:#9CA3AF;font-size:11px;transition:transform .18s;margin-left:2px}
+.part-doc-group.collapsed .pdg-chevron{transform:rotate(-90deg)}
+.part-doc-group.collapsed .pdg-body{display:none}
 .pdg-body{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+
+/* quick-jump chip bar */
+.sup-filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.sup-filter-chip{display:flex;align-items:center;gap:6px;background:#fff;border:1.5px solid #E8EAED;border-radius:20px;padding:5px 12px 5px 5px;cursor:pointer;font-size:11.5px;font-weight:700;color:#374151}
+.sup-filter-chip:hover{border-color:#9CA3AF}
+.sup-filter-chip .dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.sup-filter-chip .cnt{background:#F3F4F6;color:#0F1923;border-radius:20px;padding:1px 6px;font-size:10px}
+.sup-filter-chip.empty{opacity:.45}
+.expand-all-link{font-size:11px;font-weight:700;color:#6B7280;cursor:pointer;text-decoration:underline;margin-left:auto}
+.expand-all-link:hover{color:#374151}
 .pdg-supplier-row{display:flex;align-items:flex-start;gap:12px}
 .pdg-sup-chip{display:flex;align-items:center;gap:6px;min-width:190px;flex-shrink:0}
 .pdg-sup-dot{width:24px;height:24px;border-radius:50%;font-size:12px;display:flex;align-items:center;justify-content:center}
@@ -314,6 +329,7 @@ tbody tr:last-child > td{border-bottom:none}
     <div class="repairer-thumb-grid" id="repairerThumbGrid" style="margin-bottom:24px"></div>
 
     <div class="img-section-head"><h3>Supplier Photos</h3><span>grouped by supplier — general (whole-quote) photos shown separately from part-specific ones</span></div>
+    <div class="sup-filter-row" id="supFilterRow"></div>
     <div id="supplierPhotoGroups"></div>
   </div>
 
@@ -541,6 +557,34 @@ function renderRepairerImages(){
     `<img class="repairer-thumb" src="${src}" onclick="openRepairerLightbox(${i})">`).join('');
 }
 
+// Suppliers with photos jump straight to that card (collapsed by default) instead of
+// scrolling past every other supplier — the chip row is the fast path, the card header
+// still works for manual expand/collapse.
+function renderSupplierFilterChips(){
+  const row = document.getElementById('supFilterRow');
+  const respondedSuppliers = SUP_ORDER.filter(key => PARTS.some(p => p.prices[key] !== null));
+  const chips = respondedSuppliers.map(key=>{
+    const sup = SUPPLIERS[key];
+    const count = supplierPhotoCount(key);
+    return `<div class="sup-filter-chip ${count?'':'empty'}" onclick="${count?`expandOnlySupplier('${key}')`:''}" title="${count} photos">
+        <span class="dot" style="background:${sup.color}22;color:${sup.color}">👤</span>${sup.name}<span class="cnt">${count}</span>
+      </div>`;
+  }).join('');
+  row.innerHTML = chips + `<span class="expand-all-link" onclick="setAllSupplierGroups(false)">Expand all</span><span class="expand-all-link" onclick="setAllSupplierGroups(true)">Collapse all</span>`;
+}
+function expandOnlySupplier(key){
+  document.querySelectorAll('.part-doc-group').forEach(g=>{
+    g.classList.toggle('collapsed', g.id !== `supGroup-${key}`);
+  });
+  document.getElementById(`supGroup-${key}`).scrollIntoView({behavior:'smooth', block:'start'});
+}
+function toggleSupplierGroup(key){
+  document.getElementById(`supGroup-${key}`).classList.toggle('collapsed');
+}
+function setAllSupplierGroups(collapsed){
+  document.querySelectorAll('.part-doc-group').forEach(g=>g.classList.toggle('collapsed', collapsed));
+}
+
 function renderSupplierPhotoGroups(){
   const wrap = document.getElementById('supplierPhotoGroups');
   wrap.innerHTML = '';
@@ -570,11 +614,14 @@ function renderSupplierPhotoGroups(){
     }
 
     const group = document.createElement('div');
-    group.className = 'part-doc-group';
-    group.innerHTML = `<div class="pdg-head">
+    group.className = 'part-doc-group collapsed';
+    group.id = `supGroup-${key}`;
+    group.innerHTML = `<div class="pdg-head" onclick="toggleSupplierGroup('${key}')">
         <div class="pdg-sup-dot" style="background:${sup.color}22;color:${sup.color}">👤</div>
         <span class="pn">${sup.name}</span>
-        ${count ? `<span class="dl-btn" style="margin-left:auto" onclick="downloadAllFromSupplier('${key}')">⬇ Download All (${count})</span>` : ''}
+        <span class="pdg-count">${count} photo${count===1?'':'s'}</span>
+        ${count ? `<span class="dl-btn" style="margin-left:auto" onclick="event.stopPropagation(); downloadAllFromSupplier('${key}')">⬇ Download All (${count})</span>` : ''}
+        <span class="pdg-chevron">▾</span>
       </div><div class="pdg-body">${body}</div>`;
     wrap.appendChild(group);
   });
@@ -585,6 +632,7 @@ renderGrid();
 renderGeneralBadges();
 renderRepairerImages();
 renderSupplierPhotoGroups();
+renderSupplierFilterChips();
 document.getElementById('totalImgCount').textContent = `(${totalPhotoCount()} total)`;
 </script>
 </body>
