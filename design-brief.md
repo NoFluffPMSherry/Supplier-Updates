@@ -39,6 +39,11 @@ Suppliers responding to an RFQ on PartsCheck are capped at exactly three file up
 
 The Info tab was also brought in line with the real product's Quote Basic Info / Vehicle Info fields (Quote #, Estimator, Claim No., Status, Active Margin Rule; Make/Model/VIN/Rego etc.) for chrome fidelity — no functional change there, it was previously a placeholder.
 
+**General (whole-quote) vs. part-specific photos (15 Jul 2026):** Since Req 2 lets a supplier tag a photo to a part, the natural follow-up is: what if they don't — i.e. they attach photos to the quote as a whole, same as today? Both need to coexist without the repairer confusing one for the other. Resolved as:
+- **Grid screen** — a small amber "📦 General N" badge appears once, in the supplier's column header, if that supplier has whole-quote photos. It never repeats per row (a general photo isn't "for" any one part), and it opens a lightbox scoped to just that supplier's general photos.
+- **Images tab, Supplier Photos section** — each supplier's card shows a distinctly-styled amber "General — attached to the whole quote, not a specific part" block first (if any), followed by their per-part groups in the normal style. The mockup demonstrates all four real combinations so the pattern can be reviewed against each: OEM Direct (general + part-specific), Parts Network (part-specific only), ATS Parts (general only), Reco Centre (responded, no photos either way).
+- **Bulk download** — added "Download All" at three levels: the whole quote (repairer + every supplier), the repairer's own photos, and per-supplier (counts include that supplier's general + part photos together). Simulated in the mockup (toast + photo count) since there's no real file storage to zip.
+
 ## Open questions
 
 - **Engineering — data model** — per-part photo tagging (Req 2) requires a photo → part_id relationship that doesn't exist today. Needs sizing with Mat Roggenkamp before this becomes a committed scope item.
