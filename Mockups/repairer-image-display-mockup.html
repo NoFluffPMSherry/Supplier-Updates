@@ -132,6 +132,25 @@ tbody tr:last-child > td{border-bottom:none}
 .pdg-thumb:hover{transform:scale(1.04);box-shadow:0 4px 14px rgba(0,0,0,.15)}
 .pdg-none{font-size:11px;color:#D1D5DB;padding-top:4px}
 
+/* ===== INFO TAB (real fields) ===== */
+.info-card{background:#fff;border:1px solid #E8EAED;border-radius:10px;margin-bottom:14px;overflow:hidden}
+.info-card-head{padding:9px 16px;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.06em;background:#F9FAFB;border-bottom:1px solid #F3F4F6}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;padding:6px 0}
+.info-row{display:grid;grid-template-columns:150px 1fr;padding:10px 16px;font-size:12.5px}
+.info-row .k{color:#6B7280;font-weight:600}
+.info-row .v{color:#0F1923;font-weight:700}
+.info-row .v.muted{color:#D1D5DB;font-weight:500}
+
+/* ===== IMAGES TAB ===== */
+.img-section-head{display:flex;align-items:center;gap:8px;margin:0 0 10px}
+.img-section-head h3{font-size:13px;font-weight:800}
+.img-section-head span{font-size:11px;color:#9CA3AF;font-weight:600}
+.repairer-thumb-grid{display:flex;gap:10px;flex-wrap:wrap}
+.repairer-thumb{width:120px;height:90px;border-radius:8px;object-fit:cover;cursor:pointer;border:1px solid #E8EAED;transition:.15s}
+.repairer-thumb:hover{transform:scale(1.03);box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.doc-callout{display:flex;align-items:center;gap:10px;background:#F0FDF4;border:1px solid #BBF7D0;color:#166534;border-radius:10px;padding:12px 16px;font-size:12px;font-weight:600;margin-bottom:16px}
+.doc-callout a{color:#18A058;font-weight:800;cursor:pointer;text-decoration:underline}
+
 /* ===== LIGHTBOX ===== */
 .lb-overlay{position:fixed;inset:0;background:rgba(10,15,20,.92);z-index:999;display:none;align-items:center;justify-content:center}
 .lb-overlay.open{display:flex}
@@ -171,6 +190,7 @@ tbody tr:last-child > td{border-bottom:none}
 <div class="tab-bar">
   <div class="qh-tab on" onclick="showTab('price')"><div class="qh-tab-icon">$</div>CHECK PRICE</div>
   <div class="qh-tab" onclick="showTab('info')"><div class="qh-tab-icon">i</div>INFO</div>
+  <div class="qh-tab" onclick="showTab('images')"><div class="qh-tab-icon">📷</div>IMAGES</div>
   <div class="qh-tab" onclick="showTab('documents')"><div class="qh-tab-icon">📄</div>DOCUMENTS</div>
 </div>
 
@@ -180,7 +200,7 @@ tbody tr:last-child > td{border-bottom:none}
   <div class="quote-header">
     <div class="qh-left">
       <h1>QUOTE: <span>89734</span></h1>
-      <p><strong>Toyota Corolla, 2014</strong> · B56-432 · Insurer: <strong>Allianz</strong></p>
+      <p><strong>Hyundai Tucson, 2023</strong> · ABC123 · Insurer: <strong>Allianz</strong></p>
     </div>
     <div class="qh-right">
       <div class="sup-resp">
@@ -236,27 +256,64 @@ tbody tr:last-child > td{border-bottom:none}
 
   <!-- INFO PANEL -->
   <div class="panel" id="panel-info">
-    <div class="part-doc-group"><div class="pdg-body" style="padding:16px">
-      <div style="font-size:12px;color:#6B7280">Repairer's own reference photos already work well here today (thumbnail gallery + lightbox) — unchanged by this initiative. Out of scope: this concept focuses on <strong>supplier-submitted</strong> photos, currently buried in the Documents tab.</div>
-    </div></div>
+    <div class="info-card">
+      <div class="info-card-head">Quote Basic Info</div>
+      <div class="info-grid">
+        <div>
+          <div class="info-row"><span class="k">Quote</span><span class="v">89734</span></div>
+          <div class="info-row"><span class="k">Requested Date</span><span class="v">12/05/2026</span></div>
+          <div class="info-row"><span class="k">Claim No.</span><span class="v">CLM-2026-44821</span></div>
+          <div class="info-row"><span class="k">Insurer</span><span class="v">Allianz</span></div>
+        </div>
+        <div>
+          <div class="info-row"><span class="k">Estimator</span><span class="v">MJ</span></div>
+          <div class="info-row"><span class="k">Requested Time</span><span class="v">10:30am</span></div>
+          <div class="info-row"><span class="k">Status</span><span class="v">Saved</span></div>
+          <div class="info-row"><span class="k">Active Margin Rule</span><span class="v">Standard Baseline</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-head">Vehicle Info</div>
+      <div class="info-grid">
+        <div>
+          <div class="info-row"><span class="k">Make</span><span class="v">Hyundai</span></div>
+          <div class="info-row"><span class="k">Model</span><span class="v">Tucson</span></div>
+          <div class="info-row"><span class="k">Body Style</span><span class="v">SUV 5 Door</span></div>
+          <div class="info-row"><span class="k">VIN</span><span class="v">KMHJ341BDPU123456</span></div>
+        </div>
+        <div>
+          <div class="info-row"><span class="k">Month &amp; Year</span><span class="v">01/2023</span></div>
+          <div class="info-row"><span class="k">Vehicle Rego</span><span class="v">ABC123</span></div>
+          <div class="info-row"><span class="k">Series</span><span class="v">NX4</span></div>
+          <div class="info-row"><span class="k">Comments</span><span class="v muted">None</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMAGES PANEL -->
+  <div class="panel" id="panel-images">
+    <div class="img-section-head"><h3>Your Photos</h3><span>(<span id="repairerImgCount"></span> attached)</span></div>
+    <div class="repairer-thumb-grid" id="repairerThumbGrid" style="margin-bottom:24px"></div>
+
+    <div class="img-section-head"><h3>Supplier Photos</h3><span>grouped by supplier, then by part</span></div>
+    <div id="supplierPhotoGroups"></div>
   </div>
 
   <!-- DOCUMENTS PANEL -->
   <div class="panel" id="panel-documents">
-    <div class="section-label">Today — flat, ungrouped table (img6)</div>
+    <div class="doc-callout">📷 Looking for photos? Repairer and supplier photos now live in the <a onclick="showTab('images')">Images tab</a> — Documents is for actual paperwork only.</div>
+
+    <div class="section-label">Supplier-submitted documents</div>
     <div class="doc-flat-before">
       <div class="flat-head">Documents</div>
       <table style="width:100%">
         <tr><th style="text-align:left;color:#9CA3AF;font-weight:700">Supplier</th><th style="text-align:left;color:#9CA3AF;font-weight:700">FileName</th><th style="text-align:left;color:#9CA3AF;font-weight:700">Download</th></tr>
-        <tr><td>Parts Network</td><td>IMG_4471.png</td><td><a>Download</a></td></tr>
-        <tr><td>OEM Direct</td><td>bonnet_photo1.jpg</td><td><a>Download</a></td></tr>
-        <tr><td>Eco Parts</td><td>Screenshot 2024-09-05 125647.png</td><td><a>Download</a></td></tr>
+        <tr><td>OEM Direct</td><td>Compliance_Certificate.pdf</td><td><a>Download</a></td></tr>
+        <tr><td>Parts Network</td><td>Supplier_Invoice_4471.pdf</td><td><a>Download</a></td></tr>
       </table>
-      <div style="padding:10px 14px;font-size:11px;color:#9CA3AF">No previews, no grouping by part — repairer has to download each file to see what it is or who it's for.</div>
     </div>
-
-    <div class="section-label">Concept — grouped by supplier, then by part, with previews</div>
-    <div id="docGroups"></div>
   </div>
 </div>
 
@@ -285,6 +342,13 @@ const IMGS = [
   'https://images.unsplash.com/photo-1518987048-93e29699e79a?w=300&h=300&fit=crop',
   'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=300&h=300&fit=crop',
   'https://images.unsplash.com/photo-1541348263662-e068662d82af?w=300&h=300&fit=crop'
+];
+const REPAIRER_IMAGES = [
+  'https://images.unsplash.com/photo-1600661653561-629509216228?w=400&h=300&fit=crop',
+  'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400&h=300&fit=crop',
+  'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&h=300&fit=crop',
+  'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=400&h=300&fit=crop',
+  'https://images.unsplash.com/photo-1553440569-bcc63803a83d?w=400&h=300&fit=crop'
 ];
 const PARTS = [
   {id:1, name:'FRONT BUMPER', num:'#86510-G3700', list:'$659.80 ea',
@@ -375,6 +439,11 @@ function openSupplierLightbox(partId, supKey){
   document.getElementById('lbOverlay').classList.add('open');
   setLightboxImg(Math.max(idx,0), 0);
 }
+function openRepairerLightbox(index){
+  lbEntries = [{label:'Your Photos', color:'#18A058', images:REPAIRER_IMAGES}];
+  document.getElementById('lbOverlay').classList.add('open');
+  setLightboxImg(0, index);
+}
 function closeLightbox(){ document.getElementById('lbOverlay').classList.remove('open'); }
 
 // ===== TABS =====
@@ -385,9 +454,15 @@ function showTab(name){
   document.getElementById(`panel-${name}`).classList.add('on');
 }
 
-// ===== DOCUMENTS TAB (grouped concept) =====
-function renderDocGroups(){
-  const wrap = document.getElementById('docGroups');
+// ===== IMAGES TAB =====
+function renderRepairerImages(){
+  document.getElementById('repairerImgCount').textContent = REPAIRER_IMAGES.length;
+  document.getElementById('repairerThumbGrid').innerHTML = REPAIRER_IMAGES.map((src,i)=>
+    `<img class="repairer-thumb" src="${src}" onclick="openRepairerLightbox(${i})">`).join('');
+}
+
+function renderSupplierPhotoGroups(){
+  const wrap = document.getElementById('supplierPhotoGroups');
   wrap.innerHTML = '';
   SUP_ORDER.forEach(key=>{
     const sup = SUPPLIERS[key];
@@ -410,7 +485,8 @@ function renderDocGroups(){
 
 renderSupplierResponses();
 renderGrid();
-renderDocGroups();
+renderRepairerImages();
+renderSupplierPhotoGroups();
 </script>
 </body>
 </html>
