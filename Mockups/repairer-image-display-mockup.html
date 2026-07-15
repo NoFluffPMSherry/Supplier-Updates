@@ -110,6 +110,8 @@ tbody tr:last-child > td{border-bottom:none}
 .mini-thumbs img{width:24px;height:24px;border-radius:6px;object-fit:cover;border:2px solid #fff;box-shadow:0 0 0 1px #E8EAED;margin-left:-7px}
 .mini-thumbs img:first-child{margin-left:0}
 .mini-count{font-size:9px;font-weight:800;color:#0F1923;background:#F3F4F6;border-radius:20px;padding:2px 6px;margin-left:4px;align-self:center}
+.gen-badge{margin-top:7px;display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:800;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:20px;padding:3px 8px;cursor:pointer}
+.gen-badge:hover{background:#FEF3C7}
 
 /* ===== INFO / DOCUMENTS PANELS ===== */
 .panel{display:none}
@@ -131,6 +133,15 @@ tbody tr:last-child > td{border-bottom:none}
 .pdg-thumb{width:64px;height:64px;border-radius:8px;object-fit:cover;cursor:pointer;border:1px solid #E8EAED;transition:.15s}
 .pdg-thumb:hover{transform:scale(1.04);box-shadow:0 4px 14px rgba(0,0,0,.15)}
 .pdg-none{font-size:11px;color:#D1D5DB;padding-top:4px}
+.pdg-general-block{background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:10px 12px}
+.pdg-general-label{font-size:10px;font-weight:800;color:#92400E;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+
+.dl-btn{font-size:10.5px;font-weight:700;color:#18A058;cursor:pointer;display:inline-flex;align-items:center;gap:4px;border:1.5px solid #BBF7D0;background:#F0FDF4;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.dl-btn:hover{background:#DCFCE7}
+.dl-btn-lg{font-size:12px;padding:8px 16px}
+
+.toast{position:fixed;bottom:24px;right:24px;background:#0F1923;color:#fff;padding:12px 18px;border-radius:10px;font-size:12px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:1200;opacity:0;transform:translateY(10px);transition:.25s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
 
 /* ===== INFO TAB (real fields) ===== */
 .info-card{background:#fff;border:1px solid #E8EAED;border-radius:10px;margin-bottom:14px;overflow:hidden}
@@ -242,11 +253,11 @@ tbody tr:last-child > td{border-bottom:none}
         <thead>
           <tr>
             <th class="part-th">Part Number &amp; Description</th>
-            <th class="center" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#2563EB"><div class="sup-th"><div class="sup-avatar" style="background:#EFF6FF;color:#2563EB;border-color:#BFDBFE">👤</div><div class="sup-name">OEM Direct</div></div></div></th>
-            <th class="center" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#9333EA"><div class="sup-th"><div class="sup-avatar" style="background:#FAF5FF;color:#9333EA;border-color:#E9D5FF">👤</div><div class="sup-name">Parts Network</div></div></div></th>
-            <th class="center" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#A855F7"><div class="sup-th"><div class="sup-avatar" style="background:#FAF5FF;color:#A855F7;border-color:#E9D5FF">👤</div><div class="sup-name">ATS Parts</div></div></div></th>
-            <th class="center" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#18A058"><div class="sup-th"><div class="sup-avatar" style="background:#F0FDF4;color:#18A058;border-color:#BBF7D0">👤</div><div class="sup-name">Eco Parts</div></div></div></th>
-            <th class="center" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#D97706"><div class="sup-th"><div class="sup-avatar" style="background:#FFFBEB;color:#D97706;border-color:#FDE68A">👤</div><div class="sup-name">Reco Centre</div></div></div></th>
+            <th class="center" data-sup="oem" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#2563EB"><div class="sup-th"><div class="sup-avatar" style="background:#EFF6FF;color:#2563EB;border-color:#BFDBFE">👤</div><div class="sup-name">OEM Direct</div></div></div></th>
+            <th class="center" data-sup="net" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#9333EA"><div class="sup-th"><div class="sup-avatar" style="background:#FAF5FF;color:#9333EA;border-color:#E9D5FF">👤</div><div class="sup-name">Parts Network</div></div></div></th>
+            <th class="center" data-sup="ats" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#A855F7"><div class="sup-th"><div class="sup-avatar" style="background:#FAF5FF;color:#A855F7;border-color:#E9D5FF">👤</div><div class="sup-name">ATS Parts</div></div></div></th>
+            <th class="center" data-sup="eco" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#18A058"><div class="sup-th"><div class="sup-avatar" style="background:#F0FDF4;color:#18A058;border-color:#BBF7D0">👤</div><div class="sup-name">Eco Parts</div></div></div></th>
+            <th class="center" data-sup="reco" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#D97706"><div class="sup-th"><div class="sup-avatar" style="background:#FFFBEB;color:#D97706;border-color:#FDE68A">👤</div><div class="sup-name">Reco Centre</div></div></div></th>
           </tr>
         </thead>
         <tbody id="gridBody"></tbody>
@@ -294,10 +305,16 @@ tbody tr:last-child > td{border-bottom:none}
 
   <!-- IMAGES PANEL -->
   <div class="panel" id="panel-images">
-    <div class="img-section-head"><h3>Your Photos</h3><span>(<span id="repairerImgCount"></span> attached)</span></div>
+    <div class="img-section-head" style="margin-bottom:16px">
+      <h3 style="font-size:15px">All Images</h3>
+      <span id="totalImgCount"></span>
+      <span class="dl-btn dl-btn-lg" style="margin-left:auto" onclick="downloadAll()">⬇ Download All</span>
+    </div>
+
+    <div class="img-section-head"><h3>Your Photos</h3><span>(<span id="repairerImgCount"></span> attached)</span><span class="dl-btn" style="margin-left:auto" onclick="downloadAllRepairer()">⬇ Download All</span></div>
     <div class="repairer-thumb-grid" id="repairerThumbGrid" style="margin-bottom:24px"></div>
 
-    <div class="img-section-head"><h3>Supplier Photos</h3><span>grouped by supplier, then by part</span></div>
+    <div class="img-section-head"><h3>Supplier Photos</h3><span>grouped by supplier — general (whole-quote) photos shown separately from part-specific ones</span></div>
     <div id="supplierPhotoGroups"></div>
   </div>
 
@@ -350,12 +367,21 @@ const REPAIRER_IMAGES = [
   'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=400&h=300&fit=crop',
   'https://images.unsplash.com/photo-1553440569-bcc63803a83d?w=400&h=300&fit=crop'
 ];
+// Photos a supplier attaches to the whole quote, not tied to any one part.
+// Demonstrates all 4 scenarios: oem=both general+part, net=part-only, ats=general-only, eco=part-only, reco=none.
+const GENERAL_PHOTOS = {
+  oem: [IMGS[3], IMGS[4]],
+  net: [],
+  ats: [IMGS[0], IMGS[2], IMGS[5]],
+  eco: [],
+  reco: []
+};
 const PARTS = [
   {id:1, name:'FRONT BUMPER', num:'#86510-G3700', list:'$659.80 ea',
     prices:{oem:'$593.82', net:'$368.85', ats:'$384.50', eco:null, reco:'$391.20'},
     markup:{oem:'+$65.98', net:'+$261.83', ats:'+$252.13', eco:null, reco:'+$244.33'},
     etd:{oem:'2-3 Days', net:'1-2 Days', ats:'Same Day', eco:null, reco:'3-5 Days'},
-    photos:{oem:[IMGS[0],IMGS[1]], net:[], ats:[IMGS[2]], eco:[], reco:[]}},
+    photos:{oem:[IMGS[0],IMGS[1]], net:[], ats:[], eco:[], reco:[]}},
   {id:2, name:'LOWER BUMPER COVER', num:'#86512-G3700', list:'$261.26 ea',
     prices:{oem:'$235.13', net:'$135.50', ats:'$161.40', eco:'$148.90', reco:null},
     markup:{oem:'+$26.12', net:'+$112.07', ats:'+$89.77', eco:'+$99.64', reco:null},
@@ -412,6 +438,23 @@ function updateSelCount(){
   document.getElementById('selCount').textContent = document.querySelectorAll('#gridBody input[type=checkbox]:checked').length;
 }
 
+// General (whole-quote) photos surface once, in the supplier's column header —
+// not repeated per row, since they don't belong to any single part.
+function renderGeneralBadges(){
+  SUP_ORDER.forEach(key=>{
+    const supTh = document.querySelector(`th[data-sup="${key}"] .sup-th`);
+    if(!supTh) return;
+    const photos = GENERAL_PHOTOS[key] || [];
+    if(photos.length){
+      const badge = document.createElement('div');
+      badge.className = 'gen-badge';
+      badge.onclick = ()=>openGeneralLightbox(key);
+      badge.textContent = `📦 General ${photos.length}`;
+      supTh.appendChild(badge);
+    }
+  });
+}
+
 // ===== LIGHTBOX =====
 function buildRail(entries, activeIdx){
   const rail = document.getElementById('lbRail');
@@ -444,7 +487,45 @@ function openRepairerLightbox(index){
   document.getElementById('lbOverlay').classList.add('open');
   setLightboxImg(0, index);
 }
+function openGeneralLightbox(supKey){
+  const photos = GENERAL_PHOTOS[supKey] || [];
+  if(!photos.length) return;
+  lbEntries = [{label:`${SUPPLIERS[supKey].name} — General (whole quote)`, color:SUPPLIERS[supKey].color, images:photos}];
+  document.getElementById('lbOverlay').classList.add('open');
+  setLightboxImg(0, 0);
+}
 function closeLightbox(){ document.getElementById('lbOverlay').classList.remove('open'); }
+
+// ===== DOWNLOAD ACTIONS (simulated — concept only) =====
+function supplierPhotoCount(key){
+  return (GENERAL_PHOTOS[key]||[]).length + PARTS.reduce((a,p)=>a+(p.photos[key]||[]).length, 0);
+}
+function totalPhotoCount(){
+  return REPAIRER_IMAGES.length + SUP_ORDER.reduce((a,k)=>a+supplierPhotoCount(k), 0);
+}
+let toastTimer;
+function showToast(msg){
+  let t = document.getElementById('toast');
+  if(!t){
+    t = document.createElement('div');
+    t.id = 'toast';
+    t.className = 'toast';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  requestAnimationFrame(()=> t.classList.add('show'));
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove('show'), 2600);
+}
+function downloadAll(){
+  showToast(`Preparing ZIP of ${totalPhotoCount()} photos (yours + all suppliers)…`);
+}
+function downloadAllRepairer(){
+  showToast(`Preparing ZIP of ${REPAIRER_IMAGES.length} of your photos…`);
+}
+function downloadAllFromSupplier(key){
+  showToast(`Preparing ZIP of ${supplierPhotoCount(key)} photos from ${SUPPLIERS[key].name}…`);
+}
 
 // ===== TABS =====
 function showTab(name){
@@ -466,27 +547,46 @@ function renderSupplierPhotoGroups(){
   wrap.innerHTML = '';
   SUP_ORDER.forEach(key=>{
     const sup = SUPPLIERS[key];
-    const partsWithPhotos = PARTS.filter(p => p.photos[key] && p.photos[key].length);
     const respondedAtAll = PARTS.some(p => p.prices[key] !== null);
     if(!respondedAtAll) return;
-    const group = document.createElement('div');
-    group.className = 'part-doc-group';
-    let rows = partsWithPhotos.map(part=>{
+    const generalPhotos = GENERAL_PHOTOS[key] || [];
+    const partsWithPhotos = PARTS.filter(p => p.photos[key] && p.photos[key].length);
+    const count = supplierPhotoCount(key);
+
+    let body = '';
+    if(generalPhotos.length){
+      body += `<div class="pdg-general-block">
+        <div class="pdg-general-label">📦 General — attached to the whole quote, not a specific part</div>
+        <div class="pdg-thumb-row">${generalPhotos.map(src=>`<img class="pdg-thumb" src="${src}" onclick="openGeneralLightbox('${key}')">`).join('')}</div>
+      </div>`;
+    }
+    body += partsWithPhotos.map(part=>{
       return `<div class="pdg-supplier-row">
         <div class="pdg-sup-chip"><span style="font-weight:700;font-size:12px">${part.name}</span><br><span style="font-size:10px;color:#9CA3AF;font-family:'IBM Plex Mono',monospace">${part.num}</span></div>
         <div class="pdg-thumb-row">${part.photos[key].map(src=>`<img class="pdg-thumb" src="${src}" onclick="openSupplierLightbox(${part.id},'${key}')">`).join('')}</div>
       </div>`;
     }).join('');
-    if(!rows) rows = `<div class="pdg-none">No photos attached by this supplier yet</div>`;
-    group.innerHTML = `<div class="pdg-head"><div class="pdg-sup-dot" style="background:${sup.color}22;color:${sup.color}">👤</div><span class="pn">${sup.name}</span></div><div class="pdg-body">${rows}</div>`;
+    if(!generalPhotos.length && !partsWithPhotos.length){
+      body = `<div class="pdg-none">No photos attached by this supplier yet</div>`;
+    }
+
+    const group = document.createElement('div');
+    group.className = 'part-doc-group';
+    group.innerHTML = `<div class="pdg-head">
+        <div class="pdg-sup-dot" style="background:${sup.color}22;color:${sup.color}">👤</div>
+        <span class="pn">${sup.name}</span>
+        ${count ? `<span class="dl-btn" style="margin-left:auto" onclick="downloadAllFromSupplier('${key}')">⬇ Download All (${count})</span>` : ''}
+      </div><div class="pdg-body">${body}</div>`;
     wrap.appendChild(group);
   });
 }
 
 renderSupplierResponses();
 renderGrid();
+renderGeneralBadges();
 renderRepairerImages();
 renderSupplierPhotoGroups();
+document.getElementById('totalImgCount').textContent = `(${totalPhotoCount()} total)`;
 </script>
 </body>
 </html>
