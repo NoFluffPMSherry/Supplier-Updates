@@ -31,14 +31,19 @@ Suppliers responding to an RFQ on PartsCheck are capped at exactly three file up
 
 **Supplier upload (Req 1 + 2):** The mockup deliberately keeps today's actual supplier quote screen unchanged (Quote Status bar, Purchaser Notes, Quote Options toolbar, parts table with Type Requested/Notes/Alt columns) — only the "Attach File" flow and a new per-row "Photos" column are new, so this reads as an incremental upgrade to a screen suppliers already know, not a redesigned product. The new flow: uncapped drag-and-drop / multi-select uploader, thumbnail grid with per-photo remove and upload progress, and a part-tag selector (defaulting to "whole quote — general" or the specific part the supplier clicked "Attach photos" from). See `supplier-upload-mockup.html` — includes a live toggle back to the legacy 3-slot modal for direct before/after comparison.
 
-**Repairer display (Req 3):** Two places this lands:
-- **Documents tab** — replace the flat table with photos grouped first by supplier, then by part within each supplier, using the existing lightbox pattern. Supplier-first because the Documents tab is naturally "what did each supplier send me" — the part-first comparison view lives on the grid screen instead. Straightforward, no grid changes.
+**Repairer display (Req 3):** Three places this lands, following an information-architecture change decided 15 Jul 2026 (Shereen): photos — both the repairer's own and every supplier's — no longer live in Documents at all. Documents is now for actual paperwork only (PDFs, invoices, compliance certs).
+
+- **New Images tab** (sits alongside Check Price / Info / Documents) — replaces the old "photos buried in Documents" pattern entirely. Two sections: "Your Photos" (the repairer's own reference/damage photos, already-proven thumbnail gallery), and "Supplier Photos" (grouped by supplier, then by part within each supplier — supplier-first because you're scanning "what did each supplier send me"; the part-first comparison view lives on the grid screen instead). Both sections share the same lightbox.
+- **Documents tab** — reworked to hold only non-photo attachments (e.g. compliance certificates, invoices), with a callout linking across to the Images tab so nothing is a dead end for anyone looking for photos out of habit.
 - **Grid screen** (comparing multiple suppliers' responses to one RFQ, part by part — the highest-value UI moment in PartsCheck's core workflow) — `repairer-image-display-mockup.html` originally offered 4 candidate interaction patterns; **decided (Shereen, 14 Jul 2026): thumbnail preview under each supplier's price, click to open a single lightbox grouped by supplier for that part.** No new grid column, no extra click to reveal, works without hover (tablet-friendly). The other three (expandable row, dedicated Photos column, always-visible strip) were dropped as too cluttered. The mockup no longer shows a separate camera icon next to the part name — the per-supplier thumbnail is the only entry point, and it already opens the full cross-supplier comparison view.
+
+The Info tab was also brought in line with the real product's Quote Basic Info / Vehicle Info fields (Quote #, Estimator, Claim No., Status, Active Margin Rule; Make/Model/VIN/Rego etc.) for chrome fidelity — no functional change there, it was previously a placeholder.
 
 ## Open questions
 
 - **Engineering — data model** — per-part photo tagging (Req 2) requires a photo → part_id relationship that doesn't exist today. Needs sizing with Mat Roggenkamp before this becomes a committed scope item.
 - **FlexiQuote dependency** — FIU-1 (critical photo-persistence bug in FlexiQuote's own uploader) is unrelated to this PartsCheck-side work, but if repairer-sourced photos (uploaded upstream in FlexiQuote) are expected to flow through cleanly into what's redesigned here, that dependency is worth naming to Aju/engineering rather than assuming it's solved.
+- **New Images tab — nav/IA impact** — adding a 4th top-level quote tab is a bigger change than a same-tab redesign; worth checking with Aju/design whether a new tab is the right call platform-wide versus, say, a sub-section within an existing tab, since it changes muscle memory for every repairer, not just this workflow.
 
 ## Product Thinking Lens flags
 
