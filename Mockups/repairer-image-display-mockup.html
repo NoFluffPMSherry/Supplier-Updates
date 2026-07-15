@@ -8,51 +8,113 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:#F0F2F5;color:#0F1923;font-size:13px;min-height:100vh}
-.nav{background:#0F1923;height:48px;display:flex;align-items:center;padding:0 20px;gap:28px}
-.logo{color:#fff;font-weight:900;font-size:14px;letter-spacing:-.3px;display:flex;align-items:center;gap:7px}
-.logo-mark{width:20px;height:20px;background:#18A058;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:900}
-.nav-items{display:flex;gap:2px;flex:1}
-.nav-item{color:rgba(255,255,255,.35);font-size:11px;font-weight:600;padding:5px 11px;border-radius:5px;letter-spacing:.05em;text-transform:uppercase}
-.nav-item.on{color:#18A058}
-.nav-r{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.35);font-size:11px}
-.avatar{width:26px;height:26px;background:#18A058;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:11px}
-.page{max-width:1320px;margin:0 auto;padding:16px 20px 60px}
 
+/* ===== TOP NAV (matches current product) ===== */
+.nav{background:#fff;border-bottom:1px solid #E8EAED;height:64px;display:flex;align-items:center;padding:0 24px;gap:8px}
+.logo{display:flex;align-items:center;gap:8px;font-size:19px;font-weight:800;letter-spacing:-.3px;margin-right:24px}
+.logo-mark{width:26px;height:26px;background:#18A058;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900}
+.logo .parts{color:#1A2332}
+.logo .check{color:#18A058}
+.nav-items{display:flex;gap:22px;flex:1}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.nav-icon{width:34px;height:34px;border-radius:50%;background:#F0F2F5;display:flex;align-items:center;justify-content:center;font-size:15px;color:#6B7280}
+.nav-item.on .nav-icon{background:#18A058;color:#fff}
+.nav-label{font-size:9px;font-weight:700;color:#9CA3AF;letter-spacing:.04em}
+.nav-item.on .nav-label{color:#18A058}
+.nav-search{display:flex;align-items:center;gap:0;margin-right:16px}
+.nav-search input{border:1px solid #E8EAED;border-radius:20px 0 0 20px;padding:8px 16px;font-size:12px;width:180px;outline:none;font-family:inherit}
+.nav-search button{border:none;background:#18A058;color:#fff;border-radius:0 20px 20px 0;padding:8px 14px;cursor:pointer}
+.nav-r{display:flex;align-items:center;gap:12px}
+.nav-r-icon{width:32px;height:32px;border-radius:8px;background:#EFF6FF;color:#2563EB;display:flex;align-items:center;justify-content:center;font-size:14px}
+.avatar{width:30px;height:30px;background:#1A2332;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:11px}
+.logout{font-size:11px;font-weight:700;color:#6B7280;cursor:pointer}
+
+/* ===== TAB BAR ===== */
+.tab-bar{background:#fff;border-bottom:1px solid #E8EAED;display:flex;gap:32px;padding:0 24px}
+.qh-tab{display:flex;align-items:center;gap:8px;padding:14px 4px;font-size:12px;font-weight:700;color:#9CA3AF;letter-spacing:.03em;cursor:pointer;border-bottom:2.5px solid transparent}
+.qh-tab-icon{width:22px;height:22px;border-radius:50%;background:#F0F2F5;display:flex;align-items:center;justify-content:center;font-size:11px;color:#9CA3AF}
+.qh-tab.on{color:#18A058;border-color:#18A058}
+.qh-tab.on .qh-tab-icon{background:#18A058;color:#fff}
+
+.page{max-width:1400px;margin:0 auto;padding:16px 20px 60px}
 .banner{background:#EEF2FF;border:1px solid #C7D2FE;color:#3730A3;border-radius:10px;padding:10px 16px;font-size:12px;font-weight:600;margin-bottom:14px}
 
-.quote-hero{background:#fff;border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:20px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid #E8EAED}
-.qh-meta h1{font-size:16px;font-weight:800;color:#0F1923;letter-spacing:-.3px}
-.qh-meta p{font-size:12px;color:#6B7280;margin-top:2px}
-.qh-tabs{display:flex;gap:1px;background:#F0F2F5;border-radius:8px;padding:3px;margin-left:auto}
-.qh-tab{padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;color:#6B7280}
-.qh-tab.on{background:#fff;color:#0F1923;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+/* ===== QUOTE HEADER ===== */
+.quote-header{background:#fff;border:1px solid #E8EAED;border-radius:10px;padding:14px 20px;display:flex;align-items:center;margin-bottom:10px}
+.qh-left h1{font-size:15px;font-weight:800}
+.qh-left h1 span{color:#18A058}
+.qh-left p{font-size:11.5px;color:#6B7280;margin-top:3px}
+.qh-left p strong{color:#374151}
+.qh-right{margin-left:auto;display:flex;align-items:center;gap:18px}
+.sup-resp{text-align:center}
+.sup-resp-label{font-size:9px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.sup-resp-dots{display:flex;gap:4px}
+.sup-resp-dot{width:20px;height:20px;border-radius:50%;background:#D1FAE5;color:#18A058;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900}
+.hbtn{padding:9px 14px;border-radius:8px;font-size:11.5px;font-weight:700;cursor:pointer;border:1.5px solid #E8EAED;background:#fff;color:#374151}
+.hbtn-green{background:#18A058;border-color:#18A058;color:#fff}
 
+/* ===== COST/SELL/PROFIT BAR ===== */
+.csp-bar{background:#fff;border:1px solid #E8EAED;border-radius:10px;display:flex;margin-bottom:10px}
+.csp-cell{flex:1;padding:12px 24px;border-right:1px solid #F3F4F6}
+.csp-cell:last-child{border-right:none}
+.csp-label{font-size:9px;font-weight:700;color:#9CA3AF;letter-spacing:.06em;margin-bottom:4px}
+.csp-val{font-size:20px;font-weight:800;font-family:'IBM Plex Mono',monospace}
+.csp-val.green{color:#18A058}
+
+/* ===== MARGIN RULE BAR ===== */
+.rule-bar{background:#fff;border:1px solid #E8EAED;border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.rule-label{font-size:11px;font-weight:700;color:#6B7280;white-space:nowrap}
+.rule-chip{display:flex;align-items:center;gap:5px;background:#F3F4F6;border-radius:7px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer}
+.pill{border-radius:20px;padding:3px 10px;font-size:10.5px;font-weight:700;border:1.5px solid}
+.pill-oem{color:#2563EB;border-color:#BFDBFE;background:#EFF6FF}
+.pill-aftm{color:#9333EA;border-color:#E9D5FF;background:#FAF5FF}
+.pill-reco{color:#D97706;border-color:#FDE68A;background:#FFFBEB}
+.pill-recycled{color:#18A058;border-color:#BBF7D0;background:#F0FDF4}
+.pill-parallel{color:#6B7280;border-color:#E5E7EB;background:#F9FAFB}
+.rule-bar-right{margin-left:auto;display:flex;align-items:center;gap:14px;font-size:11px;color:#6B7280;font-weight:600}
+.rb-select{border:1px solid #E8EAED;border-radius:6px;padding:5px 10px;font-size:11px;font-family:inherit;color:#374151}
+.view-toggle{display:flex;gap:3px;background:#F0F2F5;border-radius:7px;padding:3px}
+.view-toggle span{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer}
+.view-toggle span.on{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+
+/* ===== GRID ===== */
+.grid-shell{background:#fff;border-radius:12px;border:1px solid #E8EAED;box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden}
+.grid-toolbar{padding:12px 16px;font-size:12px;font-weight:700}
+.grid-toolbar .sel-count{color:#18A058}
+.grid-toolbar .sel-total{color:#9CA3AF;font-weight:600}
+table{width:100%;border-collapse:collapse}
+thead th{padding:0;border-bottom:1px solid #F3F4F6}
+th.part-th{text-align:left;padding:9px 12px;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.06em;min-width:220px}
+.sup-th-wrap{border-top:3px solid; padding:10px 12px 8px}
+.sup-th{display:flex;flex-direction:column;align-items:center;gap:5px}
+.sup-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:1.5px solid}
+.sup-name{font-size:11px;font-weight:700;color:#1A2332;text-align:center}
+
+td{padding:12px;border-bottom:1px solid #F5F5F5;vertical-align:top}
+tbody tr:last-child > td{border-bottom:none}
+.cb-cell{width:34px;text-align:center;vertical-align:middle}
+.part-name{font-size:12.5px;font-weight:800;color:#0F1923}
+.part-sub{font-size:10.5px;color:#9CA3AF;margin-top:2px}
+.center{text-align:center;position:relative}
+.no-photo{color:#D1D5DB;font-size:13px}
+
+.type-badge{font-size:10px;font-weight:800;letter-spacing:.03em;display:inline-flex;align-items:center;gap:4px}
+.t-oem{color:#2563EB}.t-aftm{color:#9333EA}.t-used{color:#18A058}.t-recon{color:#D97706}
+.note-icon{font-size:9px;color:#9CA3AF}
+.price-val{font-family:'IBM Plex Mono',monospace;font-weight:800;font-size:14px;margin-top:3px}
+.markup-val{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:10.5px;color:#18A058;margin-top:2px}
+.etd-val{font-size:10px;color:#9CA3AF;margin-top:2px}
+.corner-flag{position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 14px 14px 0;border-color:transparent #18A058 transparent transparent}
+
+/* photo affordance — the single agreed pattern: thumbnail under price, click opens cross-supplier lightbox */
+.mini-thumbs{display:flex;cursor:pointer;margin-top:6px;justify-content:center}
+.mini-thumbs img{width:24px;height:24px;border-radius:6px;object-fit:cover;border:2px solid #fff;box-shadow:0 0 0 1px #E8EAED;margin-left:-7px}
+.mini-thumbs img:first-child{margin-left:0}
+.mini-count{font-size:9px;font-weight:800;color:#0F1923;background:#F3F4F6;border-radius:20px;padding:2px 6px;margin-left:4px;align-self:center}
+
+/* ===== INFO / DOCUMENTS PANELS ===== */
 .panel{display:none}
 .panel.on{display:block}
-
-/* ===== PRICE / GRID PANEL ===== */
-.grid-shell{background:#fff;border-radius:12px;border:1px solid #E8EAED;box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden}
-table{width:100%;border-collapse:collapse}
-thead th{padding:9px 12px;text-align:left;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.06em;background:#FAFAFA;border-bottom:1px solid #F3F4F6;white-space:nowrap}
-thead th.center{text-align:center}
-.sup-th{display:flex;flex-direction:column;align-items:center;gap:3px}
-.sup-avatar{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:9px;font-weight:800}
-.sup-name{font-size:9px;font-weight:600;color:#9CA3AF;text-align:center;line-height:1.2}
-td{padding:10px 12px;border-bottom:1px solid #F5F5F5;vertical-align:top}
-tbody tr:last-child > td{border-bottom:none}
-.part-name{font-size:12px;font-weight:700;color:#0F1923;display:flex;align-items:center;gap:6px}
-.part-num{font-size:10px;color:#9CA3AF;font-family:'IBM Plex Mono',monospace;margin-top:1px}
-.price-val{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:12px}
-.center{text-align:center}
-
-/* photo affordances */
-.no-photo{color:#D1D5DB;font-size:11px}
-.mini-thumbs{display:flex;cursor:pointer}
-.mini-thumbs img{width:26px;height:26px;border-radius:6px;object-fit:cover;border:2px solid #fff;box-shadow:0 0 0 1px #E8EAED;margin-left:-8px}
-.mini-thumbs img:first-child{margin-left:0}
-.mini-count{font-size:9px;font-weight:800;color:#0F1923;background:#F3F4F6;border-radius:20px;padding:2px 6px;margin-left:4px}
-
-/* ===== DOCUMENTS TAB ===== */
 .doc-flat-before{background:#fff;border:1px solid #E8EAED;border-radius:10px;margin-bottom:16px;overflow:hidden}
 .doc-flat-before .flat-head{padding:8px 14px;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;background:#FAFAFA;border-bottom:1px solid #F3F4F6}
 .doc-flat-before table td, .doc-flat-before table th{padding:8px 14px;font-size:12px;border-bottom:1px solid #F5F5F5}
@@ -62,11 +124,10 @@ tbody tr:last-child > td{border-bottom:none}
 .part-doc-group{background:#fff;border:1px solid #E8EAED;border-radius:12px;margin-bottom:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .pdg-head{padding:12px 16px;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;gap:8px}
 .pdg-head .pn{font-size:13px;font-weight:800}
-.pdg-head .pnum{font-size:10px;color:#9CA3AF;font-family:'IBM Plex Mono',monospace}
 .pdg-body{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
 .pdg-supplier-row{display:flex;align-items:flex-start;gap:12px}
-.pdg-sup-chip{display:flex;align-items:center;gap:6px;min-width:130px;flex-shrink:0}
-.pdg-sup-dot{width:22px;height:22px;border-radius:6px;color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.pdg-sup-chip{display:flex;align-items:center;gap:6px;min-width:190px;flex-shrink:0}
+.pdg-sup-dot{width:24px;height:24px;border-radius:50%;font-size:12px;display:flex;align-items:center;justify-content:center}
 .pdg-thumb-row{display:flex;gap:8px;flex-wrap:wrap}
 .pdg-thumb{width:64px;height:64px;border-radius:8px;object-fit:cover;cursor:pointer;border:1px solid #E8EAED;transition:.15s}
 .pdg-thumb:hover{transform:scale(1.04);box-shadow:0 4px 14px rgba(0,0,0,.15)}
@@ -79,7 +140,7 @@ tbody tr:last-child > td{border-bottom:none}
 .lb-wrap{display:flex;gap:18px;max-width:92vw;max-height:86vh}
 .lb-rail{display:flex;flex-direction:column;gap:8px;overflow-y:auto;width:170px;flex-shrink:0}
 .lb-rail-group{margin-bottom:6px}
-.lb-rail-label{font-size:9px;font-weight:800;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;padding:0 2px}
+.lb-rail-label{font-size:9px;font-weight:800;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;padding:0 2px}
 .lb-thumb{width:100%;height:60px;object-fit:cover;border-radius:6px;cursor:pointer;opacity:.55;border:2px solid transparent;margin-bottom:6px}
 .lb-thumb.on{opacity:1;border-color:#18A058}
 .lb-main{display:flex;align-items:center;justify-content:center;background:#000;border-radius:10px;overflow:hidden;flex:1;min-width:400px}
@@ -90,39 +151,83 @@ tbody tr:last-child > td{border-bottom:none}
 <body>
 
 <div class="nav">
-  <div class="logo"><div class="logo-mark">✓</div>PARTSCHECK</div>
+  <div class="logo"><div class="logo-mark">✓</div><span class="parts">PARTS</span><span class="check">CHECK</span></div>
   <div class="nav-items">
-    <div class="nav-item">Dashboard</div><div class="nav-item">Get Price</div>
-    <div class="nav-item on">Check Price</div><div class="nav-item">Orders</div><div class="nav-item">Credits</div>
+    <div class="nav-item"><div class="nav-icon">🚙</div><div class="nav-label">DASHBOARD</div></div>
+    <div class="nav-item"><div class="nav-icon">🚗</div><div class="nav-label">GET PRICE</div></div>
+    <div class="nav-item on"><div class="nav-icon">$</div><div class="nav-label">CHECK PRICE</div></div>
+    <div class="nav-item"><div class="nav-icon">📄</div><div class="nav-label">ORDERS</div></div>
+    <div class="nav-item"><div class="nav-icon">💳</div><div class="nav-label">CREDITS</div></div>
+    <div class="nav-item"><div class="nav-icon">📊</div><div class="nav-label">REPORTS</div></div>
+    <div class="nav-item"><div class="nav-icon">⚙️</div><div class="nav-label">SETTINGS</div></div>
   </div>
-  <div class="nav-r"><div class="avatar">MJ</div><span>MotorOne Collision</span></div>
+  <div class="nav-search"><input placeholder="Search..."><button>🔍</button></div>
+  <div class="nav-r">
+    <div class="nav-r-icon">⇄</div>
+    <div class="avatar">MJ</div>
+    <div class="logout">LOGOUT</div>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <div class="qh-tab on" onclick="showTab('price')"><div class="qh-tab-icon">$</div>CHECK PRICE</div>
+  <div class="qh-tab" onclick="showTab('info')"><div class="qh-tab-icon">i</div>INFO</div>
+  <div class="qh-tab" onclick="showTab('documents')"><div class="qh-tab-icon">📄</div>DOCUMENTS</div>
 </div>
 
 <div class="page">
   <div class="banner">💡 Concept — Req 3: how supplier-attached photos display per part, across every competing supplier, on a single quote</div>
 
-  <div class="quote-hero">
-    <div class="qh-meta">
-      <h1>Quote #89734 — Toyota Corolla 2014</h1>
-      <p>B56-432 · Allianz · Collision · 4 parts requested</p>
+  <div class="quote-header">
+    <div class="qh-left">
+      <h1>QUOTE: <span>89734</span></h1>
+      <p><strong>Toyota Corolla, 2014</strong> · B56-432 · Insurer: <strong>Allianz</strong></p>
     </div>
-    <div class="qh-tabs">
-      <div class="qh-tab on" onclick="showTab('price')">Price</div>
-      <div class="qh-tab" onclick="showTab('info')">Info</div>
-      <div class="qh-tab" onclick="showTab('documents')">Documents</div>
+    <div class="qh-right">
+      <div class="sup-resp">
+        <div class="sup-resp-label">Supplier Responses</div>
+        <div class="sup-resp-dots" id="supResponses"></div>
+      </div>
+      <button class="hbtn">Clear Selection</button>
+      <button class="hbtn">Cancel Request</button>
+      <button class="hbtn hbtn-green">Save</button>
+    </div>
+  </div>
+
+  <div class="csp-bar">
+    <div class="csp-cell"><div class="csp-label">YOUR COST</div><div class="csp-val">$0.00</div></div>
+    <div class="csp-cell"><div class="csp-label">YOUR SELL</div><div class="csp-val">$0.00</div></div>
+    <div class="csp-cell"><div class="csp-label">YOUR PROFIT</div><div class="csp-val green">$0.00</div></div>
+  </div>
+
+  <div class="rule-bar">
+    <div class="rule-label">Active Margin Rule:</div>
+    <div class="rule-chip">Allianz ▾</div>
+    <span class="pill pill-oem">OEM 100%</span>
+    <span class="pill pill-aftm">Aftm 72%</span>
+    <span class="pill pill-reco">Reco +25%</span>
+    <span class="pill pill-recycled">Recycled +20%</span>
+    <span class="pill pill-parallel">Parallel +20%</span>
+    <div class="rule-bar-right">
+      <span>Quick Select: <select class="rb-select"><option>— None —</option></select></span>
+      <span>Print <select class="rb-select"><option>▾</option></select></span>
+      <span>View: <span class="view-toggle"><span class="on">⊞</span><span>☰</span></span></span>
     </div>
   </div>
 
   <!-- PRICE PANEL -->
   <div class="panel on" id="panel-price">
     <div class="grid-shell">
+      <div class="grid-toolbar"><span class="sel-count" id="selCount">0</span><span class="sel-total">/4 Selected</span></div>
       <table>
         <thead>
           <tr>
-            <th style="min-width:200px">Part</th>
-            <th class="center" style="min-width:100px"><div class="sup-th"><div class="sup-avatar" style="background:#6366F1">S2</div><div class="sup-name">Dealer OEM</div></div></th>
-            <th class="center" style="min-width:100px"><div class="sup-th"><div class="sup-avatar" style="background:#8B5CF6">S1</div><div class="sup-name">Cert Aftmkt</div></div></th>
-            <th class="center" style="min-width:100px"><div class="sup-th"><div class="sup-avatar" style="background:#10B981">S4</div><div class="sup-name">Used Parts</div></div></th>
+            <th class="part-th">Part Number &amp; Description</th>
+            <th class="center" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#2563EB"><div class="sup-th"><div class="sup-avatar" style="background:#EFF6FF;color:#2563EB;border-color:#BFDBFE">👤</div><div class="sup-name">OEM Direct</div></div></div></th>
+            <th class="center" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#9333EA"><div class="sup-th"><div class="sup-avatar" style="background:#FAF5FF;color:#9333EA;border-color:#E9D5FF">👤</div><div class="sup-name">Parts Network</div></div></div></th>
+            <th class="center" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#A855F7"><div class="sup-th"><div class="sup-avatar" style="background:#FAF5FF;color:#A855F7;border-color:#E9D5FF">👤</div><div class="sup-name">ATS Parts</div></div></div></th>
+            <th class="center" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#18A058"><div class="sup-th"><div class="sup-avatar" style="background:#F0FDF4;color:#18A058;border-color:#BBF7D0">👤</div><div class="sup-name">Eco Parts</div></div></div></th>
+            <th class="center" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#D97706"><div class="sup-th"><div class="sup-avatar" style="background:#FFFBEB;color:#D97706;border-color:#FDE68A">👤</div><div class="sup-name">Reco Centre</div></div></div></th>
           </tr>
         </thead>
         <tbody id="gridBody"></tbody>
@@ -144,9 +249,9 @@ tbody tr:last-child > td{border-bottom:none}
       <div class="flat-head">Documents</div>
       <table style="width:100%">
         <tr><th style="text-align:left;color:#9CA3AF;font-weight:700">Supplier</th><th style="text-align:left;color:#9CA3AF;font-weight:700">FileName</th><th style="text-align:left;color:#9CA3AF;font-weight:700">Download</th></tr>
-        <tr><td>Cert Aftmkt</td><td>IMG_4471.png</td><td><a>Download</a></td></tr>
-        <tr><td>Dealer OEM</td><td>bonnet_photo1.jpg</td><td><a>Download</a></td></tr>
-        <tr><td>Used Parts</td><td>Screenshot 2024-09-05 125647.png</td><td><a>Download</a></td></tr>
+        <tr><td>Parts Network</td><td>IMG_4471.png</td><td><a>Download</a></td></tr>
+        <tr><td>OEM Direct</td><td>bonnet_photo1.jpg</td><td><a>Download</a></td></tr>
+        <tr><td>Eco Parts</td><td>Screenshot 2024-09-05 125647.png</td><td><a>Download</a></td></tr>
       </table>
       <div style="padding:10px 14px;font-size:11px;color:#9CA3AF">No previews, no grouping by part — repairer has to download each file to see what it is or who it's for.</div>
     </div>
@@ -167,10 +272,13 @@ tbody tr:last-child > td{border-bottom:none}
 
 <script>
 const SUPPLIERS = {
-  s2:{name:'Dealer OEM', color:'#6366F1', code:'S2'},
-  s1:{name:'Cert Aftmkt', color:'#8B5CF6', code:'S1'},
-  s4:{name:'Used Parts', color:'#10B981', code:'S4'}
+  oem:{name:'OEM Direct', color:'#2563EB', badge:'t-oem', type:'OEM'},
+  net:{name:'Parts Network', color:'#9333EA', badge:'t-aftm', type:'CERT AFTM'},
+  ats:{name:'ATS Parts', color:'#A855F7', badge:'t-oem', type:'OEM'},
+  eco:{name:'Eco Parts', color:'#18A058', badge:'t-used', type:'USED'},
+  reco:{name:'Reco Centre', color:'#D97706', badge:'t-recon', type:'RECON'}
 };
+const SUP_ORDER = ['oem','net','ats','eco','reco'];
 const IMGS = [
   'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=300&h=300&fit=crop',
   'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=300&h=300&fit=crop',
@@ -180,36 +288,54 @@ const IMGS = [
   'https://images.unsplash.com/photo-1541348263662-e068662d82af?w=300&h=300&fit=crop'
 ];
 const PARTS = [
-  {id:1, name:'Front Bumper Cover', num:'5211912977',
-    prices:{s2:'$345.16', s1:'$325.00', s4:'$224.00'},
-    photos:{s2:[IMGS[0],IMGS[1]], s1:[], s4:[IMGS[2]]}},
-  {id:2, name:'L/H/R Quarter Panel', num:'6160212B40',
-    prices:{s2:'$524.74', s1:'$129.00', s4:null},
-    photos:{s2:[], s1:[IMGS[3],IMGS[4],IMGS[0]], s4:[]}},
-  {id:3, name:'Bonnet', num:'5330112B10',
-    prices:{s2:'$267.49', s1:null, s4:'$185.60'},
-    photos:{s2:[IMGS[1]], s1:[], s4:[IMGS[2],IMGS[5]]}},
-  {id:4, name:'Clips', num:'99-466564-22',
-    prices:{s2:'$35.38', s1:null, s4:null},
-    photos:{s2:[], s1:[], s4:[]}}
+  {id:1, name:'FRONT BUMPER', num:'#86510-G3700', list:'$659.80 ea',
+    prices:{oem:'$593.82', net:'$368.85', ats:'$384.50', eco:null, reco:'$391.20'},
+    markup:{oem:'+$65.98', net:'+$261.83', ats:'+$252.13', eco:null, reco:'+$244.33'},
+    etd:{oem:'2-3 Days', net:'1-2 Days', ats:'Same Day', eco:null, reco:'3-5 Days'},
+    photos:{oem:[IMGS[0],IMGS[1]], net:[], ats:[IMGS[2]], eco:[], reco:[]}},
+  {id:2, name:'LOWER BUMPER COVER', num:'#86512-G3700', list:'$261.26 ea',
+    prices:{oem:'$235.13', net:'$135.50', ats:'$161.40', eco:'$148.90', reco:null},
+    markup:{oem:'+$26.12', net:'+$112.07', ats:'+$89.77', eco:'+$99.64', reco:null},
+    etd:{oem:'Same Day', net:'1-2 Days', ats:'2-3 Days', eco:'3-5 Days', reco:null},
+    photos:{oem:[], net:[IMGS[3],IMGS[4],IMGS[0]], ats:[], eco:[], reco:[]}},
+  {id:3, name:'RIGHT HEADLAMP ASSY', num:'#92102-G3115', list:'$2,259.56 ea',
+    prices:{oem:'$1,988.41', net:'$1,347.50', ats:null, eco:'$1,427.00', reco:'$1,724.50'},
+    markup:{oem:'+$180.76', net:'+$825.63', ats:null, eco:'+$761.42', reco:'+$518.63'},
+    etd:{oem:'3-5 Days', net:'Same Day', ats:null, eco:'2-3 Days', reco:'1-2 Days'},
+    photos:{oem:[IMGS[1]], net:[], ats:[], eco:[IMGS[2],IMGS[5]], reco:[]}},
+  {id:4, name:'R/BADGE "N-LINE"', num:'#86312-G4700', list:'$70.14 ea',
+    prices:{oem:'$62.83', net:null, ats:null, eco:'$30.10', reco:null},
+    markup:{oem:'+$7.02', net:null, ats:null, eco:'+$35.19', reco:null},
+    etd:{oem:'2-3 Days', net:null, ats:null, eco:'Same Day', reco:null},
+    photos:{oem:[], net:[], ats:[], eco:[], reco:[]}}
 ];
+
+function renderSupplierResponses(){
+  const respondedCount = SUP_ORDER.filter(k => PARTS.some(p => p.prices[k] !== null)).length;
+  document.getElementById('supResponses').innerHTML = Array.from({length:respondedCount}).map(()=>`<div class="sup-resp-dot">✓</div>`).join('');
+}
 
 function renderGrid(){
   const body = document.getElementById('gridBody');
   body.innerHTML = '';
   PARTS.forEach(part => {
     const tr = document.createElement('tr');
-    let row = `<td><div class="part-name">${part.name}</div><div class="part-num">${part.num}</div></td>`;
-    ['s2','s1','s4'].forEach(k=>{
+    let row = `<td class="cb-cell"><input type="checkbox" onchange="updateSelCount()"></td>`;
+    row += `<td><div class="part-name">${part.name}</div><div class="part-sub">Dealer: ${part.num}</div><div class="part-sub">List: ${part.list}</div></td>`;
+    SUP_ORDER.forEach(k=>{
+      const sup = SUPPLIERS[k];
       const price = part.prices[k];
       const photos = part.photos[k];
       let cell = '';
       if(price===null){
         cell = `<div class="no-photo">—</div>`;
       } else {
-        cell = `<div class="price-val">${price}</div>`;
+        cell = `<div class="type-badge ${sup.badge}">${sup.type}</div>
+          <div class="price-val">${price}</div>
+          <div class="markup-val">${part.markup[k]}</div>
+          <div class="etd-val">ETD ${part.etd[k]}</div>`;
         if(photos.length){
-          cell += `<div class="mini-thumbs" style="margin-top:5px" onclick="openSupplierLightbox(${part.id},'${k}')">${photos.slice(0,2).map(src=>`<img src="${src}">`).join('')}${photos.length>1?`<span class="mini-count">${photos.length}</span>`:''}</div>`;
+          cell += `<div class="mini-thumbs" onclick="openSupplierLightbox(${part.id},'${k}')">${photos.slice(0,2).map(src=>`<img src="${src}">`).join('')}${photos.length>1?`<span class="mini-count">${photos.length}</span>`:''}</div>`;
         }
       }
       row += `<td class="center">${cell}</td>`;
@@ -217,6 +343,10 @@ function renderGrid(){
     tr.innerHTML = row;
     body.appendChild(tr);
   });
+}
+
+function updateSelCount(){
+  document.getElementById('selCount').textContent = document.querySelectorAll('#gridBody input[type=checkbox]:checked').length;
 }
 
 // ===== LIGHTBOX =====
@@ -240,7 +370,7 @@ function setLightboxImg(g,i){
 }
 function openSupplierLightbox(partId, supKey){
   const part = PARTS.find(p=>p.id===partId);
-  const all = Object.entries(part.photos).filter(([k,v])=>v.length).map(([k,v])=>({label:SUPPLIERS[k].name, color:SUPPLIERS[k].color, images:v}));
+  const all = SUP_ORDER.filter(k => part.photos[k].length).map(k => ({label:SUPPLIERS[k].name, color:SUPPLIERS[k].color, images:part.photos[k]}));
   const idx = all.findIndex(e=>e.label===SUPPLIERS[supKey].name);
   lbEntries = all;
   document.getElementById('lbOverlay').classList.add('open');
@@ -251,7 +381,7 @@ function closeLightbox(){ document.getElementById('lbOverlay').classList.remove(
 // ===== TABS =====
 function showTab(name){
   document.querySelectorAll('.qh-tab').forEach(t=>t.classList.remove('on'));
-  event.target.classList.add('on');
+  event.currentTarget.classList.add('on');
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
   document.getElementById(`panel-${name}`).classList.add('on');
 }
@@ -260,7 +390,8 @@ function showTab(name){
 function renderDocGroups(){
   const wrap = document.getElementById('docGroups');
   wrap.innerHTML = '';
-  Object.entries(SUPPLIERS).forEach(([key, sup])=>{
+  SUP_ORDER.forEach(key=>{
+    const sup = SUPPLIERS[key];
     const partsWithPhotos = PARTS.filter(p => p.photos[key] && p.photos[key].length);
     const respondedAtAll = PARTS.some(p => p.prices[key] !== null);
     if(!respondedAtAll) return;
@@ -268,16 +399,17 @@ function renderDocGroups(){
     group.className = 'part-doc-group';
     let rows = partsWithPhotos.map(part=>{
       return `<div class="pdg-supplier-row">
-        <div class="pdg-sup-chip" style="min-width:190px"><span style="font-weight:700;font-size:12px">${part.name}</span><br><span style="font-size:10px;color:#9CA3AF;font-family:'IBM Plex Mono',monospace">${part.num}</span></div>
+        <div class="pdg-sup-chip"><span style="font-weight:700;font-size:12px">${part.name}</span><br><span style="font-size:10px;color:#9CA3AF;font-family:'IBM Plex Mono',monospace">${part.num}</span></div>
         <div class="pdg-thumb-row">${part.photos[key].map(src=>`<img class="pdg-thumb" src="${src}" onclick="openSupplierLightbox(${part.id},'${key}')">`).join('')}</div>
       </div>`;
     }).join('');
     if(!rows) rows = `<div class="pdg-none">No photos attached by this supplier yet</div>`;
-    group.innerHTML = `<div class="pdg-head"><div class="pdg-sup-dot" style="background:${sup.color}">${sup.code}</div><span class="pn">${sup.name}</span></div><div class="pdg-body">${rows}</div>`;
+    group.innerHTML = `<div class="pdg-head"><div class="pdg-sup-dot" style="background:${sup.color}22;color:${sup.color}">👤</div><span class="pn">${sup.name}</span></div><div class="pdg-body">${rows}</div>`;
     wrap.appendChild(group);
   });
 }
 
+renderSupplierResponses();
 renderGrid();
 renderDocGroups();
 </script>
