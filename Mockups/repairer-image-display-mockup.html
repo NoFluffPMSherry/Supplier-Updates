@@ -123,9 +123,6 @@ tbody tr:last-child > td{border-bottom:none}
 .photo-corner img{width:24px;height:24px;border-radius:7px;object-fit:cover;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 .photo-corner .corner-count{position:absolute;bottom:-5px;right:-5px;font-size:8px;font-weight:800;color:#fff;background:#0F1923;border-radius:20px;padding:1px 4px;border:1.5px solid #fff;line-height:1.2}
 .photo-corner:hover img{transform:scale(1.08)}
-.gen-badge{margin-top:7px;display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:800;color:#92400E;background:#FFFBEB;border:1px solid #FDE68A;border-radius:20px;padding:3px 8px;cursor:pointer}
-.gen-badge:hover{background:#FEF3C7}
-
 /* ===== INFO / DOCUMENTS PANELS ===== */
 .panel{display:none}
 .panel.on{display:block}
@@ -473,23 +470,6 @@ function updateSelCount(){
   document.getElementById('selCount').textContent = document.querySelectorAll('#gridBody input[type=checkbox]:checked').length;
 }
 
-// General (whole-quote) photos surface once, in the supplier's column header —
-// not repeated per row, since they don't belong to any single part.
-function renderGeneralBadges(){
-  SUP_ORDER.forEach(key=>{
-    const supTh = document.querySelector(`th[data-sup="${key}"] .sup-th`);
-    if(!supTh) return;
-    const photos = GENERAL_PHOTOS[key] || [];
-    if(photos.length){
-      const badge = document.createElement('div');
-      badge.className = 'gen-badge';
-      badge.onclick = ()=>openGeneralLightbox(key);
-      badge.textContent = `📦 General ${photos.length}`;
-      supTh.appendChild(badge);
-    }
-  });
-}
-
 // ===== LIGHTBOX =====
 function buildRail(entries, activeIdx){
   const rail = document.getElementById('lbRail');
@@ -661,7 +641,6 @@ function renderSupplierPhotoGroups(){
 
 renderSupplierResponses();
 renderGrid();
-renderGeneralBadges();
 renderRepairerImages();
 renderSupplierPhotoGroups();
 renderSupplierFilterChips();
