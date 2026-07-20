@@ -3,209 +3,197 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PartsCheck — Repairer Image Display (Concept)</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<title>PartsCheck — Repairer Image Display (Concept v2 — production visual language)</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:#F0F2F5;color:#0F1923;font-size:13px;min-height:100vh}
+body{font-family:"Segoe UI",Arial,Helvetica,sans-serif;background:#fff;color:#222;font-size:13px}
 
 /* ===== TOP NAV (matches current product) ===== */
-.nav{background:#fff;border-bottom:1px solid #E8EAED;height:64px;display:flex;align-items:center;padding:0 24px;gap:8px}
-.logo{display:flex;align-items:center;gap:8px;font-size:19px;font-weight:800;letter-spacing:-.3px;margin-right:24px}
-.logo-mark{width:26px;height:26px;background:#18A058;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900}
-.logo .parts{color:#1A2332}
-.logo .check{color:#18A058}
-.nav-items{display:flex;gap:22px;flex:1}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
-.nav-icon{width:34px;height:34px;border-radius:50%;background:#F0F2F5;display:flex;align-items:center;justify-content:center;font-size:15px;color:#6B7280}
-.nav-item.on .nav-icon{background:#18A058;color:#fff}
-.nav-label{font-size:9px;font-weight:700;color:#9CA3AF;letter-spacing:.04em}
-.nav-item.on .nav-label{color:#18A058}
-.nav-search{display:flex;align-items:center;gap:0;margin-right:16px}
-.nav-search input{border:1px solid #E8EAED;border-radius:20px 0 0 20px;padding:8px 16px;font-size:12px;width:180px;outline:none;font-family:inherit}
-.nav-search button{border:none;background:#18A058;color:#fff;border-radius:0 20px 20px 0;padding:8px 14px;cursor:pointer}
-.nav-r{display:flex;align-items:center;gap:12px}
-.nav-r-icon{width:32px;height:32px;border-radius:8px;background:#EFF6FF;color:#2563EB;display:flex;align-items:center;justify-content:center;font-size:14px}
-.avatar{width:30px;height:30px;background:#1A2332;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:11px}
-.logout{font-size:11px;font-weight:700;color:#6B7280;cursor:pointer}
+.nav{background:#fff;border-bottom:1px solid #ddd;height:58px;display:flex;align-items:center;padding:0 20px;gap:10px}
+.logo{display:flex;flex-direction:column;margin-right:26px}
+.logo-row{display:flex;align-items:center;gap:6px;font-size:20px;font-weight:800}
+.logo-mark{color:#3aa845}
+.logo .parts{color:#333}
+.logo .check{color:#3aa845}
+.logo-tag{font-size:9px;color:#999;margin-left:24px;margin-top:-2px}
+.nav-items{display:flex;gap:26px;flex:1}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:#888}
+.nav-icon{width:30px;height:30px;border-radius:50%;background:#f2f2f2;display:flex;align-items:center;justify-content:center;font-size:14px;color:#888}
+.nav-item.on .nav-icon{background:#3aa845;color:#fff}
+.nav-label{font-size:9px;font-weight:700;letter-spacing:.02em}
+.nav-item.on .nav-label{color:#3aa845}
+.nav-search{display:flex;align-items:center;margin-right:14px}
+.nav-search input{border:1px solid #ccc;padding:6px 10px;font-size:12px;width:150px;outline:none;font-family:inherit}
+.nav-search button{border:1px solid #3aa845;border-left:none;background:#3aa845;color:#fff;padding:6px 10px;cursor:pointer}
+.nav-r{display:flex;align-items:center;gap:12px;margin-left:auto}
+.nav-r-icon{width:26px;height:26px;border-radius:3px;background:#eef2ff;color:#2563eb;display:flex;align-items:center;justify-content:center;font-size:12px}
+.avatar{width:26px;height:26px;background:#333;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:10px}
+.logout{font-size:11px;font-weight:700;color:#666;cursor:pointer}
 
-/* ===== TAB BAR ===== */
-.tab-bar{background:#fff;border-bottom:1px solid #E8EAED;display:flex;gap:32px;padding:0 24px}
-.qh-tab{display:flex;align-items:center;gap:8px;padding:14px 4px;font-size:12px;font-weight:700;color:#9CA3AF;letter-spacing:.03em;cursor:pointer;border-bottom:2.5px solid transparent}
-.qh-tab-icon{width:22px;height:22px;border-radius:50%;background:#F0F2F5;display:flex;align-items:center;justify-content:center;font-size:11px;color:#9CA3AF}
-.qh-tab.on{color:#18A058;border-color:#18A058}
-.qh-tab.on .qh-tab-icon{background:#18A058;color:#fff}
+/* ===== TAB BAR (matches dark bar w/ colored icon + green active underline) ===== */
+.tab-bar{background:#3a3a3a;display:flex;gap:2px;padding:0 20px}
+.qh-tab{display:flex;align-items:center;gap:7px;padding:11px 14px;font-size:12px;font-weight:700;color:#ccc;letter-spacing:.02em;cursor:pointer;border-bottom:3px solid transparent}
+.qh-tab-icon{width:20px;height:20px;border-radius:50%;background:#555;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff}
+.qh-tab.on{color:#fff;border-color:#3aa845}
+.qh-tab.on .qh-tab-icon{background:#3aa845}
+.qh-tab .qh-tab-icon.doc{background:#c0392b}
 
-.page{max-width:1400px;margin:0 auto;padding:16px 20px 60px}
-.banner{background:#EEF2FF;border:1px solid #C7D2FE;color:#3730A3;border-radius:10px;padding:10px 16px;font-size:12px;font-weight:600;margin-bottom:14px}
+.page{max-width:1400px;margin:0 auto;padding:14px 20px 50px}
+.banner{background:#eef2ff;border:1px solid #c7d2fe;color:#3730a3;border-radius:4px;padding:8px 12px;font-size:12px;font-weight:bold;margin-bottom:12px}
 
-/* ===== QUOTE HEADER ===== */
-.quote-header{background:#fff;border:1px solid #E8EAED;border-radius:10px;padding:14px 20px;display:flex;align-items:center;margin-bottom:10px}
-.qh-left h1{font-size:15px;font-weight:800}
-.qh-left h1 span{color:#18A058}
-.qh-left p{font-size:11.5px;color:#6B7280;margin-top:3px}
-.qh-left p strong{color:#374151}
-.qh-right{margin-left:auto;display:flex;align-items:center;gap:18px}
-.sup-resp{text-align:center}
-.sup-resp-label{font-size:9px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
-.sup-resp-dots{display:flex;gap:4px}
-.sup-resp-dot{width:20px;height:20px;border-radius:50%;background:#D1FAE5;color:#18A058;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900}
-.hbtn{padding:9px 14px;border-radius:8px;font-size:11.5px;font-weight:700;cursor:pointer;border:1.5px solid #E8EAED;background:#fff;color:#374151}
-.hbtn-green{background:#18A058;border-color:#18A058;color:#fff}
+/* ===== QUOTE BANNER (solid green, matches production) ===== */
+.quote-banner{background:#3aa845;color:#fff;border-radius:2px;padding:9px 16px;display:flex;align-items:center;margin-bottom:10px;font-size:13px}
+.quote-banner b{font-weight:800}
+.quote-banner .veh{margin-left:auto;font-size:12px;opacity:.95}
 
-/* ===== COST/SELL/PROFIT BAR ===== */
-.csp-bar{background:#fff;border:1px solid #E8EAED;border-radius:10px;display:flex;margin-bottom:10px}
-.csp-cell{flex:1;padding:12px 24px;border-right:1px solid #F3F4F6}
-.csp-cell:last-child{border-right:none}
-.csp-label{font-size:9px;font-weight:700;color:#9CA3AF;letter-spacing:.06em;margin-bottom:4px}
-.csp-val{font-size:20px;font-weight:800;font-family:'IBM Plex Mono',monospace}
-.csp-val.green{color:#18A058}
+/* ===== SUPPLIER RESPONSES / TOOLBAR ROW ===== */
+.toolbar-row{border:1px solid #ccc;border-top:none;padding:8px 12px;display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.tb-label{font-size:11px;font-weight:700;color:#555}
+.tb-dots{display:flex;gap:4px}
+.tb-dot{width:18px;height:18px;border-radius:50%;background:#d4f5dd;color:#3aa845;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;border:1px solid #b5e8c4}
+.tb-btn{border:1px solid #bbb;background:#fff;color:#333;font-size:11px;font-weight:700;padding:5px 10px;border-radius:2px;cursor:pointer}
+.tb-spacer{flex:1}
+.tb-select{border:1px solid #ccc;padding:4px 8px;font-size:11px;font-family:inherit;color:#333}
+.tb-toggle{display:flex;gap:2px;background:#f0f0f0;border-radius:3px;padding:2px}
+.tb-toggle span{width:22px;height:22px;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;color:#777}
+.tb-toggle span.on{background:#fff;box-shadow:inset 0 0 0 1px #ccc;color:#3aa845}
 
-/* ===== MARGIN RULE BAR ===== */
-.rule-bar{background:#fff;border:1px solid #E8EAED;border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
-.rule-label{font-size:11px;font-weight:700;color:#6B7280;white-space:nowrap}
-.rule-chip{display:flex;align-items:center;gap:5px;background:#F3F4F6;border-radius:7px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer}
-.pill{border-radius:20px;padding:3px 10px;font-size:10.5px;font-weight:700;border:1.5px solid}
-.pill-oem{color:#2563EB;border-color:#BFDBFE;background:#EFF6FF}
-.pill-aftm{color:#9333EA;border-color:#E9D5FF;background:#FAF5FF}
-.pill-reco{color:#D97706;border-color:#FDE68A;background:#FFFBEB}
-.pill-recycled{color:#18A058;border-color:#BBF7D0;background:#F0FDF4}
-.pill-parallel{color:#6B7280;border-color:#E5E7EB;background:#F9FAFB}
-.rule-bar-right{margin-left:auto;display:flex;align-items:center;gap:14px;font-size:11px;color:#6B7280;font-weight:600}
-.rb-select{border:1px solid #E8EAED;border-radius:6px;padding:5px 10px;font-size:11px;font-family:inherit;color:#374151}
-.view-toggle{display:flex;gap:3px;background:#F0F2F5;border-radius:7px;padding:3px}
-.view-toggle span{width:24px;height:24px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer}
-.view-toggle span.on{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+/* ===== MARGIN RULE BAR (existing shipped component — plain labels, no reinvented pill skin) ===== */
+.rule-bar{border:1px solid #ccc;border-top:none;padding:8px 12px;display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;font-size:11.5px}
+.rule-label{font-weight:700;color:#555}
+.rule-chip{font-weight:700;color:#333;cursor:pointer}
+.rtag{font-weight:800;padding:2px 6px;border-radius:2px;border:1px solid}
+.rtag-oem{color:#2563eb;border-color:#bfdbfe;background:#eef4ff}
+.rtag-aftm{color:#8e2ec4;border-color:#e9d5ff;background:#faf5ff}
+.rtag-reco{color:#c07600;border-color:#fde68a;background:#fffbeb}
+.rtag-used{color:#3aa845;border-color:#bbf7d0;background:#f0fdf4}
 
-/* ===== GRID ===== */
-.grid-shell{background:#fff;border-radius:12px;border:1px solid #E8EAED;box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden}
-.grid-toolbar{padding:12px 16px;font-size:12px;font-weight:700}
-.grid-toolbar .sel-count{color:#18A058}
-.grid-toolbar .sel-total{color:#9CA3AF;font-weight:600}
-table{width:100%;border-collapse:collapse}
-thead th{padding:0;border-bottom:1px solid #F3F4F6}
-th.part-th{text-align:left;padding:9px 12px;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.06em;min-width:220px}
-.sup-th-wrap{border-top:3px solid; padding:10px 12px 8px}
-.sup-th{display:flex;flex-direction:column;align-items:center;gap:5px}
-.sup-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:1.5px solid}
-.sup-name{font-size:11px;font-weight:700;color:#1A2332;text-align:center}
+/* ===== GRID — sizing matched to production 20 Jul 2026: fixed column widths (not
+   stretched to fill the row when fewer suppliers respond), left-aligned cell content,
+   tighter padding, and a default of 10 supplier column slots so column width stays
+   constant whether 2 suppliers responded or 10 — unresponded slots render as a plain
+   "No Supplier" placeholder column instead of the real columns growing to fill space. */
+.grid-shell{background:#fff;border:1px solid #ccc;overflow-x:auto}
+.grid-toolbar{padding:8px 12px;font-size:12px;font-weight:700;border-bottom:1px solid #ddd}
+.grid-toolbar .sel-count{color:#3aa845}
+.grid-toolbar .sel-total{color:#999;font-weight:600}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+thead th{padding:0;background:#ececec;border:1px solid #ccc}
+th.part-th{text-align:left;padding:7px 10px;font-size:10.5px;font-weight:700;color:#555;text-transform:uppercase;width:220px}
+.sup-th-wrap{border-top:3px solid;padding:7px 10px;width:135px}
+.sup-th-wrap.empty{border-top-color:#e0e0e0}
+.sup-name{font-size:11px;font-weight:700;color:#222;text-transform:uppercase;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sup-name.muted{color:#aaa;font-weight:600}
 
-td{padding:12px;border-bottom:1px solid #F5F5F5;vertical-align:top}
-tbody tr:last-child > td{border-bottom:none}
-.cb-cell{width:34px;text-align:center;vertical-align:middle}
-.part-name{font-size:12.5px;font-weight:800;color:#0F1923}
-.part-sub{font-size:10.5px;color:#9CA3AF;margin-top:2px}
-.center{text-align:center;position:relative}
-.no-photo{color:#D1D5DB;font-size:13px}
+td{padding:6px 10px;border:1px solid #ddd;vertical-align:top}
+.cb-cell{width:28px;text-align:center;vertical-align:middle}
+.part-name{font-size:11.5px;font-weight:700;color:#222}
+.part-sub{font-size:10px;color:#888;margin-top:1px}
+.sup-cell{text-align:center;position:relative;width:135px}
+.no-photo{color:#ccc;font-size:12px}
 
-.type-badge{font-size:10px;font-weight:800;letter-spacing:.03em;display:inline-flex;align-items:center;gap:4px}
-.t-oem{color:#2563EB}.t-aftm{color:#9333EA}.t-used{color:#18A058}.t-recon{color:#D97706}
-.note-icon{font-size:9px;color:#9CA3AF}
-.price-val{font-family:'IBM Plex Mono',monospace;font-weight:800;font-size:14px;margin-top:3px}
-.markup-val{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:10.5px;color:#18A058;margin-top:2px}
-.etd-val{font-size:10px;color:#9CA3AF;margin-top:2px}
+.type-label{font-size:9.5px;font-weight:800;letter-spacing:.02em}
+.t-oem{color:#2563eb}.t-aftm{color:#8e2ec4}.t-used{color:#3aa845}.t-recon{color:#c07600}
+.price-val{font-weight:600;font-size:12.5px;margin-top:2px}
+.markup-val{font-weight:600;font-size:9.5px;color:#3aa845;margin-top:1px}
+.etd-val{font-size:9.5px;color:#999;margin-top:1px}
+.cell-inner.active .price-val{font-weight:800}
+.cell-inner.active .markup-val{font-weight:700}
 
-/* photo affordance — kept as its own click target, physically separate from the
-   price cell's existing "Modify" action, so the two never compete for the same click */
-.mini-thumbs{display:flex;cursor:pointer;margin-top:6px;justify-content:center}
-.mini-thumbs img{width:24px;height:24px;border-radius:6px;object-fit:cover;border:2px solid #fff;box-shadow:0 0 0 1px #E8EAED;margin-left:-7px}
-.mini-thumbs img:first-child{margin-left:0}
-.mini-count{font-size:9px;font-weight:800;color:#0F1923;background:#F3F4F6;border-radius:20px;padding:2px 6px;margin-left:4px;align-self:center}
+/* photo affordance — its own click target, physically separate from the price cell's
+   existing "Modify" action so the two never compete for the same click. Reuses the
+   exact thumbnail + numbered-badge convention already used on the Info tab, just smaller.
+   cell-inner reserves side padding so centered price/type text never sits under the
+   photo-corner (left) or match-flag (right) icons — this was the reported overlap bug. */
+.cell-inner{cursor:pointer;padding:4px 24px;position:relative}
+.cell-inner.active{background:#f0fdf4;box-shadow:inset 0 0 0 1px #3aa845}
+.modify-bar{display:none;margin-top:6px;background:#3aa845;color:#fff;font-size:9px;font-weight:800;letter-spacing:.02em;padding:4px 0;border-radius:2px;text-align:center}
+.cell-inner.active .modify-bar{display:block}
 
-.cell-inner{cursor:pointer;border-radius:8px;padding:8px;margin:-8px;border:2px solid transparent;transition:border-color .15s,background .15s}
-.cell-inner:hover{background:#F9FAFB}
-.cell-inner.active{border-color:#18A058;background:#F0FDF4}
-.modify-bar{display:none;margin-top:7px;background:#18A058;color:#fff;font-size:9px;font-weight:800;letter-spacing:.03em;padding:5px 0;border-radius:6px;align-items:center;justify-content:center;gap:4px}
-.modify-bar:hover{background:#16974e}
-.cell-inner.active .modify-bar{display:flex}
-/* top-right is reserved by the real product for the part-number-match indicator — using top-left instead */
-.photo-corner{position:absolute;top:8px;left:8px;cursor:pointer}
-.photo-corner img{width:24px;height:24px;border-radius:7px;object-fit:cover;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.25)}
-.photo-corner .corner-count{position:absolute;bottom:-5px;right:-5px;font-size:8px;font-weight:800;color:#fff;background:#0F1923;border-radius:20px;padding:1px 4px;border:1.5px solid #fff;line-height:1.2}
-.photo-corner:hover img{transform:scale(1.08)}
+/* top-right is reserved by the real product for the part-number-match indicator (triangle icon) — using top-left instead */
+.photo-corner{position:absolute;top:5px;left:5px;cursor:pointer;width:22px;height:22px}
+.photo-corner img{width:22px;height:22px;object-fit:cover;border:1px solid #999;border-radius:2px;display:block}
+.photo-corner .corner-count{position:absolute;bottom:-4px;right:-4px;font-size:8px;font-weight:800;color:#fff;background:#333;border-radius:2px;padding:0 3px;line-height:1.3}
+.match-flag{position:absolute;top:5px;right:5px;width:14px;height:14px;color:#999;font-size:11px}
+
 /* ===== INFO / DOCUMENTS PANELS ===== */
 .panel{display:none}
 .panel.on{display:block}
-.doc-flat-before{background:#fff;border:1px solid #E8EAED;border-radius:10px;margin-bottom:16px;overflow:hidden}
-.doc-flat-before .flat-head{padding:8px 14px;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;background:#FAFAFA;border-bottom:1px solid #F3F4F6}
-.doc-flat-before table td, .doc-flat-before table th{padding:8px 14px;font-size:12px;border-bottom:1px solid #F5F5F5}
-.doc-flat-before a{color:#2563EB}
-.section-label{font-size:11px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.06em;margin:18px 0 8px}
+.section-bar{background:#ececec;border:1px solid #ccc;color:#333;font-weight:bold;font-size:12px;padding:6px 10px}
+.info-box{border:1px solid #ccc;border-top:none;margin-bottom:12px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr}
+.info-row{display:grid;grid-template-columns:130px 1fr;padding:8px 12px;font-size:12px}
+.info-row .k{color:#666;font-weight:700}
+.info-row .v{color:#222}
+.info-row .v.muted{color:#bbb}
 
-.part-doc-group{background:#fff;border:1px solid #E8EAED;border-radius:12px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);scroll-margin-top:16px}
-.pdg-head{padding:12px 16px;display:flex;align-items:center;gap:8px;cursor:pointer}
-.part-doc-group:not(.collapsed) .pdg-head{border-bottom:1px solid #F3F4F6}
-.pdg-head .pn{font-size:13px;font-weight:800}
-.pdg-head .pdg-count{font-size:10.5px;color:#9CA3AF;font-weight:700}
-.pdg-chevron{color:#9CA3AF;font-size:11px;transition:transform .18s;margin-left:2px}
-.part-doc-group.collapsed .pdg-chevron{transform:rotate(-90deg)}
-.part-doc-group.collapsed .pdg-body{display:none}
-.pdg-body{padding:14px 16px;display:flex;flex-direction:column;gap:12px}
-
-/* quick-jump chip bar */
-.sup-filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.sup-filter-chip{display:flex;align-items:center;gap:6px;background:#fff;border:1.5px solid #E8EAED;border-radius:20px;padding:5px 12px 5px 5px;cursor:pointer;font-size:11.5px;font-weight:700;color:#374151}
-.sup-filter-chip:hover{border-color:#9CA3AF}
-.sup-filter-chip .dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
-.sup-filter-chip .cnt{background:#F3F4F6;color:#0F1923;border-radius:20px;padding:1px 6px;font-size:10px}
-.sup-filter-chip.empty{opacity:.45}
-.expand-all-link{font-size:11px;font-weight:700;color:#6B7280;cursor:pointer;text-decoration:underline;margin-left:auto}
-.expand-all-link:hover{color:#374151}
-.pdg-supplier-row{display:flex;align-items:flex-start;gap:12px}
-.pdg-sup-chip{display:flex;align-items:center;gap:6px;min-width:190px;flex-shrink:0}
-.pdg-sup-dot{width:24px;height:24px;border-radius:50%;font-size:12px;display:flex;align-items:center;justify-content:center}
-.pdg-thumb-row{display:flex;gap:8px;flex-wrap:wrap}
-.pdg-thumb{width:64px;height:64px;border-radius:8px;object-fit:cover;cursor:pointer;border:1px solid #E8EAED;transition:.15s}
-.pdg-thumb:hover{transform:scale(1.04);box-shadow:0 4px 14px rgba(0,0,0,.15)}
-.pdg-none{font-size:11px;color:#D1D5DB;padding-top:4px}
-.pdg-general-block{background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:10px 12px}
-.pdg-general-label{font-size:10px;font-weight:800;color:#92400E;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;display:flex;align-items:center;gap:5px}
-
-.dl-btn{font-size:10.5px;font-weight:700;color:#18A058;cursor:pointer;display:inline-flex;align-items:center;gap:4px;border:1.5px solid #BBF7D0;background:#F0FDF4;padding:4px 10px;border-radius:20px;white-space:nowrap}
-.dl-btn:hover{background:#DCFCE7}
-.dl-btn-lg{font-size:12px;padding:8px 16px}
-
-.toast{position:fixed;bottom:24px;right:24px;background:#0F1923;color:#fff;padding:12px 18px;border-radius:10px;font-size:12px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:1200;opacity:0;transform:translateY(10px);transition:.25s;pointer-events:none}
-.toast.show{opacity:1;transform:translateY(0)}
-
-/* ===== INFO TAB (real fields) ===== */
-.info-card{background:#fff;border:1px solid #E8EAED;border-radius:10px;margin-bottom:14px;overflow:hidden}
-.info-card-head{padding:9px 16px;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.06em;background:#F9FAFB;border-bottom:1px solid #F3F4F6}
-.info-grid{display:grid;grid-template-columns:1fr 1fr;padding:6px 0}
-.info-row{display:grid;grid-template-columns:150px 1fr;padding:10px 16px;font-size:12.5px}
-.info-row .k{color:#6B7280;font-weight:600}
-.info-row .v{color:#0F1923;font-weight:700}
-.info-row .v.muted{color:#D1D5DB;font-weight:500}
+/* thumbnail-with-numbered-badge — the ONE established photo pattern already in the product
+   (Info tab today). Every new photo surface in this concept reuses this, not a new style. */
+.thumb-row{display:flex;gap:10px;flex-wrap:wrap;padding:10px 12px}
+.thumb{position:relative;width:150px;height:112px}
+.thumb img{width:100%;height:100%;object-fit:cover;border:1px solid #ccc;cursor:pointer;display:block}
+.thumb .badge{position:absolute;bottom:4px;left:4px;background:#333;color:#fff;font-size:11px;font-weight:700;padding:1px 6px}
 
 /* ===== IMAGES TAB ===== */
-.img-section-head{display:flex;align-items:center;gap:8px;margin:0 0 10px}
-.img-section-head h3{font-size:13px;font-weight:800}
-.img-section-head span{font-size:11px;color:#9CA3AF;font-weight:600}
-.repairer-thumb-grid{display:flex;gap:10px;flex-wrap:wrap}
-.repairer-thumb{width:120px;height:90px;border-radius:8px;object-fit:cover;cursor:pointer;border:1px solid #E8EAED;transition:.15s}
-.repairer-thumb:hover{transform:scale(1.03);box-shadow:0 4px 14px rgba(0,0,0,.15)}
-.doc-callout{display:flex;align-items:center;gap:10px;background:#F0FDF4;border:1px solid #BBF7D0;color:#166534;border-radius:10px;padding:12px 16px;font-size:12px;font-weight:600;margin-bottom:16px}
-.doc-callout a{color:#18A058;font-weight:800;cursor:pointer;text-decoration:underline}
+.img-section-head{display:flex;align-items:center;gap:8px}
+.dl-link{font-size:11px;font-weight:700;color:#2563eb;cursor:pointer;margin-left:auto}
+.doc-callout{border:1px solid #ccc;background:#f7f7f7;color:#444;padding:9px 12px;font-size:12px;margin-bottom:14px}
+.doc-callout a{color:#2563eb;font-weight:700;cursor:pointer}
 
-/* ===== LIGHTBOX ===== */
-.lb-overlay{position:fixed;inset:0;background:rgba(10,15,20,.92);z-index:999;display:none;align-items:center;justify-content:center}
+.sup-filter-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:10px 12px;border-bottom:1px solid #eee}
+.sup-filter-chip{display:flex;align-items:center;gap:5px;background:#fff;border:1px solid #ccc;border-radius:2px;padding:3px 8px;cursor:pointer;font-size:11px;font-weight:700;color:#333}
+.sup-filter-chip .dot{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.sup-filter-chip .cnt{background:#eee;color:#333;border-radius:2px;padding:0 5px;font-size:10px}
+.sup-filter-chip.empty{opacity:.4}
+.expand-all-link{font-size:11px;font-weight:700;color:#666;cursor:pointer;text-decoration:underline;margin-left:auto}
+
+.part-doc-group{border:1px solid #ccc;border-top:none}
+.pdg-head{padding:8px 12px;display:flex;align-items:center;gap:8px;cursor:pointer;background:#fafafa}
+.pdg-head .pn{font-size:12px;font-weight:700;color:#222}
+.pdg-head .pdg-count{font-size:10.5px;color:#888;font-weight:600}
+.pdg-chevron{color:#888;font-size:10px;transition:transform .15s;margin-left:2px}
+.part-doc-group.collapsed .pdg-chevron{transform:rotate(-90deg)}
+.part-doc-group.collapsed .pdg-body{display:none}
+.pdg-body{padding:12px;display:flex;flex-direction:column;gap:16px}
+/* every sub-group (general + each part) is laid out exactly like "Your Photos" —
+   a plain label above a .thumb-row of full-size thumbnail cards — so supplier photos
+   read as the same pattern the repairer already knows, not a denser variant of it. */
+.pdg-part-label{font-size:11.5px;font-weight:700;color:#222;margin-bottom:8px}
+.pdg-part-num{font-size:10px;color:#888;font-weight:600;margin-left:6px}
+.pdg-none{font-size:11px;color:#bbb}
+.pdg-general-block{background:#fff9e0;border:1px solid #e6d98a;padding:10px}
+.pdg-general-label{font-size:10px;font-weight:800;color:#8a6d00;text-transform:uppercase;margin-bottom:8px}
+.dl-btn{font-size:10.5px;font-weight:700;color:#3aa845;cursor:pointer;border:1px solid #b5e8c4;background:#f0fdf4;padding:3px 8px;border-radius:2px;white-space:nowrap}
+
+.toast{position:fixed;bottom:20px;right:20px;background:#333;color:#fff;padding:10px 16px;font-size:12px;font-weight:600;z-index:1200;opacity:0;transform:translateY(8px);transition:.2s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ===== LIGHTBOX — restyled to reuse the SAME modal chrome as the existing
+   "Edit Selected Item" dialog (white card, rounded corners, soft shadow, grey-out
+   scrim, circular outline close button) instead of a separate invented dark-theatre
+   viewer. Simpler, and it's an existing pattern rather than a new one. ===== */
+.lb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:999;display:none;align-items:center;justify-content:center}
 .lb-overlay.open{display:flex}
-.lb-close{position:absolute;top:18px;right:22px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none}
-.lb-wrap{display:flex;gap:18px;max-width:92vw;max-height:86vh}
-.lb-rail{display:flex;flex-direction:column;gap:8px;overflow-y:auto;width:170px;flex-shrink:0}
-.lb-rail-group{margin-bottom:6px}
-.lb-rail-label{font-size:9px;font-weight:800;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;padding:0 2px}
-.lb-thumb{width:100%;height:60px;object-fit:cover;border-radius:6px;cursor:pointer;opacity:.55;border:2px solid transparent;margin-bottom:6px}
-.lb-thumb.on{opacity:1;border-color:#18A058}
-.lb-main{display:flex;align-items:center;justify-content:center;background:#000;border-radius:10px;overflow:hidden;flex:1;min-width:400px}
-.lb-main img{max-width:100%;max-height:80vh;object-fit:contain}
-.lb-caption{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;font-size:12px;font-weight:600;background:rgba(0,0,0,.5);padding:6px 14px;border-radius:20px}
+.lb-panel{width:min(820px,92vw);max-height:88vh;background:#fff;border-radius:8px;box-shadow:0 8px 28px rgba(0,0,0,.2);display:flex;flex-direction:column;overflow:hidden}
+.lb-panel-head{display:flex;align-items:center;padding:16px 20px;border-bottom:1px solid #eee}
+.lb-title{font-size:15px;font-weight:700;color:#222}
+.lb-counter{font-size:12px;color:#888;margin-left:8px;font-weight:600}
+.lb-close{margin-left:auto;width:30px;height:30px;border-radius:50%;background:#fff;border:2px solid #222;color:#222;font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.lb-close:hover{background:#f5f5f5}
+.lb-main{display:flex;align-items:center;justify-content:center;background:#f7f7f7;padding:20px;min-height:280px}
+.lb-main img{max-width:100%;max-height:55vh;object-fit:contain;border:1px solid #ddd}
+.lb-strip{display:flex;gap:8px;padding:12px 20px;border-top:1px solid #eee;overflow-x:auto}
+.lb-thumb{width:54px;height:54px;object-fit:cover;cursor:pointer;border:2px solid #ddd;flex-shrink:0}
+.lb-thumb.on{border-color:#3aa845}
 </style>
 </head>
 <body>
 
 <div class="nav">
-  <div class="logo"><div class="logo-mark">✓</div><span class="parts">PARTS</span><span class="check">CHECK</span></div>
+  <div class="logo">
+    <div class="logo-row"><span class="logo-mark">✓</span><span class="parts">PARTS</span><span class="check">CHECK</span></div>
+    <div class="logo-tag">Smart. Simple. Streamlined.</div>
+  </div>
   <div class="nav-items">
     <div class="nav-item"><div class="nav-icon">🚙</div><div class="nav-label">DASHBOARD</div></div>
     <div class="nav-item"><div class="nav-icon">🚗</div><div class="nav-label">GET PRICE</div></div>
@@ -226,63 +214,43 @@ tbody tr:last-child > td{border-bottom:none}
 <div class="tab-bar">
   <div class="qh-tab on" onclick="showTab('price')"><div class="qh-tab-icon">$</div>CHECK PRICE</div>
   <div class="qh-tab" onclick="showTab('info')"><div class="qh-tab-icon">i</div>INFO</div>
-  <div class="qh-tab" onclick="showTab('images')"><div class="qh-tab-icon">📷</div>IMAGES</div>
-  <div class="qh-tab" onclick="showTab('documents')"><div class="qh-tab-icon">📄</div>DOCUMENTS</div>
+  <div class="qh-tab" onclick="showTab('images')"><div class="qh-tab-icon">📷</div>IMAGES <span style="font-size:8px;background:#3aa845;padding:1px 4px;margin-left:4px;font-weight:800">NEW</span></div>
+  <div class="qh-tab" onclick="showTab('documents')"><div class="qh-tab-icon doc">⚠</div>DOCUMENTS</div>
 </div>
 
 <div class="page">
   <!-- PRICE PANEL -->
   <div class="panel on" id="panel-price">
-    <div class="quote-header">
-      <div class="qh-left">
-        <h1>QUOTE: <span>89734</span></h1>
-        <p><strong>Hyundai Tucson, 2023</strong> · ABC123 · Insurer: <strong>Allianz</strong></p>
-      </div>
-      <div class="qh-right">
-        <div class="sup-resp">
-          <div class="sup-resp-label">Supplier Responses</div>
-          <div class="sup-resp-dots" id="supResponses"></div>
-        </div>
-        <button class="hbtn">Clear Selection</button>
-        <button class="hbtn">Cancel Request</button>
-        <button class="hbtn hbtn-green">Save</button>
-      </div>
-    </div>
+    <div class="quote-banner"><b>QUOTE: 89734</b><span class="veh">Hyundai Tucson, 2023 · ABC123 · Insurer: Allianz</span></div>
 
-    <div class="csp-bar">
-      <div class="csp-cell"><div class="csp-label">YOUR COST</div><div class="csp-val">$0.00</div></div>
-      <div class="csp-cell"><div class="csp-label">YOUR SELL</div><div class="csp-val">$0.00</div></div>
-      <div class="csp-cell"><div class="csp-label">YOUR PROFIT</div><div class="csp-val green">$0.00</div></div>
+    <div class="toolbar-row">
+      <span class="tb-label">SUPPLIER RESPONSES</span>
+      <div class="tb-dots" id="supResponses"></div>
+      <button class="tb-btn">Export No Parts Info</button>
+      <button class="tb-btn">Print Available Prices</button>
+      <button class="tb-btn">List Price Report</button>
+      <div class="tb-spacer"></div>
+      <span class="tb-select">Quick Selection ▾</span>
+      <div class="tb-toggle"><span class="on">⊞</span><span>☰</span></div>
     </div>
 
     <div class="rule-bar">
-      <div class="rule-label">Active Margin Rule:</div>
-      <div class="rule-chip">Allianz ▾</div>
-      <span class="pill pill-oem">OEM 100%</span>
-      <span class="pill pill-aftm">Aftm 72%</span>
-      <span class="pill pill-reco">Reco +25%</span>
-      <span class="pill pill-recycled">Recycled +20%</span>
-      <span class="pill pill-parallel">Parallel +20%</span>
-      <div class="rule-bar-right">
-        <span>Quick Select: <select class="rb-select"><option>— None —</option></select></span>
-        <span>Print <select class="rb-select"><option>▾</option></select></span>
-        <span>View: <span class="view-toggle"><span class="on">⊞</span><span>☰</span></span></span>
-      </div>
+      <span class="rule-label">Active Margin Rule:</span>
+      <span class="rule-chip">Allianz ▾</span>
+      <span class="rtag rtag-oem">OEM 100%</span>
+      <span class="rtag rtag-aftm">AftM 72%</span>
+      <span class="rtag rtag-reco">Reco +25%</span>
+      <span class="rtag rtag-used">Used +20%</span>
     </div>
 
-    <div class="banner">💡 Concept — Req 3: how supplier-attached photos display per part, across every competing supplier, on a single quote</div>
+    <div class="banner">Concept — Req 3: how supplier-attached photos display per part, across every competing supplier, on a single quote. Restyled 20 Jul 2026 to match production visual language — no new fonts/corners/shadows introduced.</div>
     <div class="grid-shell">
       <div class="grid-toolbar"><span class="sel-count" id="selCount">0</span><span class="sel-total">/4 Selected</span></div>
       <table>
         <thead>
-          <tr>
+          <tr id="gridHeadRow">
             <th class="cb-cell"></th>
             <th class="part-th">Part Number &amp; Description</th>
-            <th class="center" data-sup="oem" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#2563EB"><div class="sup-th"><div class="sup-avatar" style="background:#EFF6FF;color:#2563EB;border-color:#BFDBFE">👤</div><div class="sup-name">OEM Direct</div></div></div></th>
-            <th class="center" data-sup="net" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#9333EA"><div class="sup-th"><div class="sup-avatar" style="background:#FAF5FF;color:#9333EA;border-color:#E9D5FF">👤</div><div class="sup-name">Parts Network</div></div></div></th>
-            <th class="center" data-sup="ats" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#A855F7"><div class="sup-th"><div class="sup-avatar" style="background:#FAF5FF;color:#A855F7;border-color:#E9D5FF">👤</div><div class="sup-name">ATS Parts</div></div></div></th>
-            <th class="center" data-sup="eco" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#18A058"><div class="sup-th"><div class="sup-avatar" style="background:#F0FDF4;color:#18A058;border-color:#BBF7D0">👤</div><div class="sup-name">Eco Parts</div></div></div></th>
-            <th class="center" data-sup="reco" style="min-width:110px"><div class="sup-th-wrap" style="border-color:#D97706"><div class="sup-th"><div class="sup-avatar" style="background:#FFFBEB;color:#D97706;border-color:#FDE68A">👤</div><div class="sup-name">Reco Centre</div></div></div></th>
           </tr>
         </thead>
         <tbody id="gridBody"></tbody>
@@ -292,8 +260,8 @@ tbody tr:last-child > td{border-bottom:none}
 
   <!-- INFO PANEL -->
   <div class="panel" id="panel-info">
-    <div class="info-card">
-      <div class="info-card-head">Quote Basic Info</div>
+    <div class="section-bar">QUOTE BASIC INFO</div>
+    <div class="info-box">
       <div class="info-grid">
         <div>
           <div class="info-row"><span class="k">Quote</span><span class="v">89734</span></div>
@@ -309,8 +277,9 @@ tbody tr:last-child > td{border-bottom:none}
         </div>
       </div>
     </div>
-    <div class="info-card">
-      <div class="info-card-head">Vehicle Info</div>
+
+    <div class="section-bar">VEHICLE INFO</div>
+    <div class="info-box">
       <div class="info-grid">
         <div>
           <div class="info-row"><span class="k">Make</span><span class="v">Hyundai</span></div>
@@ -326,35 +295,38 @@ tbody tr:last-child > td{border-bottom:none}
         </div>
       </div>
     </div>
+
+    <div class="section-bar">IMAGES (<span id="infoImgCount"></span> attached)</div>
+    <div class="info-box"><div class="thumb-row" id="infoThumbRow"></div></div>
   </div>
 
   <!-- IMAGES PANEL -->
   <div class="panel" id="panel-images">
-    <div class="img-section-head" style="margin-bottom:16px">
-      <h3 style="font-size:15px">All Images</h3>
-      <span id="totalImgCount"></span>
-      <span class="dl-btn dl-btn-lg" style="margin-left:auto" onclick="downloadAll()">⬇ Download All</span>
+    <div class="section-bar" style="display:flex;align-items:center">
+      <span>YOUR PHOTOS (<span id="repairerImgCount"></span> attached)</span>
+      <span class="dl-link" onclick="downloadAllRepairer()">⬇ Download All</span>
     </div>
+    <div class="info-box"><div class="thumb-row" id="repairerThumbRow"></div></div>
 
-    <div class="img-section-head"><h3>Your Photos</h3><span>(<span id="repairerImgCount"></span> attached)</span><span class="dl-btn" style="margin-left:auto" onclick="downloadAllRepairer()">⬇ Download All</span></div>
-    <div class="repairer-thumb-grid" id="repairerThumbGrid" style="margin-bottom:24px"></div>
-
-    <div class="img-section-head"><h3>Supplier Photos</h3><span>grouped by supplier — general (whole-quote) photos shown separately from part-specific ones</span></div>
-    <div class="sup-filter-row" id="supFilterRow"></div>
-    <div id="supplierPhotoGroups"></div>
+    <div class="section-bar" style="display:flex;align-items:center">
+      <span>SUPPLIER PHOTOS</span>
+      <span class="dl-link" onclick="downloadAll()">⬇ Download All (<span id="totalImgCount"></span>)</span>
+    </div>
+    <div class="info-box" style="border-bottom:1px solid #ccc">
+      <div class="sup-filter-row" id="supFilterRow"></div>
+      <div id="supplierPhotoGroups"></div>
+    </div>
   </div>
 
   <!-- DOCUMENTS PANEL -->
   <div class="panel" id="panel-documents">
-    <div class="doc-callout">📷 Looking for photos? Repairer and supplier photos now live in the <a onclick="showTab('images')">Images tab</a> — Documents is for actual paperwork only.</div>
-
-    <div class="section-label">Supplier-submitted documents</div>
-    <div class="doc-flat-before">
-      <div class="flat-head">Documents</div>
+    <div class="doc-callout">Looking for photos? Repairer and supplier photos now live in the <a onclick="showTab('images')">Images tab</a> — Documents is for actual paperwork only.</div>
+    <div class="section-bar">DOCUMENTS</div>
+    <div class="info-box">
       <table style="width:100%">
-        <tr><th style="text-align:left;color:#9CA3AF;font-weight:700">Supplier</th><th style="text-align:left;color:#9CA3AF;font-weight:700">FileName</th><th style="text-align:left;color:#9CA3AF;font-weight:700">Download</th></tr>
-        <tr><td>OEM Direct</td><td>Compliance_Certificate.pdf</td><td><a>Download</a></td></tr>
-        <tr><td>Parts Network</td><td>Supplier_Invoice_4471.pdf</td><td><a>Download</a></td></tr>
+        <tr><th style="text-align:left;color:#888;font-weight:700;padding:8px 12px;border-bottom:1px solid #eee">Supplier</th><th style="text-align:left;color:#888;font-weight:700;padding:8px 12px;border-bottom:1px solid #eee">FileName</th><th style="text-align:left;color:#888;font-weight:700;padding:8px 12px;border-bottom:1px solid #eee">Download</th></tr>
+        <tr><td style="padding:8px 12px">OEM Direct</td><td style="padding:8px 12px">Compliance_Certificate.pdf</td><td style="padding:8px 12px"><a style="color:#2563eb">Download</a></td></tr>
+        <tr><td style="padding:8px 12px">Parts Network</td><td style="padding:8px 12px">Supplier_Invoice_4471.pdf</td><td style="padding:8px 12px"><a style="color:#2563eb">Download</a></td></tr>
       </table>
     </div>
   </div>
@@ -362,22 +334,30 @@ tbody tr:last-child > td{border-bottom:none}
 
 <!-- LIGHTBOX -->
 <div class="lb-overlay" id="lbOverlay" onclick="if(event.target===this)closeLightbox()">
-  <button class="lb-close" onclick="closeLightbox()">✕</button>
-  <div class="lb-wrap">
-    <div class="lb-rail" id="lbRail"></div>
-    <div class="lb-main"><img id="lbMainImg" src=""><div class="lb-caption" id="lbCaption"></div></div>
+  <div class="lb-panel" onclick="event.stopPropagation()">
+    <div class="lb-panel-head">
+      <span class="lb-title" id="lbTitle"></span><span class="lb-counter" id="lbCounter"></span>
+      <button class="lb-close" onclick="closeLightbox()">✕</button>
+    </div>
+    <div class="lb-main"><img id="lbMainImg" src=""></div>
+    <div class="lb-strip" id="lbStrip"></div>
   </div>
 </div>
 
 <script>
 const SUPPLIERS = {
-  oem:{name:'OEM Direct', color:'#2563EB', badge:'t-oem', type:'OEM'},
-  net:{name:'Parts Network', color:'#9333EA', badge:'t-aftm', type:'CERT AFTM'},
-  ats:{name:'ATS Parts', color:'#A855F7', badge:'t-oem', type:'OEM'},
-  eco:{name:'Eco Parts', color:'#18A058', badge:'t-used', type:'USED'},
-  reco:{name:'Reco Centre', color:'#D97706', badge:'t-recon', type:'RECON'}
+  oem:{name:'OEM Direct', color:'#2563eb', badge:'t-oem', type:'OEM'},
+  net:{name:'Parts Network', color:'#8e2ec4', badge:'t-aftm', type:'CERT AFTM'},
+  ats:{name:'ATS Parts', color:'#a855f7', badge:'t-oem', type:'OEM'},
+  eco:{name:'Eco Parts', color:'#3aa845', badge:'t-used', type:'USED'},
+  reco:{name:'Reco Centre', color:'#c07600', badge:'t-recon', type:'RECON'}
 };
 const SUP_ORDER = ['oem','net','ats','eco','reco'];
+// Grid always shows a default of 10 supplier column slots so column width stays
+// constant regardless of how many suppliers actually responded — unfilled slots
+// render as a plain "No Supplier" placeholder rather than the real columns stretching.
+const TOTAL_COLUMNS = 10;
+const PLACEHOLDER_COLS = Array.from({length: Math.max(0, TOTAL_COLUMNS - SUP_ORDER.length)}, (_,i) => `empty${i+1}`);
 const IMGS = [
   'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=300&h=300&fit=crop',
   'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=300&h=300&fit=crop',
@@ -427,7 +407,20 @@ const PARTS = [
 
 function renderSupplierResponses(){
   const respondedCount = SUP_ORDER.filter(k => PARTS.some(p => p.prices[k] !== null)).length;
-  document.getElementById('supResponses').innerHTML = Array.from({length:respondedCount}).map(()=>`<div class="sup-resp-dot">✓</div>`).join('');
+  document.getElementById('supResponses').innerHTML = Array.from({length:respondedCount}).map(()=>`<div class="tb-dot">✓</div>`).join('');
+}
+
+function renderGridHead(){
+  const headRow = document.getElementById('gridHeadRow');
+  let head = '';
+  SUP_ORDER.forEach(k=>{
+    const sup = SUPPLIERS[k];
+    head += `<th class="sup-cell" data-sup="${k}"><div class="sup-th-wrap" style="border-color:${sup.color}"><div class="sup-name">${sup.name}</div></div></th>`;
+  });
+  PLACEHOLDER_COLS.forEach(()=>{
+    head += `<th class="sup-cell"><div class="sup-th-wrap empty"><div class="sup-name muted">No Supplier</div></div></th>`;
+  });
+  headRow.insertAdjacentHTML('beforeend', head);
 }
 
 function renderGrid(){
@@ -446,11 +439,12 @@ function renderGrid(){
         cell = `<div class="no-photo">—</div>`;
       } else {
         cell = `<div class="cell-inner" onclick="toggleCellActive(this)">
-            <div class="type-badge ${sup.badge}">${sup.type}</div>
+            <div class="type-label ${sup.badge}">${sup.type}</div>
             <div class="price-val">${price}</div>
             <div class="markup-val">${part.markup[k]}</div>
             <div class="etd-val">ETD ${part.etd[k]}</div>
-            <div class="modify-bar" onclick="event.stopPropagation(); openModify('${part.name.replace(/'/g,"\\'")}','${sup.name}')">✏ MODIFY</div>
+            <div class="modify-bar" onclick="event.stopPropagation(); openModify('${part.name.replace(/'/g,"\\'")}','${sup.name}')">MODIFY</div>
+            <span class="match-flag" title="Part number match indicator — existing, unchanged">△</span>
           </div>`;
         if(photos.length){
           cell += `<div class="photo-corner" onclick="openSupplierLightbox(${part.id},'${k}')" title="${photos.length} photo${photos.length===1?'':'s'} from ${sup.name} — click to view">
@@ -459,7 +453,10 @@ function renderGrid(){
           </div>`;
         }
       }
-      row += `<td class="center">${cell}</td>`;
+      row += `<td class="sup-cell">${cell}</td>`;
+    });
+    PLACEHOLDER_COLS.forEach(()=>{
+      row += `<td class="sup-cell"><div class="no-photo">—</div></td>`;
     });
     tr.innerHTML = row;
     body.appendChild(tr);
@@ -470,42 +467,46 @@ function updateSelCount(){
   document.getElementById('selCount').textContent = document.querySelectorAll('#gridBody input[type=checkbox]:checked').length;
 }
 
-// ===== LIGHTBOX =====
-function buildRail(entries, activeIdx){
-  const rail = document.getElementById('lbRail');
-  rail.innerHTML = '';
+// ===== LIGHTBOX (simplified — flat strip, no colored rail groups) =====
+let lbEntries = [];
+function buildStrip(entries, activeIdx){
+  const strip = document.getElementById('lbStrip');
+  strip.innerHTML = '';
   entries.forEach((group, gi)=>{
-    const wrap = document.createElement('div');
-    wrap.className = 'lb-rail-group';
-    wrap.innerHTML = `<div class="lb-rail-label" style="color:${group.color}">${group.label}</div>` +
-      group.images.map((src,ii)=>`<img class="lb-thumb ${gi===activeIdx.g && ii===activeIdx.i?'on':''}" src="${src}" onclick="setLightboxImg(${gi},${ii})">`).join('');
-    rail.appendChild(wrap);
+    group.images.forEach((src, ii)=>{
+      const img = document.createElement('img');
+      img.className = 'lb-thumb' + (gi===activeIdx.g && ii===activeIdx.i ? ' on' : '');
+      img.src = src;
+      img.title = group.label;
+      img.onclick = ()=>setLightboxImg(gi, ii);
+      strip.appendChild(img);
+    });
   });
 }
-let lbEntries = [];
 function setLightboxImg(g,i){
   const entry = lbEntries[g];
   document.getElementById('lbMainImg').src = entry.images[i];
-  document.getElementById('lbCaption').textContent = `${entry.label} — photo ${i+1} of ${entry.images.length}`;
-  buildRail(lbEntries, {g,i});
+  document.getElementById('lbTitle').textContent = entry.label;
+  document.getElementById('lbCounter').textContent = `photo ${i+1} of ${entry.images.length}`;
+  buildStrip(lbEntries, {g,i});
 }
 function openSupplierLightbox(partId, supKey){
   const part = PARTS.find(p=>p.id===partId);
-  const all = SUP_ORDER.filter(k => part.photos[k].length).map(k => ({label:SUPPLIERS[k].name, color:SUPPLIERS[k].color, images:part.photos[k]}));
+  const all = SUP_ORDER.filter(k => part.photos[k].length).map(k => ({label:SUPPLIERS[k].name, images:part.photos[k]}));
   const idx = all.findIndex(e=>e.label===SUPPLIERS[supKey].name);
   lbEntries = all;
   document.getElementById('lbOverlay').classList.add('open');
   setLightboxImg(Math.max(idx,0), 0);
 }
 function openRepairerLightbox(index){
-  lbEntries = [{label:'Your Photos', color:'#18A058', images:REPAIRER_IMAGES}];
+  lbEntries = [{label:'Your Photos', images:REPAIRER_IMAGES}];
   document.getElementById('lbOverlay').classList.add('open');
   setLightboxImg(0, index);
 }
 function openGeneralLightbox(supKey){
   const photos = GENERAL_PHOTOS[supKey] || [];
   if(!photos.length) return;
-  lbEntries = [{label:`${SUPPLIERS[supKey].name} — General (whole quote)`, color:SUPPLIERS[supKey].color, images:photos}];
+  lbEntries = [{label:`${SUPPLIERS[supKey].name} — General (whole quote)`, images:photos}];
   document.getElementById('lbOverlay').classList.add('open');
   setLightboxImg(0, 0);
 }
@@ -547,8 +548,6 @@ function downloadAllFromSupplier(key){
 function openModify(partName, supName){
   showToast(`Opens "Modify Part Number" for ${partName} — ${supName} (existing pricing workflow, unaffected by this concept)`);
 }
-// MODIFY stays hidden until the cell is clicked once — matches the real product's
-// selected-cell (green border) state rather than showing an action bar on every cell by default.
 function toggleCellActive(el){
   document.querySelectorAll('.cell-inner.active').forEach(c => { if(c !== el) c.classList.remove('active'); });
   el.classList.toggle('active');
@@ -562,11 +561,19 @@ function showTab(name){
   document.getElementById(`panel-${name}`).classList.add('on');
 }
 
-// ===== IMAGES TAB =====
+// ===== INFO TAB — same thumbnail+badge convention as today, seeded with today's 5 sample images =====
+function renderInfoImages(){
+  document.getElementById('infoImgCount').textContent = 5;
+  const counts = [1,1,1,1,2];
+  document.getElementById('infoThumbRow').innerHTML = REPAIRER_IMAGES.concat(IMGS[0]).map((src,i)=>
+    `<div class="thumb"><img src="${src}"><span class="badge">${counts[i]}</span></div>`).join('');
+}
+
+// ===== IMAGES TAB — "Your Photos" reuses the exact Info-tab thumbnail convention =====
 function renderRepairerImages(){
   document.getElementById('repairerImgCount').textContent = REPAIRER_IMAGES.length;
-  document.getElementById('repairerThumbGrid').innerHTML = REPAIRER_IMAGES.map((src,i)=>
-    `<img class="repairer-thumb" src="${src}" onclick="openRepairerLightbox(${i})">`).join('');
+  document.getElementById('repairerThumbRow').innerHTML = REPAIRER_IMAGES.map((src,i)=>
+    `<div class="thumb"><img src="${src}" onclick="openRepairerLightbox(${i})"><span class="badge">1</span></div>`).join('');
 }
 
 // Suppliers with photos jump straight to that card (collapsed by default) instead of
@@ -582,7 +589,7 @@ function renderSupplierFilterChips(){
         <span class="dot" style="background:${sup.color}22;color:${sup.color}">👤</span>${sup.name}<span class="cnt">${count}</span>
       </div>`;
   }).join('');
-  row.innerHTML = chips + `<span class="expand-all-link" onclick="setAllSupplierGroups(false)">Expand all</span><span class="expand-all-link" onclick="setAllSupplierGroups(true)">Collapse all</span>`;
+  row.innerHTML = chips + `<span class="expand-all-link" onclick="setAllSupplierGroups(false)">Expand all</span><span class="expand-all-link" onclick="setAllSupplierGroups(true)" style="margin-left:8px">Collapse all</span>`;
 }
 function expandOnlySupplier(key){
   document.querySelectorAll('.part-doc-group').forEach(g=>{
@@ -608,43 +615,47 @@ function renderSupplierPhotoGroups(){
     const partsWithPhotos = PARTS.filter(p => p.photos[key] && p.photos[key].length);
     const count = supplierPhotoCount(key);
 
-    let body = '';
+    // Every sub-group renders as the exact same shape as "Your Photos" — a label,
+    // then a .thumb-row of full-size thumbnail cards with the same numbered badge —
+    // so supplier photos aren't a visually distinct, denser pattern from repairer photos.
+    let bodyHtml = '';
     if(generalPhotos.length){
-      body += `<div class="pdg-general-block">
-        <div class="pdg-general-label">📦 General — attached to the whole quote, not a specific part</div>
-        <div class="pdg-thumb-row">${generalPhotos.map(src=>`<img class="pdg-thumb" src="${src}" onclick="openGeneralLightbox('${key}')">`).join('')}</div>
+      bodyHtml += `<div class="pdg-general-block">
+        <div class="pdg-general-label">General — attached to the whole quote, not a specific part</div>
+        <div class="thumb-row" style="padding:0">${generalPhotos.map(src=>`<div class="thumb"><img src="${src}" onclick="openGeneralLightbox('${key}')"><span class="badge">1</span></div>`).join('')}</div>
       </div>`;
     }
-    body += partsWithPhotos.map(part=>{
-      return `<div class="pdg-supplier-row">
-        <div class="pdg-sup-chip"><span style="font-weight:700;font-size:12px">${part.name}</span><br><span style="font-size:10px;color:#9CA3AF;font-family:'IBM Plex Mono',monospace">${part.num}</span></div>
-        <div class="pdg-thumb-row">${part.photos[key].map(src=>`<img class="pdg-thumb" src="${src}" onclick="openSupplierLightbox(${part.id},'${key}')">`).join('')}</div>
+    bodyHtml += partsWithPhotos.map(part=>{
+      return `<div>
+        <div class="pdg-part-label">${part.name}<span class="pdg-part-num">${part.num}</span></div>
+        <div class="thumb-row" style="padding:0">${part.photos[key].map(src=>`<div class="thumb"><img src="${src}" onclick="openSupplierLightbox(${part.id},'${key}')"><span class="badge">1</span></div>`).join('')}</div>
       </div>`;
     }).join('');
     if(!generalPhotos.length && !partsWithPhotos.length){
-      body = `<div class="pdg-none">No photos attached by this supplier yet</div>`;
+      bodyHtml = `<div class="pdg-none">No photos attached by this supplier yet</div>`;
     }
 
     const group = document.createElement('div');
     group.className = 'part-doc-group collapsed';
     group.id = `supGroup-${key}`;
     group.innerHTML = `<div class="pdg-head" onclick="toggleSupplierGroup('${key}')">
-        <div class="pdg-sup-dot" style="background:${sup.color}22;color:${sup.color}">👤</div>
         <span class="pn">${sup.name}</span>
         <span class="pdg-count">${count} photo${count===1?'':'s'}</span>
         ${count ? `<span class="dl-btn" style="margin-left:auto" onclick="event.stopPropagation(); downloadAllFromSupplier('${key}')">⬇ Download All (${count})</span>` : ''}
         <span class="pdg-chevron">▾</span>
-      </div><div class="pdg-body">${body}</div>`;
+      </div><div class="pdg-body">${bodyHtml}</div>`;
     wrap.appendChild(group);
   });
 }
 
 renderSupplierResponses();
+renderGridHead();
 renderGrid();
+renderInfoImages();
 renderRepairerImages();
 renderSupplierPhotoGroups();
 renderSupplierFilterChips();
-document.getElementById('totalImgCount').textContent = `(${totalPhotoCount()} total)`;
+document.getElementById('totalImgCount').textContent = totalPhotoCount();
 </script>
 </body>
 </html>
