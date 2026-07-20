@@ -109,6 +109,14 @@ table.parts td.desc{text-align:left;font-weight:bold}
 .btn-ghost:hover{background:#ddd}
 .btn-green{background:#3aa845;border-color:#3aa845;color:#fff}
 .btn-green:hover{background:#328f3c}
+
+.thumb-card img{cursor:zoom-in}
+
+/* ===== LIGHTBOX (view full-size attached photo) ===== */
+.lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;display:none;align-items:center;justify-content:center}
+.lightbox-overlay.open{display:flex}
+.lightbox-overlay img{max-width:90vw;max-height:85vh;border:2px solid #fff}
+.lightbox-close{position:absolute;top:18px;right:24px;width:32px;height:32px;background:#3aa845;color:#fff;border:none;font-weight:900;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
@@ -270,6 +278,12 @@ table.parts td.desc{text-align:left;font-weight:bold}
   </div>
 </div>
 
+<!-- LIGHTBOX: full-size view of an attached photo -->
+<div class="lightbox-overlay" id="lightboxOverlay" onclick="if(event.target===this)closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="">
+</div>
+
 <script>
 const SAMPLE_IMAGES = [
   'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=300&h=300&fit=crop',
@@ -286,8 +300,8 @@ let nextPhotoId = 100;
 // Seeded with Bonnet's 2 photos already shown in the table on page load
 const partPhotos = {
   2: [
-    {id:-1, src:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=80&h=80&fit=crop'},
-    {id:-2, src:'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=80&h=80&fit=crop'}
+    {id:-1, src:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=300&h=300&fit=crop'},
+    {id:-2, src:'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=300&h=300&fit=crop'}
   ]
 };
 
@@ -295,6 +309,7 @@ function openUploader(partId, partName){
   document.getElementById('uploadOverlay').classList.add('open');
   document.getElementById('partTagSelect').value = partId ? String(partId) : 'general';
   document.getElementById('umSub').textContent = partName ? `Quote — Toyota Corolla, 1/2017 · tagging photos to "${partName}"` : 'Quote — Toyota Corolla, 1/2017';
+  renderThumbGrid(partId ? String(partId) : 'general');
 }
 function closeUploader(){
   document.getElementById('uploadOverlay').classList.remove('open');
@@ -303,10 +318,36 @@ function toggleLegacy(){
   document.getElementById('legacyOverlay').classList.toggle('open');
 }
 
+// Renders every photo already attached to this part so the repairer/supplier can actually
+// see and open what was uploaded previously, not just a blank drop-zone.
+function renderThumbGrid(partId){
+  const grid = document.getElementById('thumbGrid');
+  grid.innerHTML = '';
+  const photos = partPhotos[partId] || [];
+  photos.forEach(p => grid.appendChild(buildThumbCard(p.id, p.src, partId, false)));
+}
+function buildThumbCard(photoId, src, partId, isUploading){
+  const partName = PART_NAMES[partId];
+  const card = document.createElement('div');
+  card.className = 'thumb-card';
+  card.innerHTML = `
+    <img src="${src}" onclick="openLightbox('${src}')">
+    ${isUploading ? '<div class="thumb-uploading">Uploading…</div><div class="thumb-progress" style="width:0%"></div>' : ''}
+    <button class="thumb-remove" onclick="removePhoto(this, ${photoId}, '${partId}')">✕</button>
+    <div class="thumb-tag">${partName}</div>`;
+  return card;
+}
+function openLightbox(src){
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightboxOverlay').classList.add('open');
+}
+function closeLightbox(){
+  document.getElementById('lightboxOverlay').classList.remove('open');
+}
+
 function handleFiles(files){
   const grid = document.getElementById('thumbGrid');
   const partId = document.getElementById('partTagSelect').value;
-  const partName = PART_NAMES[partId];
   Array.from(files).forEach(() => {
     const src = SAMPLE_IMAGES[imgCycle % SAMPLE_IMAGES.length]; imgCycle++;
     const photoId = nextPhotoId++;
@@ -314,14 +355,7 @@ function handleFiles(files){
       if(!partPhotos[partId]) partPhotos[partId] = [];
       partPhotos[partId].push({id:photoId, src});
     }
-    const card = document.createElement('div');
-    card.className = 'thumb-card';
-    card.innerHTML = `
-      <img src="${src}">
-      <div class="thumb-uploading">Uploading…</div>
-      <div class="thumb-progress" style="width:0%"></div>
-      <button class="thumb-remove" onclick="removePhoto(this, ${photoId}, '${partId}')">✕</button>
-      <div class="thumb-tag">${partName}</div>`;
+    const card = buildThumbCard(photoId, src, partId, true);
     grid.appendChild(card);
     const bar = card.querySelector('.thumb-progress');
     const overlay = card.querySelector('.thumb-uploading');
