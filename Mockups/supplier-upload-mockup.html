@@ -201,13 +201,7 @@ table.parts td.desc{text-align:left;font-weight:bold}
         </select></td>
         <td><span class="pill on"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td>
         <td><span class="add-notes">Add Notes</span></td><td><span class="alt-plus">+</span></td>
-        <td class="photo-cell-legacy" id="photoCell-2">
-          <div class="photo-thumbs-legacy" onclick="openUploader(2,'Bonnet')">
-            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=80&h=80&fit=crop">
-            <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=80&h=80&fit=crop">
-            <span class="photo-count-legacy">2</span>
-          </div>
-        </td>
+        <td class="photo-cell-legacy" id="photoCell-2"><span class="photo-link" onclick="openUploader(2,'Bonnet')">📷 Attach photos</span></td>
       </tr>
       <tr data-part="3">
         <td><input type="checkbox"></td><td>3</td>
@@ -297,13 +291,8 @@ const PART_NAMES = {general:'Whole quote (general)',1:'ADAS Calibration - Advise
 let sessionCount = 0;
 let imgCycle = 0;
 let nextPhotoId = 100;
-// Seeded with Bonnet's 2 photos already shown in the table on page load
-const partPhotos = {
-  2: [
-    {id:-1, src:'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=300&h=300&fit=crop'},
-    {id:-2, src:'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=300&h=300&fit=crop'}
-  ]
-};
+// Every part starts with no attached photos
+const partPhotos = {};
 
 function openUploader(partId, partName){
   document.getElementById('uploadOverlay').classList.add('open');
@@ -382,7 +371,7 @@ function updatePartCell(partId){
   if(!photos.length){
     cell.innerHTML = `<span class="photo-link" onclick="openUploader(${partId},'${partName}')">📷 Attach photos</span>`;
   } else {
-    const thumbs = photos.slice(0,2).map(p => `<img src="${p.src}">`).join('');
+    const thumbs = photos.slice(-2).map(p => `<img src="${p.src}">`).join('');
     cell.innerHTML = `<div class="photo-thumbs-legacy" onclick="openUploader(${partId},'${partName}')">${thumbs}<span class="photo-count-legacy">${photos.length}</span></div>`;
   }
 }
