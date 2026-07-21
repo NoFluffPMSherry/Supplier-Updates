@@ -245,7 +245,7 @@ table.parts td.desc{text-align:left;font-weight:bold}
     <div class="um-body">
       <div class="tag-field">
         <div class="tag-label">Attach to</div>
-        <select class="tag-select" id="partTagSelect">
+        <select class="tag-select" id="partTagSelect" onchange="renderThumbGrid(this.value)">
           <option value="general">Whole quote (general — not tied to one part)</option>
           <option value="1">ADAS Calibration - Advise &amp; Qu..</option>
           <option value="2">Bonnet — 5330112B10</option>
@@ -340,10 +340,8 @@ function handleFiles(files){
   Array.from(files).forEach(() => {
     const src = SAMPLE_IMAGES[imgCycle % SAMPLE_IMAGES.length]; imgCycle++;
     const photoId = nextPhotoId++;
-    if(partId !== 'general'){
-      if(!partPhotos[partId]) partPhotos[partId] = [];
-      partPhotos[partId].push({id:photoId, src});
-    }
+    if(!partPhotos[partId]) partPhotos[partId] = [];
+    partPhotos[partId].push({id:photoId, src});
     const card = buildThumbCard(photoId, src, partId, true);
     grid.appendChild(card);
     const bar = card.querySelector('.thumb-progress');
@@ -358,10 +356,10 @@ function handleFiles(files){
 function removePhoto(btn, photoId, partId){
   btn.closest('.thumb-card').remove();
   updateCount(-1);
-  if(partId !== 'general' && partPhotos[partId]){
+  if(partPhotos[partId]){
     partPhotos[partId] = partPhotos[partId].filter(p => p.id !== Number(photoId) && p.id !== photoId);
-    updatePartCell(partId);
   }
+  if(partId !== 'general') updatePartCell(partId);
 }
 function updatePartCell(partId){
   const cell = document.getElementById(`photoCell-${partId}`);
