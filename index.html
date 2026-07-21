@@ -261,7 +261,7 @@ table.parts td.desc{text-align:left;font-weight:bold}
 <div class="modal-overlay" id="uploadOverlay" onclick="if(event.target===this)closeUploader()">
   <div class="upload-modal">
     <div class="um-header">
-      <div><div class="um-title">Attach Photos</div><div class="um-sub" id="umSub">Quote — Toyota Corolla, 1/2017</div></div>
+      <div><div class="um-title">Attach Files</div><div class="um-sub" id="umSub">Quote — Toyota Corolla, 1/2017</div></div>
       <button class="um-close" onclick="closeUploader()">✕</button>
     </div>
     <div class="um-body">
@@ -273,20 +273,20 @@ table.parts td.desc{text-align:left;font-weight:bold}
           <option value="2">Bonnet — 5330112B10</option>
           <option value="3">Bonnet Emblem</option>
         </select>
-        <div class="tag-hint">Tagging a photo to a part means the repairer sees it right next to your price for that part — not buried in a generic documents list.</div>
+        <div class="tag-hint">Tagging a file to a part means the repairer sees it right next to your price for that part — not buried in a generic documents list.</div>
       </div>
 
       <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
         <div class="dz-icon">⬆️</div>
-        <div class="dz-title">Drag &amp; drop photos here, or click to browse</div>
-        <div class="dz-sub">No limit on how many — JPG, PNG, HEIC up to 15MB each</div>
-        <input class="dz-input" type="file" id="fileInput" multiple accept="image/*" onchange="handleFiles(this.files)">
+        <div class="dz-title">Drag &amp; drop files here, or click to browse</div>
+        <div class="dz-sub">No limit on how many — photos, PDFs, spreadsheets, and other documents</div>
+        <input class="dz-input" type="file" id="fileInput" multiple onchange="handleFiles(this.files)">
       </div>
 
       <div class="thumb-grid" id="thumbGrid"></div>
     </div>
     <div class="um-footer">
-      <div class="um-footer-info"><strong id="photoTotalCount">0</strong> photos attached this session</div>
+      <div class="um-footer-info"><strong id="photoTotalCount">0</strong> files attached this session</div>
       <div class="spacer"></div>
       <button class="btn btn-ghost" onclick="closeUploader()">Cancel</button>
       <button class="btn btn-green" id="doneBtn" onclick="closeUploader()">Done</button>
@@ -348,7 +348,7 @@ const partPhotos = {};
 function openUploader(partId, partName){
   document.getElementById('uploadOverlay').classList.add('open');
   document.getElementById('partTagSelect').value = partId ? String(partId) : 'general';
-  document.getElementById('umSub').textContent = partName ? `Quote — Toyota Corolla, 1/2017 · tagging photos to "${partName}"` : 'Quote — Toyota Corolla, 1/2017';
+  document.getElementById('umSub').textContent = partName ? `Quote — Toyota Corolla, 1/2017 · tagging files to "${partName}"` : 'Quote — Toyota Corolla, 1/2017';
   renderThumbGrid();
 }
 function closeUploader(){
