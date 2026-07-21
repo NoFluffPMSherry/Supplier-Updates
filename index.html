@@ -213,7 +213,7 @@ table.parts td.desc{text-align:left;font-weight:bold}
         </select></td>
         <td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill on"></span></td><td><span class="pill"></span></td>
         <td><span class="add-notes">Add Notes</span></td><td><span class="alt-plus">+</span></td>
-        <td class="photo-cell-legacy" id="photoCell-1"><span class="photo-link" onclick="openUploader(1,'ADAS Calibration - Advise &amp; Qu..')">📷 Attach photos</span></td>
+        <td class="photo-cell-legacy" id="photoCell-1"><span class="photo-link" onclick="openUploader(1,'ADAS Calibration - Advise &amp; Qu..')">📷 Add</span></td>
       </tr>
       <tr data-part="2">
         <td><input type="checkbox"></td><td>2</td>
@@ -223,7 +223,7 @@ table.parts td.desc{text-align:left;font-weight:bold}
         </select></td>
         <td><span class="pill on"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td>
         <td><span class="add-notes">Add Notes</span></td><td><span class="alt-plus">+</span></td>
-        <td class="photo-cell-legacy" id="photoCell-2"><span class="photo-link" onclick="openUploader(2,'Bonnet')">📷 Attach photos</span></td>
+        <td class="photo-cell-legacy" id="photoCell-2"><span class="photo-link" onclick="openUploader(2,'Bonnet')">📷 Add</span></td>
       </tr>
       <tr data-part="3">
         <td><input type="checkbox"></td><td>3</td>
@@ -233,7 +233,7 @@ table.parts td.desc{text-align:left;font-weight:bold}
         </select></td>
         <td><span class="pill on"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td>
         <td><span class="add-notes">Add Notes</span></td><td><span class="alt-plus">+</span></td>
-        <td class="photo-cell-legacy" id="photoCell-3"><span class="photo-link" onclick="openUploader(3,'Bonnet Emblem')">📷 Attach photos</span></td>
+        <td class="photo-cell-legacy" id="photoCell-3"><span class="photo-link" onclick="openUploader(3,'Bonnet Emblem')">📷 Add</span></td>
       </tr>
     </tbody>
   </table>
@@ -464,7 +464,7 @@ function updatePartCell(partId){
   const photos = partPhotos[partId] || [];
   const partName = PART_NAMES[partId];
   if(!photos.length){
-    cell.innerHTML = `<span class="photo-link" onclick="openUploader(${partId},'${partName}')">📷 Attach photos</span>`;
+    cell.innerHTML = `<span class="photo-link" onclick="openUploader(${partId},'${partName}')">📷 Add</span>`;
   } else {
     const thumbs = photos.slice(-2).map(p => `<img src="${p.src}">`).join('');
     cell.innerHTML = `<div class="photo-thumbs-legacy" onclick="openUploader(${partId},'${partName}')">${thumbs}<span class="photo-count-legacy">${photos.length}</span></div>`;
