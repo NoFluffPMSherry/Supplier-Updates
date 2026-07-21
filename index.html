@@ -92,12 +92,16 @@ table.parts td.desc{text-align:left;font-weight:bold}
 .dz-sub{font-size:11px;color:#888;margin-top:3px}
 .dz-input{display:none}
 
-.thumb-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
-.thumb-card{position:relative;border:1px solid #999;background:#fafafa}
-.thumb-card img{width:100%;height:70px;object-fit:cover;display:block}
+.thumb-grid{margin-top:14px}
+.thumb-section{margin-bottom:14px}
+.thumb-section:last-child{margin-bottom:0}
+.thumb-section-label{font-size:11px;font-weight:700;color:#555;margin-bottom:6px}
+.thumb-row{display:flex;flex-wrap:wrap;gap:8px}
+.thumb-card{position:relative;width:110px;height:82px;border:1px solid #999;background:#fafafa}
+.thumb-card img{width:100%;height:100%;object-fit:cover;cursor:pointer;display:block}
+.thumb-badge{position:absolute;bottom:4px;left:4px;background:#333;color:#fff;font-size:11px;font-weight:700;padding:1px 6px}
 .thumb-remove{position:absolute;top:3px;right:3px;width:18px;height:18px;background:#333;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none}
 .thumb-remove:hover{background:#c0392b}
-.thumb-tag{font-size:9px;font-weight:700;color:#444;padding:3px 5px;background:#fff;border-top:1px solid #ddd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .thumb-progress{position:absolute;bottom:0;left:0;height:3px;background:#3aa845;transition:width .3s}
 .thumb-uploading{position:absolute;inset:0;background:rgba(255,255,255,.75);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#333}
 
@@ -246,7 +250,7 @@ table.parts td.desc{text-align:left;font-weight:bold}
     <div class="um-body">
       <div class="tag-field">
         <div class="tag-label">Attach to</div>
-        <select class="tag-select" id="partTagSelect" onchange="renderThumbGrid(this.value)">
+        <select class="tag-select" id="partTagSelect">
           <option value="general">Whole quote (general — not tied to one part)</option>
           <option value="1">ADAS Calibration - Advise &amp; Qu..</option>
           <option value="2">Bonnet — 5330112B10</option>
@@ -319,7 +323,7 @@ function openUploader(partId, partName){
   document.getElementById('uploadOverlay').classList.add('open');
   document.getElementById('partTagSelect').value = partId ? String(partId) : 'general';
   document.getElementById('umSub').textContent = partName ? `Quote — Toyota Corolla, 1/2017 · tagging photos to "${partName}"` : 'Quote — Toyota Corolla, 1/2017';
-  renderThumbGrid(partId ? String(partId) : 'general');
+  renderThumbGrid();
 }
 function closeUploader(){
   document.getElementById('uploadOverlay').classList.remove('open');
@@ -338,23 +342,43 @@ function closePurchaserPhotos(){
   document.getElementById('purchaserPhotosOverlay').classList.remove('open');
 }
 
-// Renders every photo already attached to this part so the repairer/supplier can actually
-// see and open what was uploaded previously, not just a blank drop-zone.
-function renderThumbGrid(partId){
+// Renders every photo attached to this quote so far, grouped by target (whole quote /
+// each part) — not just whatever the "Attach to" dropdown currently has selected, so the
+// footer's total count always matches what's visibly on screen.
+function renderThumbGrid(){
   const grid = document.getElementById('thumbGrid');
   grid.innerHTML = '';
-  const photos = partPhotos[partId] || [];
-  photos.forEach(p => grid.appendChild(buildThumbCard(p.id, p.src, partId, false)));
+  const order = ['general','1','2','3'];
+  order.forEach(partId=>{
+    const photos = partPhotos[partId] || [];
+    if(!photos.length) return;
+    grid.appendChild(buildThumbSection(partId, photos));
+  });
 }
-function buildThumbCard(photoId, src, partId, isUploading){
-  const partName = PART_NAMES[partId];
+function buildThumbSection(partId, photos){
+  const section = document.createElement('div');
+  section.className = 'thumb-section';
+  section.id = `thumbSection-${partId}`;
+  section.innerHTML = `<div class="thumb-section-label">${PART_NAMES[partId]}</div><div class="thumb-row"></div>`;
+  const row = section.querySelector('.thumb-row');
+  photos.forEach((p,i) => row.appendChild(buildThumbCard(p.id, p.src, partId, false, i+1)));
+  return section;
+}
+function getOrCreateSectionRow(partId){
+  let section = document.getElementById(`thumbSection-${partId}`);
+  if(!section){
+    section = buildThumbSection(partId, []);
+    document.getElementById('thumbGrid').appendChild(section);
+  }
+  return section.querySelector('.thumb-row');
+}
+function buildThumbCard(photoId, src, partId, isUploading, badgeNum){
   const card = document.createElement('div');
   card.className = 'thumb-card';
   card.innerHTML = `
     <img src="${src}" onclick="openLightbox('${src}')">
-    ${isUploading ? '<div class="thumb-uploading">Uploading…</div><div class="thumb-progress" style="width:0%"></div>' : ''}
-    <button class="thumb-remove" onclick="removePhoto(this, ${photoId}, '${partId}')">✕</button>
-    <div class="thumb-tag">${partName}</div>`;
+    ${isUploading ? '<div class="thumb-uploading">Uploading…</div><div class="thumb-progress" style="width:0%"></div>' : `<span class="thumb-badge">${badgeNum}</span>`}
+    <button class="thumb-remove" onclick="removePhoto(${photoId}, '${partId}')">✕</button>`;
   return card;
 }
 function openLightbox(src){
@@ -366,30 +390,32 @@ function closeLightbox(){
 }
 
 function handleFiles(files){
-  const grid = document.getElementById('thumbGrid');
   const partId = document.getElementById('partTagSelect').value;
+  const row = getOrCreateSectionRow(partId);
   Array.from(files).forEach(() => {
     const src = SAMPLE_IMAGES[imgCycle % SAMPLE_IMAGES.length]; imgCycle++;
     const photoId = nextPhotoId++;
     if(!partPhotos[partId]) partPhotos[partId] = [];
     partPhotos[partId].push({id:photoId, src});
     const card = buildThumbCard(photoId, src, partId, true);
-    grid.appendChild(card);
+    row.appendChild(card);
     const bar = card.querySelector('.thumb-progress');
     const overlay = card.querySelector('.thumb-uploading');
     requestAnimationFrame(()=>{ bar.style.width='100%'; });
-    setTimeout(()=>{ overlay.remove(); }, 650);
+    // Once the upload animation finishes, re-render from state so badge numbers
+    // and section grouping stay accurate rather than just clearing the overlay in place.
+    setTimeout(()=>{ renderThumbGrid(); }, 650);
     updateCount(1);
   });
   document.getElementById('fileInput').value = '';
   if(partId !== 'general') updatePartCell(partId);
 }
-function removePhoto(btn, photoId, partId){
-  btn.closest('.thumb-card').remove();
+function removePhoto(photoId, partId){
   updateCount(-1);
   if(partPhotos[partId]){
     partPhotos[partId] = partPhotos[partId].filter(p => p.id !== Number(photoId) && p.id !== photoId);
   }
+  renderThumbGrid();
   if(partId !== 'general') updatePartCell(partId);
 }
 function updatePartCell(partId){
