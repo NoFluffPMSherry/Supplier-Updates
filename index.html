@@ -147,9 +147,9 @@ table.parts td.desc{text-align:left;font-weight:bold}
   <div class="quote-options">
     <div class="qo-btn"><div class="qo-icon">📧</div><div class="qo-label">DMS EMAIL</div></div>
     <div class="qo-btn"><div class="qo-icon">⬆️</div><div class="qo-label">DMS UPLOAD</div></div>
-    <div class="qo-btn" onclick="openUploader(null)" title="Your photos/documents attached to this quote as the supplier"><div class="qo-icon attach">📎<span class="qo-badge" id="photosIconBadge" style="display:none">0</span></div><div class="qo-label">ATTACH FILE <span class="new-tag">NEW</span></div></div>
+    <div class="qo-btn" onclick="openUploader(null)" title="Your photos/documents attached to this quote as the supplier"><div class="qo-icon attach">📎<span class="qo-badge" id="photosIconBadge" style="display:none">0</span></div><div class="qo-label">MY FILES <span class="new-tag">NEW</span></div></div>
     <div class="qo-btn"><div class="qo-icon">🔻</div><div class="qo-label">FILTER PARTS</div></div>
-    <div class="qo-btn" onclick="openRepairerPhotos()" title="Photos attached by the purchaser (repairer) — view only"><div class="qo-icon">📁<span class="qo-badge" id="repairerPhotosBadge" style="display:none">0</span></div><div class="qo-label">REPAIRER PHOTOS</div></div>
+    <div class="qo-btn" onclick="openPurchaserPhotos()" title="Photos uploaded by the purchaser — view only, nothing to attach here"><div class="qo-icon">📁<span class="qo-badge" id="purchaserPhotosBadge" style="display:none">0</span></div><div class="qo-label">PURCHASER PHOTOS</div></div>
   </div>
 
   <div class="est-row">Set Est. Delivery for selected: <select id="bulkEstDelivery" onchange="applyBulkEstDelivery(this.value)">
@@ -273,20 +273,20 @@ table.parts td.desc{text-align:left;font-weight:bold}
   </div>
 </div>
 
-<!-- REPAIRER PHOTOS: read-only view of photos the purchaser (repairer) attached to the quote -->
-<div class="modal-overlay" id="repairerPhotosOverlay" onclick="if(event.target===this)closeRepairerPhotos()">
+<!-- PURCHASER PHOTOS: read-only view of photos the purchaser (repairer) attached to the quote -->
+<div class="modal-overlay" id="purchaserPhotosOverlay" onclick="if(event.target===this)closePurchaserPhotos()">
   <div class="upload-modal">
     <div class="um-header">
-      <div><div class="um-title">Repairer Photos</div><div class="um-sub">Quote — Toyota Corolla, 1/2017 · attached by the purchaser, view only</div></div>
-      <button class="um-close" onclick="closeRepairerPhotos()">✕</button>
+      <div><div class="um-title">Purchaser Photos</div><div class="um-sub">Quote — Toyota Corolla, 1/2017 · uploaded by the purchaser, for reference only — no attach/upload here</div></div>
+      <button class="um-close" onclick="closePurchaserPhotos()">✕</button>
     </div>
     <div class="um-body">
-      <div class="thumb-grid" id="repairerThumbGrid"></div>
+      <div class="thumb-grid" id="purchaserThumbGrid"></div>
     </div>
     <div class="um-footer">
-      <div class="um-footer-info"><strong id="repairerPhotoCount">0</strong> photos from the repairer</div>
+      <div class="um-footer-info"><strong id="purchaserPhotoCount">0</strong> photos from the purchaser</div>
       <div class="spacer"></div>
-      <button class="btn btn-green" onclick="closeRepairerPhotos()">Close</button>
+      <button class="btn btn-green" onclick="closePurchaserPhotos()">Close</button>
     </div>
   </div>
 </div>
@@ -307,8 +307,8 @@ const SAMPLE_IMAGES = [
   'https://images.unsplash.com/photo-1541348263662-e068662d82af?w=300&h=300&fit=crop'
 ];
 const PART_NAMES = {general:'Whole quote (general)',1:'ADAS Calibration - Advise & Qu..',2:'Bonnet',3:'Bonnet Emblem'};
-// Simulates photos the repairer already attached upstream (FlexiQuote) before this quote reached the supplier — read only from the supplier's side
-const REPAIRER_PHOTOS = [SAMPLE_IMAGES[3], SAMPLE_IMAGES[4], SAMPLE_IMAGES[5]];
+// Simulates photos the purchaser already uploaded upstream (FlexiQuote) before this quote reached the supplier — read only from the supplier's side
+const PURCHASER_PHOTOS = [SAMPLE_IMAGES[3], SAMPLE_IMAGES[4], SAMPLE_IMAGES[5]];
 let sessionCount = 0;
 let imgCycle = 0;
 let nextPhotoId = 100;
@@ -328,14 +328,14 @@ function toggleLegacy(){
   document.getElementById('legacyOverlay').classList.toggle('open');
 }
 
-function openRepairerPhotos(){
-  const grid = document.getElementById('repairerThumbGrid');
-  grid.innerHTML = REPAIRER_PHOTOS.map(src => `<div class="thumb-card"><img src="${src}" onclick="openLightbox('${src}')"></div>`).join('');
-  document.getElementById('repairerPhotoCount').textContent = REPAIRER_PHOTOS.length;
-  document.getElementById('repairerPhotosOverlay').classList.add('open');
+function openPurchaserPhotos(){
+  const grid = document.getElementById('purchaserThumbGrid');
+  grid.innerHTML = PURCHASER_PHOTOS.map(src => `<div class="thumb-card"><img src="${src}" onclick="openLightbox('${src}')"></div>`).join('');
+  document.getElementById('purchaserPhotoCount').textContent = PURCHASER_PHOTOS.length;
+  document.getElementById('purchaserPhotosOverlay').classList.add('open');
 }
-function closeRepairerPhotos(){
-  document.getElementById('repairerPhotosOverlay').classList.remove('open');
+function closePurchaserPhotos(){
+  document.getElementById('purchaserPhotosOverlay').classList.remove('open');
 }
 
 // Renders every photo already attached to this part so the repairer/supplier can actually
@@ -426,10 +426,10 @@ function applyBulkEstDelivery(value){
   document.getElementById('bulkEstDelivery').value = '';
 }
 
-// Repairer's own photos are attached upstream, not by the supplier, so this badge is set once on load rather than driven by updateCount()
-const repairerBadge = document.getElementById('repairerPhotosBadge');
-repairerBadge.style.display = REPAIRER_PHOTOS.length > 0 ? 'flex' : 'none';
-repairerBadge.textContent = REPAIRER_PHOTOS.length;
+// Purchaser's own photos are uploaded upstream, not by the supplier, so this badge is set once on load rather than driven by updateCount()
+const purchaserBadge = document.getElementById('purchaserPhotosBadge');
+purchaserBadge.style.display = PURCHASER_PHOTOS.length > 0 ? 'flex' : 'none';
+purchaserBadge.textContent = PURCHASER_PHOTOS.length;
 
 const dz = document.getElementById('dropzone');
 ['dragenter','dragover'].forEach(evt => dz.addEventListener(evt, e=>{ e.preventDefault(); dz.classList.add('drag'); }));
