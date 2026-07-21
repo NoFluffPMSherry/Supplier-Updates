@@ -73,6 +73,23 @@ table.parts td.desc{text-align:left;font-weight:bold}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:950;display:none;align-items:flex-start;justify-content:center;padding-top:8vh}
 .modal-overlay.open{display:flex}
 .upload-modal{background:#fff;border:2px solid #000;width:560px;max-height:80vh;display:flex;flex-direction:column;font-family:Verdana,Geneva,sans-serif}
+.upload-modal.wide{width:760px}
+
+/* PURCHASER PHOTOS — thumbnail rail + zoom pane, the same pattern already used
+   elsewhere in the real product (repairer's photo lightbox), reused as-is here
+   rather than the grid-of-cards style used in the supplier's own upload modal. */
+.pv-layout{display:flex;gap:16px;min-height:300px}
+.pv-thumbs{width:190px;border-right:1px solid #ccc;padding-right:14px;flex-shrink:0}
+.pv-thumbs-label{font-size:13px;font-weight:700;color:#222;margin-bottom:8px}
+.pv-thumb-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.pv-thumb{position:relative;width:80px;height:80px;border:1px solid #999;background:#fafafa;cursor:pointer}
+.pv-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.pv-thumb.active{border:2px solid #3aa845}
+.pv-zoom{flex:1;min-width:0}
+.pv-zoom-label{font-size:13px;font-weight:700;color:#222;margin-bottom:12px}
+.pv-zoom-hint{font-weight:400;color:#888}
+.pv-zoom-frame{display:flex;align-items:center;justify-content:center;min-height:240px}
+.pv-zoom-frame img{max-width:100%;max-height:280px;object-fit:contain;border:1px solid #ccc}
 .um-header{padding:14px 18px;background:#fff;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid #ccc}
 .um-title{font-size:16px;font-weight:700;color:#222}
 .um-sub{font-size:11px;color:#777;margin-top:3px}
@@ -279,13 +296,22 @@ table.parts td.desc{text-align:left;font-weight:bold}
 
 <!-- PURCHASER PHOTOS: read-only view of photos the purchaser (repairer) attached to the quote -->
 <div class="modal-overlay" id="purchaserPhotosOverlay" onclick="if(event.target===this)closePurchaserPhotos()">
-  <div class="upload-modal">
+  <div class="upload-modal wide">
     <div class="um-header">
       <div><div class="um-title">Purchaser Photos</div><div class="um-sub">Quote — Toyota Corolla, 1/2017 · uploaded by the purchaser, for reference only — no attach/upload here</div></div>
       <button class="um-close" onclick="closePurchaserPhotos()">✕</button>
     </div>
     <div class="um-body">
-      <div class="thumb-grid" id="purchaserThumbGrid"></div>
+      <div class="pv-layout">
+        <div class="pv-thumbs">
+          <div class="pv-thumbs-label">Thumbnails</div>
+          <div class="pv-thumb-grid" id="purchaserThumbGrid"></div>
+        </div>
+        <div class="pv-zoom">
+          <div class="pv-zoom-label">Zoom. <span class="pv-zoom-hint" id="purchaserZoomHint">Click on Thumbnails on the left to Zoom</span></div>
+          <div class="pv-zoom-frame"><img id="purchaserZoomImg" src="" style="display:none"></div>
+        </div>
+      </div>
     </div>
     <div class="um-footer">
       <div class="um-footer-info"><strong id="purchaserPhotoCount">0</strong> photos from the purchaser</div>
@@ -334,12 +360,26 @@ function toggleLegacy(){
 
 function openPurchaserPhotos(){
   const grid = document.getElementById('purchaserThumbGrid');
-  grid.innerHTML = PURCHASER_PHOTOS.map(src => `<div class="thumb-card"><img src="${src}" onclick="openLightbox('${src}')"></div>`).join('');
+  grid.innerHTML = PURCHASER_PHOTOS.map((src,i) =>
+    `<div class="pv-thumb" onclick="zoomPurchaserPhoto(${i}, this)"><img src="${src}"><span class="thumb-badge">${i+1}</span></div>`).join('');
   document.getElementById('purchaserPhotoCount').textContent = PURCHASER_PHOTOS.length;
+  document.getElementById('purchaserZoomImg').style.display = 'none';
+  document.getElementById('purchaserZoomImg').src = '';
+  document.getElementById('purchaserZoomHint').style.display = 'inline';
   document.getElementById('purchaserPhotosOverlay').classList.add('open');
 }
 function closePurchaserPhotos(){
   document.getElementById('purchaserPhotosOverlay').classList.remove('open');
+}
+// Left-rail thumbnail → right-pane zoom, matching the existing repairer-side photo
+// viewer pattern rather than a click-to-open overlay lightbox.
+function zoomPurchaserPhoto(i, el){
+  document.querySelectorAll('#purchaserThumbGrid .pv-thumb').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const img = document.getElementById('purchaserZoomImg');
+  img.src = PURCHASER_PHOTOS[i];
+  img.style.display = 'block';
+  document.getElementById('purchaserZoomHint').style.display = 'none';
 }
 
 // Renders every photo attached to this quote so far, grouped by target (whole quote /
