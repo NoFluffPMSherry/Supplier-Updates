@@ -24,8 +24,9 @@ table.info input{border:1px solid #999;padding:3px 5px;font-size:12px;width:140p
 
 .quote-options{border:1px solid #ccc;border-top:none;padding:12px;display:flex;gap:14px;margin-bottom:14px}
 .qo-btn{width:88px;text-align:center;cursor:pointer}
-.qo-icon{width:60px;height:52px;background:#e8e8e8;border:1px solid #b5b5b5;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 4px}
+.qo-icon{width:60px;height:52px;background:#e8e8e8;border:1px solid #b5b5b5;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 4px;position:relative}
 .qo-icon.attach{background:#eef2ff;border-color:#a5b4fc}
+.qo-badge{position:absolute;top:-8px;right:-8px;background:#d64545;color:#fff;font-size:11px;font-weight:bold;font-family:'Segoe UI',Arial,sans-serif;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid #fff}
 .qo-label{font-size:10.5px;font-weight:bold;color:#333}
 .qo-btn:hover .qo-icon{border-color:#3aa845}
 
@@ -148,7 +149,7 @@ table.parts td.desc{text-align:left;font-weight:bold}
     <div class="qo-btn"><div class="qo-icon">⬆️</div><div class="qo-label">DMS UPLOAD</div></div>
     <div class="qo-btn" onclick="openUploader(null)"><div class="qo-icon attach">📎</div><div class="qo-label">ATTACH FILE <span class="new-tag">NEW</span></div></div>
     <div class="qo-btn"><div class="qo-icon">🔻</div><div class="qo-label">FILTER PARTS</div></div>
-    <div class="qo-btn"><div class="qo-icon">📁</div><div class="qo-label">PHOTOS</div></div>
+    <div class="qo-btn" onclick="openUploader(null)"><div class="qo-icon">📁<span class="qo-badge" id="photosIconBadge" style="display:none">0</span></div><div class="qo-label">PHOTOS</div></div>
   </div>
 
   <div class="est-row">Set Est. Delivery for selected: <select id="bulkEstDelivery" onchange="applyBulkEstDelivery(this.value)">
@@ -375,7 +376,14 @@ function updatePartCell(partId){
 }
 function updateCount(delta){
   sessionCount += delta;
-  document.getElementById('photoTotalCount').textContent = Math.max(0,sessionCount);
+  const total = Math.max(0,sessionCount);
+  document.getElementById('photoTotalCount').textContent = total;
+  updatePhotosIconBadge(total);
+}
+function updatePhotosIconBadge(total){
+  const badge = document.getElementById('photosIconBadge');
+  badge.style.display = total > 0 ? 'flex' : 'none';
+  badge.textContent = total;
 }
 
 function applyBulkEstDelivery(value){
