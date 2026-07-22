@@ -169,19 +169,6 @@ table.parts td.desc{text-align:left;font-weight:bold}
     <div class="qo-btn" onclick="openPurchaserPhotos()" title="Photos uploaded by the purchaser — view only, nothing to attach here"><div class="qo-icon">📁<span class="qo-badge" id="purchaserPhotosBadge" style="display:none">0</span></div><div class="qo-label">PURCHASER PHOTOS</div></div>
   </div>
 
-  <div class="est-row">Set Est. Delivery for selected: <select id="bulkEstDelivery" onchange="applyBulkEstDelivery(this.value)">
-    <option value=""></option>
-    <option>Same Day</option>
-    <option>1-2 Days</option>
-    <option>2-3 Days</option>
-    <option>4-5 Days</option>
-    <option>1 Week</option>
-    <option>2-3 Weeks</option>
-    <option>4-6 Weeks</option>
-    <option>6 Weeks+</option>
-    <option>NLA</option>
-  </select></div>
-
   <table class="parts">
     <thead>
       <tr>
@@ -476,16 +463,6 @@ function updateAttachFileBadge(total){
   const badge = document.getElementById('photosIconBadge');
   badge.style.display = total > 0 ? 'flex' : 'none';
   badge.textContent = total;
-}
-
-function applyBulkEstDelivery(value){
-  if(!value) return;
-  document.querySelectorAll('#partsBody tr').forEach(tr=>{
-    const cb = tr.querySelector('input[type=checkbox]');
-    const sel = tr.querySelector('.est-select');
-    if(cb && cb.checked && sel){ sel.value = value; }
-  });
-  document.getElementById('bulkEstDelivery').value = '';
 }
 
 // Purchaser's own photos are uploaded upstream, not by the supplier, so this badge is set once on load rather than driven by updateCount()
