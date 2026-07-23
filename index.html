@@ -320,6 +320,14 @@ let imgCycle = 0;
 let nextPhotoId = 100;
 // Every part starts with no attached photos
 const partPhotos = {};
+   const taskProgress = { partPhoto:false, quotePhoto:false, purchaserViewed:false };
+   function markProgress(key){
+        if(taskProgress[key]) return;
+        taskProgress[key] = true;
+        if(taskProgress.partPhoto && taskProgress.quotePhoto && taskProgress.purchaserViewed){
+               location.hash = 'task-complete';
+        }
+   }
 
 function openUploader(partId, partName){
   document.getElementById('uploadOverlay').classList.add('open');
@@ -335,6 +343,7 @@ function toggleLegacy(){
 }
 
 function openPurchaserPhotos(){
+   markProgress('purchaserViewed');
   const grid = document.getElementById('purchaserThumbGrid');
   grid.innerHTML = PURCHASER_PHOTOS.map((src,i) =>
     `<div class="pv-thumb" onclick="zoomPurchaserPhoto(${i}, this)"><img src="${src}"><span class="thumb-badge">${i+1}</span></div>`).join('');
@@ -407,6 +416,7 @@ function closeLightbox(){
 
 function handleFiles(files){
   const partId = document.getElementById('partTagSelect').value;
+   markProgress(partId === 'general' ? 'quotePhoto' : 'partPhoto');
   const row = getOrCreateSectionRow(partId);
   Array.from(files).forEach(() => {
     const src = SAMPLE_IMAGES[imgCycle % SAMPLE_IMAGES.length]; imgCycle++;
