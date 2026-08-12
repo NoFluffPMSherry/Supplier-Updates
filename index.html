@@ -75,21 +75,16 @@ table.parts td.desc{text-align:left;font-weight:bold}
 .upload-modal{background:#fff;border:2px solid #000;width:560px;max-height:80vh;display:flex;flex-direction:column;font-family:Verdana,Geneva,sans-serif}
 .upload-modal.wide{width:760px}
 
-/* PURCHASER PHOTOS — thumbnail rail + zoom pane, the same pattern already used
-   elsewhere in the real product (repairer's photo lightbox), reused as-is here
-   rather than the grid-of-cards style used in the supplier's own upload modal. */
-.pv-layout{display:flex;gap:16px;min-height:300px}
-.pv-thumbs{width:190px;border-right:1px solid #ccc;padding-right:14px;flex-shrink:0}
-.pv-thumbs-label{font-size:13px;font-weight:700;color:#222;margin-bottom:8px}
-.pv-thumb-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.pv-thumb{position:relative;width:80px;height:80px;border:1px solid #999;background:#fafafa;cursor:pointer}
-.pv-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.pv-thumb.active{border:2px solid #3aa845}
-.pv-zoom{flex:1;min-width:0}
-.pv-zoom-label{font-size:13px;font-weight:700;color:#222;margin-bottom:12px}
-.pv-zoom-hint{font-weight:400;color:#888}
-.pv-zoom-frame{display:flex;align-items:center;justify-content:center;min-height:240px}
-.pv-zoom-frame img{max-width:100%;max-height:280px;object-fit:contain;border:1px solid #ccc}
+/* ATTACHMENTS — one modal, two tabs (My Photos / Repairer Photos) so a long list of
+   your own photos never pushes the purchaser's photos out of easy reach. Both tabs
+   use the same thumbnail-card grid + shared carousel lightbox. */
+.attach-tabs{display:flex;border-bottom:1px solid #ccc;margin-bottom:14px}
+.attach-tab{background:none;border:none;border-bottom:2px solid transparent;padding:8px 4px;margin-right:20px;font-size:13px;font-weight:700;color:#777;cursor:pointer;font-family:inherit}
+.attach-tab:hover{color:#333}
+.attach-tab.active{color:#222;border-bottom-color:#3aa845}
+.attach-tab-count{display:inline-block;background:#ececec;color:#555;font-size:10.5px;font-weight:700;border-radius:8px;padding:1px 6px;margin-left:5px}
+.attach-tab.active .attach-tab-count{background:#3aa845;color:#fff}
+.attach-section-hint{display:block;font-size:11px;color:#888;margin-bottom:10px}
 .um-header{padding:14px 18px;background:#fff;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid #ccc}
 .um-title{font-size:16px;font-weight:700;color:#222}
 .um-sub{font-size:11px;color:#777;margin-top:3px}
@@ -139,6 +134,11 @@ table.parts td.desc{text-align:left;font-weight:bold}
 .lightbox-overlay.open{display:flex}
 .lightbox-overlay img{max-width:90vw;max-height:85vh;border:2px solid #fff}
 .lightbox-close{position:absolute;top:18px;right:24px;width:32px;height:32px;background:#3aa845;color:#fff;border:none;font-weight:900;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;background:rgba(255,255,255,.15);color:#fff;border:none;font-size:26px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.lightbox-nav:hover{background:rgba(255,255,255,.3)}
+.lightbox-prev{left:18px}
+.lightbox-next{right:18px}
+.lightbox-counter{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;font-size:13px;font-weight:600;background:rgba(0,0,0,.5);padding:4px 12px;border-radius:12px}
 </style>
 </head>
 <body>
@@ -164,9 +164,8 @@ table.parts td.desc{text-align:left;font-weight:bold}
   <div class="quote-options">
     <div class="qo-btn"><div class="qo-icon">📧</div><div class="qo-label">DMS EMAIL</div></div>
     <div class="qo-btn"><div class="qo-icon">⬆️</div><div class="qo-label">DMS UPLOAD</div></div>
-    <div class="qo-btn" onclick="openUploader(null)" title="Your photos/documents attached to this quote as the supplier"><div class="qo-icon attach">📎<span class="qo-badge" id="photosIconBadge" style="display:none">0</span></div><div class="qo-label">MY FILES <span class="new-tag">NEW</span></div></div>
+    <div class="qo-btn" onclick="openAttachments(null)" title="View the purchaser's photos and attach your own photos or files to this quote"><div class="qo-icon attach">📎<span class="qo-badge" id="attachmentsBadge" style="display:none">0</span></div><div class="qo-label">ATTACHMENTS <span class="new-tag">NEW</span></div></div>
     <div class="qo-btn"><div class="qo-icon">🔻</div><div class="qo-label">FILTER PARTS</div></div>
-    <div class="qo-btn" onclick="openPurchaserPhotos()" title="Photos uploaded by the purchaser — view only, nothing to attach here"><div class="qo-icon">📁<span class="qo-badge" id="purchaserPhotosBadge" style="display:none">0</span></div><div class="qo-label">PURCHASER PHOTOS</div></div>
   </div>
 
   <table class="parts">
@@ -179,37 +178,37 @@ table.parts td.desc{text-align:left;font-weight:bold}
         <th rowspan="2">Qty</th>
         <th rowspan="2">Total List Price<br>ex GST</th>
         <th rowspan="2">Total Buy Price<br>ex GST</th>
-        <th colspan="4">Type Requested</th>
+        <th colspan="5">Type Requested</th>
         <th rowspan="2">Notes</th>
         <th rowspan="2">Alt</th>
         <th rowspan="2">Photos <span class="new-tag">NEW</span></th>
       </tr>
-      <tr><th>OEM</th><th>USE</th><th>AFT</th><th>REC</th></tr>
+      <tr><th>OEM</th><th>PAR</th><th>USE</th><th>AFT</th><th>REC</th></tr>
     </thead>
     <tbody id="partsBody">
       <tr data-part="1">
         <td><input type="checkbox"></td><td>1</td>
         <td class="desc">ADAS Calibration - Advise &amp; Qu..</td>
         <td></td><td>1</td><td></td><td></td>
-        <td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill on"></span></td><td><span class="pill"></span></td>
+        <td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill on"></span></td><td><span class="pill"></span></td>
         <td><span class="add-notes">Add Notes</span></td><td><span class="alt-plus">+</span></td>
-        <td class="photo-cell-legacy" id="photoCell-1"><span class="photo-link" onclick="openUploader(1,'ADAS Calibration - Advise &amp; Qu..')">📷 Add</span></td>
+        <td class="photo-cell-legacy" id="photoCell-1"><span class="photo-link" onclick="openAttachments(1,'ADAS Calibration - Advise &amp; Qu..')">📷 Add</span></td>
       </tr>
       <tr data-part="2">
         <td><input type="checkbox"></td><td>2</td>
         <td class="desc">Bonnet</td>
         <td>5330112B10</td><td>1</td><td>$334.36</td><td>$267.49</td>
-        <td><span class="pill on"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td>
+        <td><span class="pill on"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td>
         <td><span class="add-notes">Add Notes</span></td><td><span class="alt-plus">+</span></td>
-        <td class="photo-cell-legacy" id="photoCell-2"><span class="photo-link" onclick="openUploader(2,'Bonnet')">📷 Add</span></td>
+        <td class="photo-cell-legacy" id="photoCell-2"><span class="photo-link" onclick="openAttachments(2,'Bonnet')">📷 Add</span></td>
       </tr>
       <tr data-part="3">
         <td><input type="checkbox"></td><td>3</td>
         <td class="desc">Bonnet Emblem</td>
         <td></td><td>1</td><td></td><td></td>
-        <td><span class="pill on"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td>
+        <td><span class="pill on"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td>
         <td><span class="add-notes">Add Notes</span></td><td><span class="alt-plus">+</span></td>
-        <td class="photo-cell-legacy" id="photoCell-3"><span class="photo-link" onclick="openUploader(3,'Bonnet Emblem')">📷 Add</span></td>
+        <td class="photo-cell-legacy" id="photoCell-3"><span class="photo-link" onclick="openAttachments(3,'Bonnet Emblem')">📷 Add</span></td>
       </tr>
     </tbody>
   </table>
@@ -233,74 +232,64 @@ table.parts td.desc{text-align:left;font-weight:bold}
   </div>
 </div>
 
-<!-- MODERN UPLOADER: PROPOSED -->
-<div class="modal-overlay" id="uploadOverlay" onclick="if(event.target===this)closeUploader()">
-  <div class="upload-modal">
-    <div class="um-header">
-      <div><div class="um-title">Attach Files</div><div class="um-sub" id="umSub">Quote — Toyota Corolla, 1/2017</div></div>
-      <button class="um-close" onclick="closeUploader()">✕</button>
-    </div>
-    <div class="um-body">
-      <div class="tag-field">
-        <div class="tag-label">Attach to</div>
-        <select class="tag-select" id="partTagSelect">
-          <option value="general">Whole quote (general — not tied to one part)</option>
-          <option value="1">ADAS Calibration - Advise &amp; Qu..</option>
-          <option value="2">Bonnet — 5330112B10</option>
-          <option value="3">Bonnet Emblem</option>
-        </select>
-        <div class="tag-hint">Tagging a file to a part means the repairer sees it right next to your price for that part — not buried in a generic documents list.</div>
-      </div>
-
-      <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
-        <div class="dz-icon">⬆️</div>
-        <div class="dz-title">Drag &amp; drop files here, or click to browse</div>
-        <div class="dz-sub">No limit on how many — photos, PDFs, spreadsheets, and other documents</div>
-        <input class="dz-input" type="file" id="fileInput" multiple onchange="handleFiles(this.files)">
-      </div>
-
-      <div class="thumb-grid" id="thumbGrid"></div>
-    </div>
-    <div class="um-footer">
-      <div class="um-footer-info"><strong id="photoTotalCount">0</strong> files attached this session</div>
-      <div class="spacer"></div>
-      <button class="btn btn-ghost" onclick="closeUploader()">Cancel</button>
-      <button class="btn btn-green" id="doneBtn" onclick="closeUploader()">Done</button>
-    </div>
-  </div>
-</div>
-
-<!-- PURCHASER PHOTOS: read-only view of photos the purchaser (repairer) attached to the quote -->
-<div class="modal-overlay" id="purchaserPhotosOverlay" onclick="if(event.target===this)closePurchaserPhotos()">
+<!-- ATTACHMENTS: PROPOSED — one entry point for both your files and the purchaser's read-only photos -->
+<div class="modal-overlay" id="attachmentsOverlay" onclick="if(event.target===this)closeAttachments()">
   <div class="upload-modal wide">
     <div class="um-header">
-      <div><div class="um-title">Purchaser Photos</div><div class="um-sub">Quote — Toyota Corolla, 1/2017 · uploaded by the purchaser, for reference only — no attach/upload here</div></div>
-      <button class="um-close" onclick="closePurchaserPhotos()">✕</button>
+      <div><div class="um-title">Attachments</div><div class="um-sub" id="umSub">Quote — Toyota Corolla, 1/2017</div></div>
+      <button class="um-close" onclick="closeAttachments()">✕</button>
     </div>
     <div class="um-body">
-      <div class="pv-layout">
-        <div class="pv-thumbs">
-          <div class="pv-thumbs-label">Thumbnails</div>
-          <div class="pv-thumb-grid" id="purchaserThumbGrid"></div>
-        </div>
-        <div class="pv-zoom">
-          <div class="pv-zoom-label">Zoom. <span class="pv-zoom-hint" id="purchaserZoomHint">Click on Thumbnails on the left to Zoom</span></div>
-          <div class="pv-zoom-frame"><img id="purchaserZoomImg" src="" style="display:none"></div>
-        </div>
+
+      <div class="attach-tabs">
+        <button class="attach-tab active" id="tabBtnMine" onclick="switchAttachTab('mine')">My Photos <span class="attach-tab-count" id="mineTabCount">0</span></button>
+        <button class="attach-tab" id="tabBtnPurchaser" onclick="switchAttachTab('purchaser')">Repairer Photos <span class="attach-tab-count" id="purchaserTabCount">0</span></button>
       </div>
+
+      <div class="attach-tab-panel" id="tabPanelMine">
+        <div class="tag-field">
+          <div class="tag-label">Attach to</div>
+          <select class="tag-select" id="partTagSelect">
+            <option value="general">Whole quote (general — not tied to one part)</option>
+            <option value="1">ADAS Calibration - Advise &amp; Qu..</option>
+            <option value="2">Bonnet — 5330112B10</option>
+            <option value="3">Bonnet Emblem</option>
+          </select>
+          <div class="tag-hint">Tagging a file to a part means the repairer sees it right next to your price for that part — not buried in a generic documents list.</div>
+        </div>
+
+        <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
+          <div class="dz-icon">⬆️</div>
+          <div class="dz-title">Drag &amp; drop files here, or click to browse</div>
+          <div class="dz-sub">No limit on how many — photos, PDFs, spreadsheets, and other documents</div>
+          <input class="dz-input" type="file" id="fileInput" multiple onchange="handleFiles(this.files)">
+        </div>
+
+        <div class="thumb-grid" id="thumbGrid"></div>
+      </div>
+
+      <div class="attach-tab-panel" id="tabPanelPurchaser" style="display:none">
+        <div class="attach-section-hint">Uploaded by the purchaser — view only, nothing to attach here.</div>
+        <div class="thumb-grid"><div class="thumb-section"><div class="thumb-row" id="purchaserThumbRow"></div></div></div>
+      </div>
+
     </div>
     <div class="um-footer">
-      <div class="um-footer-info"><strong id="purchaserPhotoCount">0</strong> photos from the purchaser</div>
+      <div class="um-footer-info"><strong id="photoTotalCount">0</strong> of your files attached this session &middot; <strong id="purchaserPhotoCount">0</strong> from the purchaser</div>
       <div class="spacer"></div>
-      <button class="btn btn-green" onclick="closePurchaserPhotos()">Close</button>
+      <button class="btn btn-ghost" onclick="closeAttachments()">Cancel</button>
+      <button class="btn btn-green" id="doneBtn" onclick="closeAttachments()">Done</button>
     </div>
   </div>
 </div>
 
-<!-- LIGHTBOX: full-size view of an attached photo -->
+<!-- LIGHTBOX: full-size view of an attached photo, carousel through the rest of its group -->
 <div class="lightbox-overlay" id="lightboxOverlay" onclick="if(event.target===this)closeLightbox()">
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation();lightboxNav(-1)">‹</button>
   <img id="lightboxImg" src="">
+  <button class="lightbox-nav lightbox-next" onclick="event.stopPropagation();lightboxNav(1)">›</button>
+  <div class="lightbox-counter" id="lightboxCounter"></div>
 </div>
 
 <script>
@@ -340,64 +329,66 @@ const partPhotos = {};
 }
    }
 
-function openUploader(partId, partName){
-  document.getElementById('uploadOverlay').classList.add('open');
+function openAttachments(partId, partName){
+  document.getElementById('attachmentsOverlay').classList.add('open');
   document.getElementById('partTagSelect').value = partId ? String(partId) : 'general';
   document.getElementById('umSub').textContent = partName ? `Quote — Toyota Corolla, 1/2017 · tagging files to "${partName}"` : 'Quote — Toyota Corolla, 1/2017';
+  switchAttachTab('mine');
   renderThumbGrid();
+  renderPurchaserPhotos();
 }
-function closeUploader(){
-  document.getElementById('uploadOverlay').classList.remove('open');
+function closeAttachments(){
+  document.getElementById('attachmentsOverlay').classList.remove('open');
+}
+// My Photos is the default tab every time the modal opens — uploading is the primary
+// task here, so it shouldn't be hidden behind whichever tab was left active last time.
+function switchAttachTab(tab){
+  const mine = tab === 'mine';
+  document.getElementById('tabBtnMine').classList.toggle('active', mine);
+  document.getElementById('tabBtnPurchaser').classList.toggle('active', !mine);
+  document.getElementById('tabPanelMine').style.display = mine ? 'block' : 'none';
+  document.getElementById('tabPanelPurchaser').style.display = mine ? 'none' : 'block';
+  if(!mine) markProgress('purchaserViewed');
 }
 function toggleLegacy(){
   document.getElementById('legacyOverlay').classList.toggle('open');
 }
 
-function openPurchaserPhotos(){
-   markProgress('purchaserViewed');
-  const grid = document.getElementById('purchaserThumbGrid');
-  grid.innerHTML = PURCHASER_PHOTOS.map((src,i) =>
-    `<div class="pv-thumb" onclick="zoomPurchaserPhoto(${i}, this)"><img src="${src}"><span class="thumb-badge">${i+1}</span></div>`).join('');
+// Read-only — reuses the same thumb-card grid + shared lightbox as your own files;
+// no remove button is ever rendered here, so there's no code path that can delete one.
+function renderPurchaserPhotos(){
+  const row = document.getElementById('purchaserThumbRow');
+  row.innerHTML = PURCHASER_PHOTOS.map((src,i) =>
+    `<div class="thumb-card"><img src="${src}" onclick="openLightboxGroup('purchaser', ${i})"><span class="thumb-badge">${i+1}</span></div>`).join('');
   document.getElementById('purchaserPhotoCount').textContent = PURCHASER_PHOTOS.length;
-  document.getElementById('purchaserZoomImg').style.display = 'none';
-  document.getElementById('purchaserZoomImg').src = '';
-  document.getElementById('purchaserZoomHint').style.display = 'inline';
-  document.getElementById('purchaserPhotosOverlay').classList.add('open');
-}
-function closePurchaserPhotos(){
-  document.getElementById('purchaserPhotosOverlay').classList.remove('open');
-}
-// Left-rail thumbnail → right-pane zoom, matching the existing repairer-side photo
-// viewer pattern rather than a click-to-open overlay lightbox.
-function zoomPurchaserPhoto(i, el){
-  document.querySelectorAll('#purchaserThumbGrid .pv-thumb').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  const img = document.getElementById('purchaserZoomImg');
-  img.src = PURCHASER_PHOTOS[i];
-  img.style.display = 'block';
-  document.getElementById('purchaserZoomHint').style.display = 'none';
 }
 
 // Renders every photo attached to this quote so far, grouped by target (whole quote /
 // each part) — not just whatever the "Attach to" dropdown currently has selected, so the
-// footer's total count always matches what's visibly on screen.
+// footer's total count always matches what's visibly on screen. Also rebuilds mineFlat,
+// a single ordered list of every one of your own photos across all targets, so the
+// lightbox can carousel through all of "My Photos" rather than stopping at a part's edge.
+let mineFlat = [];
 function renderThumbGrid(){
   const grid = document.getElementById('thumbGrid');
   grid.innerHTML = '';
+  mineFlat = [];
   const order = ['general','1','2','3'];
   order.forEach(partId=>{
     const photos = partPhotos[partId] || [];
     if(!photos.length) return;
-    grid.appendChild(buildThumbSection(partId, photos));
+    const startIndex = mineFlat.length;
+    mineFlat = mineFlat.concat(photos);
+    grid.appendChild(buildThumbSection(partId, photos, startIndex));
   });
 }
-function buildThumbSection(partId, photos){
+function buildThumbSection(partId, photos, startIndex){
   const section = document.createElement('div');
   section.className = 'thumb-section';
   section.id = `thumbSection-${partId}`;
   section.innerHTML = `<div class="thumb-section-label">${PART_NAMES[partId]}</div><div class="thumb-row"></div>`;
   const row = section.querySelector('.thumb-row');
-  photos.forEach((p,i) => row.appendChild(buildThumbCard(p.id, p.src, partId, false, i+1)));
+  photos.forEach((p,i) => row.appendChild(buildThumbCard(p.id, p.src, partId, false, i+1, (startIndex||0) + i)));
   return section;
 }
 function getOrCreateSectionRow(partId){
@@ -408,22 +399,53 @@ function getOrCreateSectionRow(partId){
   }
   return section.querySelector('.thumb-row');
 }
-function buildThumbCard(photoId, src, partId, isUploading, badgeNum){
+function buildThumbCard(photoId, src, partId, isUploading, badgeNum, index){
   const card = document.createElement('div');
   card.className = 'thumb-card';
   card.innerHTML = `
-    <img src="${src}" onclick="openLightbox('${src}')">
+    <img src="${src}" onclick="openLightboxGroup('mine', ${index})">
     ${isUploading ? '<div class="thumb-uploading">Uploading…</div><div class="thumb-progress" style="width:0%"></div>' : `<span class="thumb-badge">${badgeNum}</span>`}
     <button class="thumb-remove" onclick="removePhoto(${photoId}, '${partId}')">✕</button>`;
   return card;
 }
-function openLightbox(src){
-  document.getElementById('lightboxImg').src = src;
+
+// Lightbox as a carousel: opens on whichever photo was clicked but carries the rest of
+// that same tab's photos (all of "My Photos" across every part/whole-quote, or the
+// purchaser's set) so browsing the rest is a click/arrow-key away — no closing and
+// reopening per photo.
+let lightboxPhotos = [];
+let lightboxIndex = 0;
+function openLightboxGroup(groupKey, index){
+  const photos = groupKey === 'purchaser' ? PURCHASER_PHOTOS : mineFlat.map(p => p.src);
+  openLightbox(photos, index);
+}
+function openLightbox(photos, index){
+  lightboxPhotos = photos;
+  lightboxIndex = index;
+  renderLightbox();
   document.getElementById('lightboxOverlay').classList.add('open');
+}
+function renderLightbox(){
+  document.getElementById('lightboxImg').src = lightboxPhotos[lightboxIndex];
+  const multi = lightboxPhotos.length > 1;
+  document.querySelectorAll('.lightbox-nav').forEach(btn => btn.style.display = multi ? 'flex' : 'none');
+  const counter = document.getElementById('lightboxCounter');
+  counter.style.display = multi ? 'block' : 'none';
+  counter.textContent = `${lightboxIndex + 1} / ${lightboxPhotos.length}`;
+}
+function lightboxNav(delta){
+  lightboxIndex = (lightboxIndex + delta + lightboxPhotos.length) % lightboxPhotos.length;
+  renderLightbox();
 }
 function closeLightbox(){
   document.getElementById('lightboxOverlay').classList.remove('open');
 }
+document.addEventListener('keydown', e=>{
+  if(!document.getElementById('lightboxOverlay').classList.contains('open')) return;
+  if(e.key === 'ArrowLeft') lightboxNav(-1);
+  if(e.key === 'ArrowRight') lightboxNav(1);
+  if(e.key === 'Escape') closeLightbox();
+});
 
 function handleFiles(files){
   const partId = document.getElementById('partTagSelect').value;
@@ -434,7 +456,7 @@ function handleFiles(files){
     const photoId = nextPhotoId++;
     if(!partPhotos[partId]) partPhotos[partId] = [];
     partPhotos[partId].push({id:photoId, src});
-    const card = buildThumbCard(photoId, src, partId, true);
+    const card = buildThumbCard(photoId, src, partId, true, null, mineFlat.length);
     row.appendChild(card);
     const bar = card.querySelector('.thumb-progress');
     const overlay = card.querySelector('.thumb-uploading');
@@ -461,28 +483,30 @@ function updatePartCell(partId){
   const photos = partPhotos[partId] || [];
   const partName = PART_NAMES[partId];
   if(!photos.length){
-    cell.innerHTML = `<span class="photo-link" onclick="openUploader(${partId},'${partName}')">📷 Add</span>`;
+    cell.innerHTML = `<span class="photo-link" onclick="openAttachments(${partId},'${partName}')">📷 Add</span>`;
   } else {
     const thumbs = photos.slice(-2).map(p => `<img src="${p.src}">`).join('');
-    cell.innerHTML = `<div class="photo-thumbs-legacy" onclick="openUploader(${partId},'${partName}')">${thumbs}<span class="photo-count-legacy">${photos.length}</span></div>`;
+    cell.innerHTML = `<div class="photo-thumbs-legacy" onclick="openAttachments(${partId},'${partName}')">${thumbs}<span class="photo-count-legacy">${photos.length}</span></div>`;
   }
 }
 function updateCount(delta){
   sessionCount += delta;
-  const total = Math.max(0,sessionCount);
-  document.getElementById('photoTotalCount').textContent = total;
-  updateAttachFileBadge(total);
+  document.getElementById('photoTotalCount').textContent = Math.max(0,sessionCount);
+  updateAttachmentsBadge();
 }
-function updateAttachFileBadge(total){
-  const badge = document.getElementById('photosIconBadge');
+// Combined badge = your session uploads + the purchaser's (fixed) photo count, recomputed
+// from scratch every time rather than incremented/decremented independently, so it can't drift.
+// Also keeps the two tab counts in sync so you can tell at a glance which tab has more to see.
+function updateAttachmentsBadge(){
+  const mine = Math.max(0,sessionCount);
+  const total = mine + PURCHASER_PHOTOS.length;
+  const badge = document.getElementById('attachmentsBadge');
   badge.style.display = total > 0 ? 'flex' : 'none';
   badge.textContent = total;
+  document.getElementById('mineTabCount').textContent = mine;
+  document.getElementById('purchaserTabCount').textContent = PURCHASER_PHOTOS.length;
 }
-
-// Purchaser's own photos are uploaded upstream, not by the supplier, so this badge is set once on load rather than driven by updateCount()
-const purchaserBadge = document.getElementById('purchaserPhotosBadge');
-purchaserBadge.style.display = PURCHASER_PHOTOS.length > 0 ? 'flex' : 'none';
-purchaserBadge.textContent = PURCHASER_PHOTOS.length;
+updateAttachmentsBadge();
 
 const dz = document.getElementById('dropzone');
 ['dragenter','dragover'].forEach(evt => dz.addEventListener(evt, e=>{ e.preventDefault(); dz.classList.add('drag'); }));
