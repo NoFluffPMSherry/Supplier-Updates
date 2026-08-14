@@ -193,7 +193,7 @@ table.parts td.desc{text-align:left;font-weight:bold}
         <td></td><td>1</td><td></td><td></td>
         <td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill on"></span></td><td><span class="pill"></span></td>
         <td><span class="add-notes">Add Notes</span></td><td><span class="alt-plus">+</span></td>
-        <td class="photo-cell-legacy" id="photoCell-1"><span class="photo-link" onclick="openAttachments(1,'ADAS Calibration - Advise &amp; Qu..')" title="Add photo to part">📷 Add</span><span class="alt-plus photo-add-plus" onclick="openAttachments(1,'ADAS Calibration - Advise &amp; Qu..')" title="Add photo to part">+</span></td>
+        <td class="photo-cell-legacy" id="photoCell-1"><span class="photo-link" onclick="openAttachments(1,'ADAS Calibration - Advise &amp; Qu..')" title="Add photo to part">📷</span><span class="alt-plus photo-add-plus" onclick="openAttachments(1,'ADAS Calibration - Advise &amp; Qu..')" title="Add photo to part">+</span></td>
       </tr>
       <tr data-part="2">
         <td><input type="checkbox"></td><td>2</td>
@@ -201,7 +201,7 @@ table.parts td.desc{text-align:left;font-weight:bold}
         <td>5330112B10</td><td>1</td><td>$334.36</td><td>$267.49</td>
         <td><span class="pill on"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td>
         <td><span class="add-notes">Add Notes</span></td><td><span class="alt-plus">+</span></td>
-        <td class="photo-cell-legacy" id="photoCell-2"><span class="photo-link" onclick="openAttachments(2,'Bonnet')" title="Add photo to part">📷 Add</span><span class="alt-plus photo-add-plus" onclick="openAttachments(2,'Bonnet')" title="Add photo to part">+</span></td>
+        <td class="photo-cell-legacy" id="photoCell-2"><span class="photo-link" onclick="openAttachments(2,'Bonnet')" title="Add photo to part">📷</span><span class="alt-plus photo-add-plus" onclick="openAttachments(2,'Bonnet')" title="Add photo to part">+</span></td>
       </tr>
       <tr data-part="3">
         <td><input type="checkbox"></td><td>3</td>
@@ -209,7 +209,7 @@ table.parts td.desc{text-align:left;font-weight:bold}
         <td></td><td>1</td><td></td><td></td>
         <td><span class="pill on"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td>
         <td><span class="add-notes">Add Notes</span></td><td><span class="alt-plus">+</span></td>
-        <td class="photo-cell-legacy" id="photoCell-3"><span class="photo-link" onclick="openAttachments(3,'Bonnet Emblem')" title="Add photo to part">📷 Add</span><span class="alt-plus photo-add-plus" onclick="openAttachments(3,'Bonnet Emblem')" title="Add photo to part">+</span></td>
+        <td class="photo-cell-legacy" id="photoCell-3"><span class="photo-link" onclick="openAttachments(3,'Bonnet Emblem')" title="Add photo to part">📷</span><span class="alt-plus photo-add-plus" onclick="openAttachments(3,'Bonnet Emblem')" title="Add photo to part">+</span></td>
       </tr>
     </tbody>
   </table>
@@ -484,7 +484,7 @@ function updatePartCell(partId){
   const photos = partPhotos[partId] || [];
   const partName = PART_NAMES[partId];
   if(!photos.length){
-    cell.innerHTML = `<span class="photo-link" onclick="openAttachments(${partId},'${partName}')" title="Add photo to part">📷 Add</span><span class="alt-plus photo-add-plus" onclick="openAttachments(${partId},'${partName}')" title="Add photo to part">+</span>`;
+    cell.innerHTML = `<span class="photo-link" onclick="openAttachments(${partId},'${partName}')" title="Add photo to part">📷</span><span class="alt-plus photo-add-plus" onclick="openAttachments(${partId},'${partName}')" title="Add photo to part">+</span>`;
   } else {
     const thumbs = photos.slice(-2).map(p => `<img src="${p.src}">`).join('');
     cell.innerHTML = `<div class="photo-thumbs-legacy" onclick="openAttachments(${partId},'${partName}')" title="Add photo to part">${thumbs}<span class="photo-count-legacy">${photos.length}</span><span class="photo-add-plus" title="Add photo to part">+</span></div>`;
