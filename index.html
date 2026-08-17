@@ -4,55 +4,65 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PartsCheck — Supplier Photo Upload (Concept)</title>
+<!-- Canonical PartsCheck Design System stylesheets — vendored from
+     https://github.com/partscheck/design-system (assets/tokens.css +
+     assets/components.css). Consume colour/type only via var(--…);
+     never hard-code a hex outside this file's own bespoke additions
+     below (dropzone / thumbnail grid / lightbox have no DS component
+     yet, so they're built on tokens instead of borrowing one). -->
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/components.css">
+<!-- Legacy supplier variant — pixel-faithful reproduction of today's actual
+     production supplier UI (v1.partscheck.com.au), scoped entirely to
+     --sl-*/.sl-* so it coexists with the current-look tokens above without
+     collision. Used only for the chrome/info-band wrapper below: production
+     around today's screen stays production, per the design brief's own
+     "keep the screen suppliers already know unchanged" intent. -->
+<link rel="stylesheet" href="assets/supplier-legacy.css">
+<script src="assets/ui.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Verdana,Geneva,Arial,sans-serif;background:#fff;color:#222;font-size:13px}
-.page{max-width:980px;margin:0 auto;padding:14px}
+.sl-scope{padding-bottom:0}
 
-.banner{font-family:'Segoe UI',Arial,sans-serif;background:#eef2ff;border:1px solid #c7d2fe;color:#3730a3;border-radius:6px;padding:9px 14px;font-size:12px;font-weight:bold;margin-bottom:14px}
-.banner .compare-toggle{float:right;font-weight:bold;color:#3730a3;text-decoration:underline;cursor:pointer}
+/* ---- comparison-mode banner (mockup chrome, not a product surface) ---- */
+.compare-link{font-family:var(--figure);font-size:10.5px;font-weight:700;color:var(--muted);text-decoration:underline;white-space:nowrap}
+.compare-link:hover{color:var(--green-deep)}
 
-table.info{width:100%;border-collapse:collapse;margin-bottom:10px}
-table.info td{border:1px solid #ccc;padding:6px 10px;font-size:12px;vertical-align:middle}
-table.info .lbl{background:#f0f0f0;font-weight:bold;width:110px}
-table.info input{border:1px solid #999;padding:3px 5px;font-size:12px;width:140px}
+/* ---- info strip ---- */
+table.info-table{width:100%;border-collapse:collapse;margin-bottom:14px;font-family:var(--sans);font-size:11px}
+table.info-table td{border:1px solid var(--line);padding:6px 10px;vertical-align:middle}
+table.info-table .lbl{background:var(--gauge);font-family:var(--figure);font-weight:700;width:110px;color:var(--ink-soft)}
 
-.olive-banner{background:#c9c9a8;border:1px solid #a8a880;padding:8px 10px;font-size:12px;margin-bottom:10px}
+/* ---- Quote Options icon row — legacy skeuomorphic treatment, matching
+   production's grey/white gradient tiles (all sit inside .sl-content now,
+   not a separate DS panel) ---- */
+.sl-qo-row{display:flex;gap:16px;flex-wrap:wrap}
+.sl-qo-btn{width:90px;text-align:center;cursor:pointer}
+.sl-qo-icon{width:64px;height:56px;margin:0 auto 4px;border-radius:4px;
+  background:linear-gradient(#fdfdfd,#e2e2e2);border:1px solid var(--sl-gray);
+  box-shadow:0 1px 2px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;
+  font-size:26px;position:relative}
+.sl-qo-label{font-family:var(--sl-arial);font-size:11px;font-weight:700;color:var(--sl-ink-soft);margin-top:2px}
+.sl-newbadge{display:inline-block;background:var(--sl-green);color:#fff;font-size:9px;font-weight:700;
+  padding:1px 5px;border-radius:2px;margin-top:2px;font-family:var(--sl-arial)}
+.sl-qo-badge{position:absolute;top:-8px;right:-8px;background:var(--sl-green);color:#fff;font-size:11px;
+  font-weight:bold;font-family:var(--sl-arial);min-width:18px;height:18px;border-radius:9px;display:flex;
+  align-items:center;justify-content:center;padding:0 4px;border:2px solid #fff}
 
-.section-bar{background:#58595b;color:#fff;font-weight:bold;font-size:12px;padding:6px 10px;margin-bottom:0}
-.purchaser-note{background:#fff59d;border:1px solid #ccc;border-top:none;padding:8px 10px;font-weight:bold;font-size:13px;margin-bottom:10px}
+.photo-cell-legacy{min-width:100px}
+.photo-row{display:flex;align-items:center;justify-content:center;gap:6px}
+.photo-thumb-wrap{position:relative;width:24px;height:24px;cursor:pointer;flex-shrink:0}
+.photo-thumb-wrap img{width:24px;height:24px;object-fit:cover;border-radius:4px;border:1px solid var(--line-strong);display:block}
+.photo-thumb-badge{position:absolute;bottom:-5px;right:-5px;background:var(--ink);color:#fff;font-size:9px;font-weight:bold;
+  border-radius:8px;min-width:14px;height:14px;line-height:14px;text-align:center;padding:0 3px;border:1.5px solid var(--card)}
+.photo-add-btn{color:var(--green);font-size:16px;font-weight:bold;cursor:pointer;line-height:1}
+.photo-add-btn:hover{color:var(--green-deep)}
 
-.quote-options{border:1px solid #ccc;border-top:none;padding:12px;display:flex;gap:14px;margin-bottom:14px}
-.qo-btn{width:88px;text-align:center;cursor:pointer}
-.qo-icon{width:60px;height:52px;background:#e8e8e8;border:1px solid #b5b5b5;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 4px;position:relative}
-.qo-icon.attach{background:#eef2ff;border-color:#a5b4fc}
-.qo-badge{position:absolute;top:-8px;right:-8px;background:#d64545;color:#fff;font-size:11px;font-weight:bold;font-family:'Segoe UI',Arial,sans-serif;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid #fff}
-.qo-label{font-size:10.5px;font-weight:bold;color:#333}
-.qo-btn:hover .qo-icon{border-color:#3aa845}
-
-.est-row{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:10px}
-.est-row select{font-size:12px;padding:2px}
-
-table.parts{width:100%;border-collapse:collapse;font-size:11.5px}
-table.parts th{background:#ececec;border:1px solid #ccc;padding:5px 6px;font-weight:bold;font-size:10.5px;text-align:center}
-table.parts td{border:1px solid #ddd;padding:6px;vertical-align:middle;text-align:center}
-table.parts td.desc{text-align:left;font-weight:bold}
-.pill{display:inline-block;width:20px;height:12px;border-radius:2px;background:#e0e0e0}
-.pill.on{background:#7ac143;position:relative}
-.pill.on::after{content:'✓';position:absolute;inset:0;color:#fff;font-size:9px;line-height:12px;font-weight:bold}
-.add-notes{color:#2563eb;font-size:11px;cursor:pointer;text-decoration:underline}
-.alt-plus{color:#3aa845;font-size:16px;font-weight:bold;cursor:pointer}
-
-.photo-cell-legacy{min-width:120px}
-.photo-link{color:#2563eb;font-size:11px;font-weight:bold;cursor:pointer;text-decoration:underline;white-space:nowrap}
-.photo-thumbs-legacy{display:flex;align-items:center;justify-content:center;gap:4px;cursor:pointer}
-.photo-thumbs-legacy img{width:24px;height:24px;object-fit:cover;border:1px solid #999;margin-left:-6px}
-.photo-thumbs-legacy img:first-child{margin-left:0}
-.photo-count-legacy{font-size:10px;font-weight:bold;background:#333;color:#fff;border-radius:8px;padding:1px 5px;margin-left:3px}
-.photo-add-plus{color:#3aa845;font-size:15px;font-weight:bold;margin-left:6px;line-height:1}
-.new-tag{background:#3aa845;color:#fff;font-size:8px;font-weight:bold;padding:1px 4px;border-radius:2px;margin-left:4px;vertical-align:middle;font-family:'Segoe UI',Arial,sans-serif}
-
-/* ===== LEGACY MODAL (today's Attach File experience) ===== */
+/* ===== LEGACY MODAL — deliberately NOT restyled to the design system.
+   This reproduces today's actual "Attach Files to Quote" production modal
+   (hard 3-file cap, OS file picker, no previews) so the before/after toggle
+   is an honest comparison, the same principle the DS's own legacy-supplier
+   variant uses: production-as-is stays production-as-is. ===== */
 .legacy-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:900;display:none;align-items:flex-start;justify-content:center;padding-top:8vh}
 .legacy-overlay.open{display:flex}
 .legacy-modal{background:#fff;border:2px solid #000;width:520px;font-family:Verdana,Geneva,sans-serif}
@@ -67,155 +77,376 @@ table.parts td.desc{text-align:left;font-weight:bold}
 .legacy-btn{background:#8a8a8a;color:#fff;border-radius:3px;padding:8px 18px;font-size:12px;font-weight:700;cursor:default}
 .legacy-caption{text-align:center;color:rgba(255,255,255,.85);font-size:12px;font-weight:600;margin-top:14px;font-family:'Segoe UI',Arial,sans-serif}
 
-/* ===== UPLOADER MODAL (proposed) — restyled 20 Jul 2026 to match production chrome.
-   Same drag-drop/multi-select/part-tagging functionality as before; only the skin changed:
-   plain bordered box, house font, sharp corners, no shadows/animation — matches the
-   legacy "Attach Files" modal alongside it rather than inventing a new visual system. */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:950;display:none;align-items:flex-start;justify-content:center;padding-top:8vh}
-.modal-overlay.open{display:flex}
-.upload-modal{background:#fff;border:2px solid #000;width:560px;max-height:80vh;display:flex;flex-direction:column;font-family:Verdana,Geneva,sans-serif}
-.upload-modal.wide{width:760px}
+/* ===== ATTACHMENTS MODAL (proposed) — built on the DS modal grammar:
+   .modal-backdrop > .modal(-h -b -f). components.css doesn't gate
+   visibility with a class (its own pcModal.open/close adds/removes the
+   node instead) so this page adds the show/hide toggle itself, same
+   pattern the legacy overlay above already uses. ===== */
+.modal-backdrop{display:none}
+.modal-backdrop.open{display:flex}
+.modal.att-modal{max-width:760px}
+.um-sub{font-size:11px;color:var(--faint);margin:-4px 0 12px}
 
-/* ATTACHMENTS — one modal, two tabs (My Photos / Repairer Photos) so a long list of
-   your own photos never pushes the purchaser's photos out of easy reach. Both tabs
-   use the same thumbnail-card grid + shared carousel lightbox. */
-.attach-tabs{display:flex;border-bottom:1px solid #ccc;margin-bottom:14px}
-.attach-tab{background:none;border:none;border-bottom:2px solid transparent;padding:8px 4px;margin-right:20px;font-size:13px;font-weight:700;color:#777;cursor:pointer;font-family:inherit}
-.attach-tab:hover{color:#333}
-.attach-tab.active{color:#222;border-bottom-color:#3aa845}
-.attach-tab-count{display:inline-block;background:#ececec;color:#555;font-size:10.5px;font-weight:700;border-radius:8px;padding:1px 6px;margin-left:5px}
-.attach-tab.active .attach-tab-count{background:#3aa845;color:#fff}
-.attach-section-hint{display:block;font-size:11px;color:#888;margin-bottom:10px}
-.um-header{padding:14px 18px;background:#fff;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid #ccc}
-.um-title{font-size:16px;font-weight:700;color:#222}
-.um-sub{font-size:11px;color:#777;margin-top:3px}
-.um-close{width:26px;height:26px;background:#3aa845;color:#fff;border:none;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;cursor:pointer}
-.um-body{padding:16px 18px;overflow-y:auto;flex:1}
+.attach-tab-panel{padding-top:14px}
+.attach-section-hint{display:block;font-size:11px;color:var(--faint);margin-bottom:10px}
 
-.tag-field{margin-bottom:14px}
-.tag-label{font-size:11px;font-weight:700;color:#555;margin-bottom:5px}
-.tag-select{width:100%;padding:6px 8px;border:1px solid #999;font-size:12px;color:#222;background:#fff;font-family:inherit}
-.tag-select:focus{outline:1px solid #3aa845}
-.tag-hint{font-size:11px;color:#777;margin-top:5px}
-
-.dropzone{border:2px dashed #999;background:#f5f5f5;padding:24px 18px;text-align:center;cursor:pointer}
-.dropzone:hover,.dropzone.drag{border-color:#3aa845;background:#eef7ee}
+.dropzone{border:2px dashed var(--line-strong);background:var(--card-2);padding:24px 18px;text-align:center;cursor:pointer;border-radius:3px}
+.dropzone:hover,.dropzone.drag{border-color:var(--green);background:var(--green-wash)}
 .dz-icon{font-size:22px;margin-bottom:6px}
-.dz-title{font-size:12px;font-weight:700;color:#333}
-.dz-sub{font-size:11px;color:#888;margin-top:3px}
+.dz-title{font-family:var(--figure);font-size:12px;font-weight:700;color:var(--ink-soft)}
+.dz-sub{font-size:11px;color:var(--faint);margin-top:3px}
 .dz-input{display:none}
 
 .thumb-grid{margin-top:14px}
 .thumb-section{margin-bottom:14px}
 .thumb-section:last-child{margin-bottom:0}
-.thumb-section-label{font-size:11px;font-weight:700;color:#555;margin-bottom:6px}
+.thumb-section-label{font-family:var(--figure);font-size:11px;font-weight:700;color:var(--ink-soft);margin-bottom:6px}
 .thumb-row{display:flex;flex-wrap:wrap;gap:8px}
-.thumb-card{position:relative;width:110px;height:82px;border:1px solid #999;background:#fafafa}
-.thumb-card img{width:100%;height:100%;object-fit:cover;cursor:pointer;display:block}
-.thumb-badge{position:absolute;bottom:4px;left:4px;background:#333;color:#fff;font-size:11px;font-weight:700;padding:1px 6px}
-.thumb-remove{position:absolute;top:3px;right:3px;width:18px;height:18px;background:#333;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none}
-.thumb-remove:hover{background:#c0392b}
-.thumb-progress{position:absolute;bottom:0;left:0;height:3px;background:#3aa845;transition:width .3s}
-.thumb-uploading{position:absolute;inset:0;background:rgba(255,255,255,.75);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#333}
+.thumb-card{position:relative;width:110px;height:82px;border:1px solid var(--line-strong);background:var(--card-2);border-radius:3px;overflow:hidden}
+.thumb-card img{width:100%;height:100%;object-fit:cover;cursor:zoom-in;display:block}
+.thumb-badge{position:absolute;bottom:4px;left:4px;background:var(--ink);color:#fff;font-size:11px;font-weight:700;padding:1px 6px;border-radius:2px}
+.thumb-remove{position:absolute;top:3px;right:3px;width:18px;height:18px;background:var(--muted);color:#fff;font-size:10px;
+  font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;border-radius:2px}
+.thumb-remove:hover{background:var(--bad)}
+.thumb-progress{position:absolute;bottom:0;left:0;height:3px;background:var(--green);transition:width .3s}
+.thumb-uploading{position:absolute;inset:0;background:rgba(255,255,255,.75);display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:700;color:var(--ink-soft)}
 
-.um-footer{padding:12px 18px;border-top:1px solid #ccc;display:flex;align-items:center;gap:10px}
-.um-footer-info{font-size:12px;color:#555;font-weight:600}
-.um-footer-info strong{color:#222}
-.spacer{flex:1}
-.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid #999;font-family:inherit}
-.btn-ghost{background:#e8e8e8;border-color:#999;color:#333}
-.btn-ghost:hover{background:#ddd}
-.btn-green{background:#3aa845;border-color:#3aa845;color:#fff}
-.btn-green:hover{background:#328f3c}
+.um-footer-info{font-size:12px;color:var(--muted);font-weight:600;margin-right:auto}
+.um-footer-info strong{color:var(--ink)}
 
-.thumb-card img{cursor:zoom-in}
-
-/* ===== LIGHTBOX (view full-size attached photo) ===== */
+/* ===== LIGHTBOX — full-bleed photo viewer, no DS component to extend;
+   tokens carry the brand colour on the interactive chrome. ===== */
 .lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;display:none;align-items:center;justify-content:center}
 .lightbox-overlay.open{display:flex}
 .lightbox-overlay img{max-width:90vw;max-height:85vh;border:2px solid #fff}
-.lightbox-close{position:absolute;top:18px;right:24px;width:32px;height:32px;background:#3aa845;color:#fff;border:none;font-weight:900;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;background:rgba(255,255,255,.15);color:#fff;border:none;font-size:26px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.lightbox-close{position:absolute;top:18px;right:24px;width:32px;height:32px;background:var(--green);color:#fff;border:none;
+  font-weight:900;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lightbox-close:hover{background:var(--green-deep)}
+.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;background:rgba(255,255,255,.15);
+  color:#fff;border:none;font-size:26px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%}
 .lightbox-nav:hover{background:rgba(255,255,255,.3)}
 .lightbox-prev{left:18px}
 .lightbox-next{right:18px}
-.lightbox-counter{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;font-size:13px;font-weight:600;background:rgba(0,0,0,.5);padding:4px 12px;border-radius:12px}
+.lightbox-counter{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;font-size:13px;font-weight:600;
+  background:rgba(0,0,0,.5);padding:4px 12px;border-radius:12px}
+
+/* ===== Legacy chrome — small additions supplier-legacy.css doesn't cover
+   (an icon glyph per header link, the "Direct Purchase" callout box, the
+   dismissible fee-overdue banner). Everything else in this section comes
+   straight from the vendored .sl-* stylesheet. ===== */
+.sl-hlink.iconed::before{content:none}
+.sl-hlink .hi{margin-right:2px}
+.sl-alert-red{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.sl-alert-red a{color:#fff;text-decoration:underline}
+.sl-alert-red .sl-dismiss{background:transparent;border:0;color:#fff;font-size:16px;line-height:1;cursor:pointer;flex:none}
+/* .sl-btn's fill sat too close in value to .sl-btnbar's own background at
+   this size to read clearly as separate buttons — darken the fill and add
+   a visible light border/shadow so each one pops off the bar. */
+.sl-btnbar .sl-btn{background:#3d3d3d;border:1px solid #d9d9d9;border-radius:4px;font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.35)}
+.sl-btnbar .sl-btn:hover{background:#2b2b2b;color:#fff;border-color:#fff}
+.sl-addnotes{color:#3f8fd1;font-size:11px;font-weight:600;text-decoration:none}
+.sl-addnotes:hover{text-decoration:underline}
+.sl-altplus{display:inline-block;color:#3f8fd1;font-size:20px;font-weight:700;line-height:1;text-decoration:none}
+.sl-altplus:hover{color:#1a6fb5}
+.sl-directpurchase{background:yellow;border:2px solid var(--sl-ink);padding:8px;text-align:center}
+.sl-directpurchase b{display:block;font-size:13px}
+.sl-directpurchase span{display:block;margin-top:2px;font-size:11px}
+.sl-vin-box{display:inline-block;background:var(--sl-band);border:1px solid var(--sl-gray);padding:1px 6px}
+.sl-note-yellow.left{text-align:left;color:var(--sl-ink)}
 </style>
 </head>
 <body>
 
-<div class="page">
-  <table class="info">
-    <tr>
-      <td class="lbl">Quote Status</td><td>Opened</td>
-      <td class="lbl">Mth/Yr</td><td>1/2017</td>
-      <td class="lbl">Est. Freight</td><td><input type="text"></td>
-    </tr>
-  </table>
+<!-- ===== PRODUCTION CHROME (legacy supplier variant, .sl-scope) =====
+     Faithful reproduction of today's actual v1.partscheck.com.au supplier
+     quote screen: header, fees-overdue banner, nav tabs + counter menu,
+     General/Vehicle/Required/Optional info cards, Price method + Purchaser
+     Notes bars. Everything below "Quote Options" is the proposed redesign
+     and stays on the current-look system — the two coexist because every
+     token/class in this block is --sl-*/.sl- scoped. ===== -->
+<div class="sl-scope">
+  <div class="sl-shell">
+    <div class="sl-header">
+      <div class="sl-logo">
+        <svg viewBox="0 0 24 24" role="img" aria-label="PartsCheck">
+          <path d="M2 13 L9 20 L22 4" style="fill:none;stroke:var(--sl-green)" stroke-width="4" stroke-linecap="square"/>
+        </svg>
+        <div><b>PARTS<span>CHECK</span></b><small>Smart. Simple. Streamlined.</small></div>
+      </div>
+      <div class="sl-headerlinks">
+        <a class="sl-hlink iconed" href="#" onclick="return false;"><span class="hi">🏠</span>Dashboard</a>
+        <a class="sl-hlink iconed" href="#" onclick="return false;"><span class="hi">🖥️</span>TeamViewer</a>
+        <a class="sl-hlink iconed" href="#" onclick="return false;"><span class="hi">📊</span>Reports</a>
+        <a class="sl-hlink iconed" href="#" onclick="return false;"><span class="hi">⚙️</span>Settings</a>
+        <a class="sl-hlink iconed" href="#" onclick="return false;"><span class="hi">✖</span>Logout</a>
+      </div>
+      <div class="sl-search">
+        <input type="text" placeholder="Search here" aria-label="Search">
+        <button type="button" aria-label="Search">⌕</button>
+      </div>
 
-  <div class="olive-banner">
-    <strong>Price method Available</strong><br>
-    Entering in -999 into a price field marks it "Not Available for this Order." Available for the following parts.
+      <div class="sl-alert-red" id="feeAlert">
+        <div>Your Fees are now OVERDUE and you will be locked out within the next couple of days.<br>
+          <a href="#" onclick="return false;">Click here to view PartsCheck monthly fees</a></div>
+        <button class="sl-dismiss" onclick="document.getElementById('feeAlert').style.display='none'" aria-label="Dismiss">✕</button>
+      </div>
+
+      <div class="sl-navtabs">
+        <a class="sl-navtab" href="#" onclick="return false;">🗒 Quotes</a>
+        <a class="sl-navtab" href="#" onclick="return false;">☑ My Orders</a>
+        <a class="sl-navtab" href="#" onclick="return false;">💲 Credit Management</a>
+        <a class="sl-navtab" href="#" onclick="return false;">🛠 Reports &amp; Tools</a>
+      </div>
+      <div class="sl-menu">
+        <div class="sl-menu-col">
+          <div class="sl-menu-item">New Quote Request<span class="sl-menu-count">40</span></div>
+          <div class="sl-menu-item">Quotes In Progress<span class="sl-menu-count">5</span></div>
+        </div>
+        <div class="sl-menu-col">
+          <div class="sl-menu-item">All Orders<span class="sl-menu-count">40</span></div>
+          <div class="sl-menu-item">ETA Requests</div>
+          <div class="sl-menu-item">ETA Overdue<span class="sl-menu-count">3</span></div>
+        </div>
+        <div class="sl-menu-col">
+          <div class="sl-menu-item">All Credit Requests<span class="sl-menu-count">64</span></div>
+          <div class="sl-menu-item">Credits Not Opened<span class="sl-menu-count">61</span></div>
+          <div class="sl-menu-item">Credits Opened<span class="sl-menu-count">3</span></div>
+        </div>
+        <div class="sl-menu-col">
+          <div class="sl-menu-item">Contact Us</div>
+          <div class="sl-menu-item">New Messages<span class="sl-menu-count">79</span></div>
+          <div class="sl-menu-item">New Feedback<span class="sl-menu-count">17</span></div>
+          <div class="sl-menu-item">Fill Rate Reporting</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sl-content">
+      <div style="display:flex;gap:5px;margin-bottom:10px">
+        <div class="sl-card" style="width:33%">
+          <div class="sl-card-h">General Info</div>
+          <div class="sl-card-b">
+            <div class="sl-kv"><span class="sl-k">Request Type</span><span class="sl-v">
+              <div class="sl-directpurchase"><b>Direct Purchase</b><span>Supply: 12/07/2026</span></div>
+            </span></div>
+            <div class="sl-kv"><span class="sl-k">Purchaser</span><span class="sl-v">King Panels<br>28 Bald St<br>Sunshine West, VIC<br>Ph: (07) 8888 9999</span></div>
+            <div class="sl-kv"><span class="sl-k">Estimator</span><span class="sl-v">Automated Test</span></div>
+            <div class="sl-kv"><span class="sl-k">Reference</span><span class="sl-v">38876</span></div>
+            <div class="sl-kv"><span class="sl-k">Quote Status</span><span class="sl-v">Opened</span></div>
+          </div>
+        </div>
+        <div class="sl-card" style="width:33%">
+          <div class="sl-card-h">Vehicle Info</div>
+          <div class="sl-card-b">
+            <div class="sl-kv"><span class="sl-k">Make</span><span class="sl-v">Toyota</span></div>
+            <div class="sl-kv"><span class="sl-k">Model</span><span class="sl-v">Model</span></div>
+            <div class="sl-kv"><span class="sl-k">Model Nr</span><span class="sl-v"></span></div>
+            <div class="sl-kv"><span class="sl-k">Series</span><span class="sl-v">Series</span></div>
+            <div class="sl-kv"><span class="sl-k">Trans</span><span class="sl-v"></span></div>
+            <div class="sl-kv"><span class="sl-k">Colour</span><span class="sl-v"></span></div>
+            <div class="sl-kv"><span class="sl-k">VIN</span><span class="sl-v"><span class="sl-vin-box">[NA]</span></span></div>
+            <div class="sl-kv"><span class="sl-k">Body</span><span class="sl-v"></span></div>
+            <div class="sl-kv"><span class="sl-k">Mth/Yr</span><span class="sl-v">1/2017</span></div>
+            <div class="sl-kv"><span class="sl-k">Veh Reg</span><span class="sl-v">ABC123</span></div>
+            <div class="sl-kv"><span class="sl-k">Claim Nr</span><span class="sl-v">37093</span></div>
+          </div>
+        </div>
+        <div style="width:34%;display:flex;flex-direction:column;gap:5px">
+          <div class="sl-card">
+            <div class="sl-card-h req">Required Info</div>
+            <div class="sl-card-b">
+              <div class="sl-kv"><span class="sl-k">Quote Nr</span><span class="sl-v"><input class="sl-input" style="width:100px" aria-label="Quote Nr"></span></div>
+              <div class="sl-kv"><span class="sl-k">Quote Expiry</span><span class="sl-v"><input class="sl-input" style="width:90px" value="24/08/2026" aria-label="Quote Expiry"> <button class="sl-icobtn" title="Pick a date">📅</button></span></div>
+              <div class="sl-kv"><span class="sl-k">Est. Delivery</span><span class="sl-v">
+                <select class="sl-select" aria-label="Est. Delivery"><option>Same Day</option><option>Next Day</option><option>2-3 Days</option></select>
+              </span></div>
+              <label style="display:block;font-size:11px;font-style:italic;margin-top:4px">
+                <input type="checkbox"> Set above estimate delivery as Default</label>
+            </div>
+          </div>
+          <div class="sl-card">
+            <div class="sl-card-h">Optional Info</div>
+            <div class="sl-card-b">
+              <div class="sl-kv"><span class="sl-k">Internal Status</span><span class="sl-v">
+                <select class="sl-select" aria-label="Internal Status"><option>API Assigned</option></select>
+              </span></div>
+              <div class="sl-kv"><span class="sl-k">Sales Rep</span><span class="sl-v">
+                <select class="sl-select" aria-label="Sales Rep"><option>Not Selected</option></select> <button class="sl-icobtn" title="Edit sales rep">✏️</button>
+              </span></div>
+              <div class="sl-kv"><span class="sl-k">Est. Freight</span><span class="sl-v"><input class="sl-input" style="width:90px" aria-label="Est. Freight"></span></div>
+              <div class="sl-kv"><span class="sl-k">Settlement %</span><span class="sl-v"><input class="sl-input" style="width:60px" value="0.00" aria-label="Settlement %"></span></div>
+              <a href="#" onclick="return false;" style="font-size:11px;color:var(--sl-head-blue)">What is this?</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sl-card-h" style="margin-bottom:0">Price method Available</div>
+      <div class="sl-note-beige left" style="text-align:left;padding:8px;margin-bottom:10px">
+        <b>Entering in -999 into buy price column will automatically set value to 48.00% OF List.</b><br>
+        Available for the following item types: Used
+      </div>
+
+      <div class="sl-card-h" style="margin-bottom:0">Purchaser Notes</div>
+      <div class="sl-note-yellow left" style="padding:8px;margin-bottom:0"><b>i enjoy stuff</b></div>
+
+      <div class="sl-card-h" style="margin-top:10px;margin-bottom:0">Quote Options</div>
+      <div style="padding:12px;border:1px solid var(--sl-gray);border-top:0">
+        <div class="sl-qo-row">
+          <div class="sl-qo-btn">
+            <div class="sl-qo-icon">
+              <svg viewBox="0 0 36 36" width="34" height="34">
+                <rect x="2" y="8" width="28" height="19" rx="2" fill="#F5A623" stroke="#8a5a00" stroke-width="1"/>
+                <path d="M2 9 L16 20 L30 9" fill="none" stroke="#8a5a00" stroke-width="1.5"/>
+                <circle cx="26" cy="26" r="7.5" fill="#4CAF50" stroke="#2e7d32" stroke-width="1"/>
+                <path d="M23 26a3 3 0 1 1 1.1 2.3" fill="none" stroke="#fff" stroke-width="1.3"/>
+                <path d="M22.7 24.3 L23 26.3 L25 26.3" fill="none" stroke="#fff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="sl-qo-label">DMS Email</div>
+          </div>
+          <div class="sl-qo-btn">
+            <div class="sl-qo-icon">
+              <svg viewBox="0 0 36 36" width="34" height="34">
+                <path d="M8 3 H22 L28 9 V33 H8 Z" fill="#fff" stroke="#7a7a7a" stroke-width="1.2"/>
+                <path d="M22 3 V9 H28 Z" fill="#e0e0e0" stroke="#7a7a7a" stroke-width="1"/>
+                <path d="M18 14 V27 M12 20 L18 14 L24 20" fill="none" stroke="#2f7fd1" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="sl-qo-label">DMS Upload</div>
+          </div>
+          <div class="sl-qo-btn" onclick="openAttachments(null)" title="View the purchaser's photos and attach your own photos or files to this quote">
+            <div class="sl-qo-icon">
+              <svg viewBox="0 0 36 36" width="34" height="34">
+                <rect x="5" y="3" width="26" height="30" rx="3" fill="#fff" stroke="#333" stroke-width="1.6"/>
+                <rect x="13" y="1" width="10" height="5" rx="1.5" fill="#fff" stroke="#333" stroke-width="1.4"/>
+                <rect x="15" y="9" width="6" height="18" rx="3" fill="#fff" stroke="#333" stroke-width="1.4"/>
+                <line x1="15" y1="13" x2="21" y2="13" stroke="#333" stroke-width="1.2"/>
+                <line x1="15" y1="17" x2="21" y2="17" stroke="#333" stroke-width="1.2"/>
+                <line x1="15" y1="21" x2="21" y2="21" stroke="#333" stroke-width="1.2"/>
+                <circle cx="18" cy="24" r="2.6" fill="#333"/>
+              </svg>
+              <span class="sl-qo-badge" id="attachmentsBadge" style="display:none">0</span>
+            </div>
+            <div class="sl-qo-label">Attachments</div><span class="sl-newbadge">NEW</span>
+          </div>
+          <div class="sl-qo-btn">
+            <div class="sl-qo-icon">
+              <svg viewBox="0 0 36 36" width="34" height="34">
+                <rect x="4" y="4" width="19" height="26" rx="1" fill="#f2edd8" stroke="#b8b090" stroke-width="1"/>
+                <rect x="7" y="9" width="4" height="4" fill="none" stroke="#5a9e46" stroke-width="1.3"/>
+                <path d="M7.7 11 L9 12.3 L11 9.7" fill="none" stroke="#5a9e46" stroke-width="1.3"/>
+                <rect x="7" y="16" width="4" height="4" fill="none" stroke="#5a9e46" stroke-width="1.3"/>
+                <path d="M7.7 18 L9 19.3 L11 16.7" fill="none" stroke="#5a9e46" stroke-width="1.3"/>
+                <rect x="7" y="23" width="4" height="4" fill="none" stroke="#999" stroke-width="1.3"/>
+                <line x1="14" y1="11" x2="20" y2="11" stroke="#999"/>
+                <line x1="14" y1="18" x2="20" y2="18" stroke="#999"/>
+                <line x1="14" y1="25" x2="20" y2="25" stroke="#999"/>
+                <path d="M17 14 L31 14 L24 22 L24 31 L21 29 L21 22 Z" fill="#9a9a9a" stroke="#6a6a6a" stroke-width="1"/>
+              </svg>
+            </div>
+            <div class="sl-qo-label">Filter Parts</div>
+          </div>
+        </div>
+      </div>
+
+      <table class="sl-grid" style="width:100%;margin-top:10px">
+        <thead>
+          <tr>
+            <th rowspan="2" style="width:20px"><input type="checkbox"></th>
+            <th rowspan="2" style="width:15px">#</th>
+            <th rowspan="2">Description</th>
+            <th rowspan="2" style="width:90px">Part Number</th>
+            <th rowspan="2" style="width:40px">Qty</th>
+            <th rowspan="2">Total List Price ex GST</th>
+            <th rowspan="2">Total Buy Price ex GST</th>
+            <th colspan="5" style="text-align:center">Type Requested</th>
+            <th rowspan="2" style="width:50px">Notes</th>
+            <th rowspan="2" style="width:40px">Alt</th>
+            <th rowspan="2" style="width:70px">Photos <span class="sl-newbadge">NEW</span></th>
+          </tr>
+          <tr>
+            <th style="width:25px;text-align:center">OEM</th>
+            <th style="width:25px;text-align:center">PAR</th>
+            <th style="width:25px;text-align:center">USE</th>
+            <th style="width:25px;text-align:center">AFT</th>
+            <th style="width:25px;text-align:center">REC</th>
+          </tr>
+        </thead>
+        <tbody id="partsBody">
+          <tr class="sl-linerow" data-part="1">
+            <td><input type="checkbox"></td><td>1</td>
+            <td>ADAS Calibration - Advise &amp; Qu..</td>
+            <td><input class="sl-input w-part"></td>
+            <td><input class="sl-input w-qty" value="1"></td>
+            <td><input class="sl-input w-price"></td>
+            <td><input class="sl-input w-price"></td>
+            <td style="text-align:center"><span class="sl-itemtype"></span></td>
+            <td style="text-align:center"><span class="sl-itemtype"></span></td>
+            <td style="text-align:center"><span class="sl-itemtype"></span></td>
+            <td style="text-align:center"><span class="sl-itemtype chosen"></span></td>
+            <td style="text-align:center"><span class="sl-itemtype"></span></td>
+            <td><a href="#" class="sl-addnotes" onclick="return false;">Add Notes</a></td>
+            <td><a href="#" class="sl-altplus" onclick="return false;" title="Offer an alternative">+</a></td>
+            <td class="photo-cell-legacy" id="photoCell-1"><div class="photo-row"><span class="photo-add-btn" onclick="openAttachments(1,'ADAS Calibration - Advise &amp; Qu..')" title="Add photo to part">+</span></div></td>
+          </tr>
+          <tr class="sl-linerow" data-part="2">
+            <td><input type="checkbox"></td><td>2</td>
+            <td>Bonnet</td>
+            <td><input class="sl-input w-part" value="5330112B10"></td>
+            <td><input class="sl-input w-qty" value="1"></td>
+            <td><input class="sl-input w-price" value="334.36"></td>
+            <td><input class="sl-input w-price" value="267.49"></td>
+            <td style="text-align:center"><span class="sl-itemtype chosen"></span></td>
+            <td style="text-align:center"><span class="sl-itemtype"></span></td>
+            <td style="text-align:center"><span class="sl-itemtype"></span></td>
+            <td style="text-align:center"><span class="sl-itemtype"></span></td>
+            <td style="text-align:center"><span class="sl-itemtype"></span></td>
+            <td><a href="#" class="sl-addnotes" onclick="return false;">Add Notes</a></td>
+            <td><a href="#" class="sl-altplus" onclick="return false;" title="Offer an alternative">+</a></td>
+            <td class="photo-cell-legacy" id="photoCell-2"><div class="photo-row"><span class="photo-add-btn" onclick="openAttachments(2,'Bonnet')" title="Add photo to part">+</span></div></td>
+          </tr>
+          <tr class="sl-linerow" data-part="3">
+            <td><input type="checkbox"></td><td>3</td>
+            <td>Bonnet Emblem</td>
+            <td><input class="sl-input w-part"></td>
+            <td><input class="sl-input w-qty" value="1"></td>
+            <td><input class="sl-input w-price"></td>
+            <td><input class="sl-input w-price"></td>
+            <td style="text-align:center"><span class="sl-itemtype chosen"></span></td>
+            <td style="text-align:center"><span class="sl-itemtype"></span></td>
+            <td style="text-align:center"><span class="sl-itemtype"></span></td>
+            <td style="text-align:center"><span class="sl-itemtype"></span></td>
+            <td style="text-align:center"><span class="sl-itemtype"></span></td>
+            <td><a href="#" class="sl-addnotes" onclick="return false;">Add Notes</a></td>
+            <td><a href="#" class="sl-altplus" onclick="return false;" title="Offer an alternative">+</a></td>
+            <td class="photo-cell-legacy" id="photoCell-3"><div class="photo-row"><span class="photo-add-btn" onclick="openAttachments(3,'Bonnet Emblem')" title="Add photo to part">+</span></div></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="sl-btnbar">
+        <div class="sl-btnbar-l">
+          <button class="sl-btn" onclick="return false;">Back</button>
+          <button class="sl-btn" title="Respond with no parts available">No Parts Available</button>
+        </div>
+        <div class="sl-btnbar-c">3 lines · 0 priced</div>
+        <div class="sl-btnbar-r"><button class="sl-btn right">Save Prices</button></div>
+      </div>
+    </div>
+    <div class="sl-pagefoot">
+      <span>Logged in as Sci-Fleet Parts (<i>Supplier</i>) &middot; 1:28pm AEST</span>
+      <a href="#" onclick="return false;">Contact PartsCheck</a>
+    </div>
   </div>
-
-  <div class="section-bar">PURCHASER NOTES</div>
-  <div class="purchaser-note">i enjoy stuff</div>
-
-  <div class="section-bar">QUOTE OPTIONS</div>
-  <div class="quote-options">
-    <div class="qo-btn"><div class="qo-icon">📧</div><div class="qo-label">DMS EMAIL</div></div>
-    <div class="qo-btn"><div class="qo-icon">⬆️</div><div class="qo-label">DMS UPLOAD</div></div>
-    <div class="qo-btn" onclick="openAttachments(null)" title="View the purchaser's photos and attach your own photos or files to this quote"><div class="qo-icon attach">📎<span class="qo-badge" id="attachmentsBadge" style="display:none">0</span></div><div class="qo-label">ATTACHMENTS <span class="new-tag">NEW</span></div></div>
-    <div class="qo-btn"><div class="qo-icon">🔻</div><div class="qo-label">FILTER PARTS</div></div>
-  </div>
-
-  <table class="parts">
-    <thead>
-      <tr>
-        <th rowspan="2"><input type="checkbox"></th>
-        <th rowspan="2">#</th>
-        <th rowspan="2">Description</th>
-        <th rowspan="2">Part Number</th>
-        <th rowspan="2">Qty</th>
-        <th rowspan="2">Total List Price<br>ex GST</th>
-        <th rowspan="2">Total Buy Price<br>ex GST</th>
-        <th colspan="5">Type Requested</th>
-        <th rowspan="2">Notes</th>
-        <th rowspan="2">Alt</th>
-        <th rowspan="2">Photos <span class="new-tag">NEW</span></th>
-      </tr>
-      <tr><th>OEM</th><th>PAR</th><th>USE</th><th>AFT</th><th>REC</th></tr>
-    </thead>
-    <tbody id="partsBody">
-      <tr data-part="1">
-        <td><input type="checkbox"></td><td>1</td>
-        <td class="desc">ADAS Calibration - Advise &amp; Qu..</td>
-        <td></td><td>1</td><td></td><td></td>
-        <td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill on"></span></td><td><span class="pill"></span></td>
-        <td><span class="add-notes">Add Notes</span></td><td><span class="alt-plus">+</span></td>
-        <td class="photo-cell-legacy" id="photoCell-1"><span class="photo-link" onclick="openAttachments(1,'ADAS Calibration - Advise &amp; Qu..')" title="Add photo to part">📷</span><span class="alt-plus photo-add-plus" onclick="openAttachments(1,'ADAS Calibration - Advise &amp; Qu..')" title="Add photo to part">+</span></td>
-      </tr>
-      <tr data-part="2">
-        <td><input type="checkbox"></td><td>2</td>
-        <td class="desc">Bonnet</td>
-        <td>5330112B10</td><td>1</td><td>$334.36</td><td>$267.49</td>
-        <td><span class="pill on"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td>
-        <td><span class="add-notes">Add Notes</span></td><td><span class="alt-plus">+</span></td>
-        <td class="photo-cell-legacy" id="photoCell-2"><span class="photo-link" onclick="openAttachments(2,'Bonnet')" title="Add photo to part">📷</span><span class="alt-plus photo-add-plus" onclick="openAttachments(2,'Bonnet')" title="Add photo to part">+</span></td>
-      </tr>
-      <tr data-part="3">
-        <td><input type="checkbox"></td><td>3</td>
-        <td class="desc">Bonnet Emblem</td>
-        <td></td><td>1</td><td></td><td></td>
-        <td><span class="pill on"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td><td><span class="pill"></span></td>
-        <td><span class="add-notes">Add Notes</span></td><td><span class="alt-plus">+</span></td>
-        <td class="photo-cell-legacy" id="photoCell-3"><span class="photo-link" onclick="openAttachments(3,'Bonnet Emblem')" title="Add photo to part">📷</span><span class="alt-plus photo-add-plus" onclick="openAttachments(3,'Bonnet Emblem')" title="Add photo to part">+</span></td>
-      </tr>
-    </tbody>
-  </table>
 </div>
 
-<!-- LEGACY MODAL: TODAY'S EXPERIENCE -->
+<div style="max-width:888px;margin:8px auto 0;text-align:right">
+  <a href="#" class="compare-link" onclick="toggleLegacy();return false;">View legacy 3-file modal →</a>
+</div>
+
+<!-- LEGACY MODAL: TODAY'S EXPERIENCE (not design-system markup — see comment above) -->
 <div class="legacy-overlay" id="legacyOverlay" onclick="if(event.target===this)toggleLegacy()">
   <div>
     <div class="legacy-modal">
@@ -233,30 +464,29 @@ table.parts td.desc{text-align:left;font-weight:bold}
   </div>
 </div>
 
-<!-- ATTACHMENTS: PROPOSED — one entry point for both your files and the purchaser's read-only photos -->
-<div class="modal-overlay" id="attachmentsOverlay" onclick="if(event.target===this)closeAttachments()">
-  <div class="upload-modal wide">
-    <div class="um-header">
-      <div><div class="um-title">Attachments</div><div class="um-sub" id="umSub">Quote — Toyota Corolla, 1/2017</div></div>
-      <button class="um-close" onclick="closeAttachments()">✕</button>
-    </div>
-    <div class="um-body">
+<!-- ATTACHMENTS: PROPOSED — DS modal grammar (.modal-backdrop > .modal-h/-b/-f),
+     DS tabbar, DS field/select, DS btn/btn-primary -->
+<div class="modal-backdrop" id="attachmentsOverlay" onclick="if(event.target===this)closeAttachments()">
+  <div class="modal att-modal" role="dialog" aria-modal="true" aria-label="Attachments">
+    <div class="modal-h"><h3>Attachments</h3><button class="modal-x" onclick="closeAttachments()" aria-label="Close">✕</button></div>
+    <div class="modal-b">
+      <div class="um-sub" id="umSub">Quote — Toyota Corolla, 1/2017</div>
 
-      <div class="attach-tabs">
-        <button class="attach-tab active" id="tabBtnMine" onclick="switchAttachTab('mine')">My Photos <span class="attach-tab-count" id="mineTabCount">0</span></button>
-        <button class="attach-tab" id="tabBtnPurchaser" onclick="switchAttachTab('purchaser')">Repairer Photos <span class="attach-tab-count" id="purchaserTabCount">0</span></button>
+      <div class="tabbar">
+        <button class="tab on" id="tabBtnMine" onclick="switchAttachTab('mine')">My Photos <span class="ct" id="mineTabCount">0</span></button>
+        <button class="tab" id="tabBtnPurchaser" onclick="switchAttachTab('purchaser')">Repairer Photos <span class="ct" id="purchaserTabCount">0</span></button>
       </div>
 
       <div class="attach-tab-panel" id="tabPanelMine">
-        <div class="tag-field">
-          <div class="tag-label">Attach to</div>
-          <select class="tag-select" id="partTagSelect">
+        <div class="field" style="margin-bottom:14px">
+          <label>Attach to</label>
+          <select class="select" id="partTagSelect">
             <option value="general">Whole quote (general — not tied to one part)</option>
             <option value="1">ADAS Calibration - Advise &amp; Qu..</option>
             <option value="2">Bonnet — 5330112B10</option>
             <option value="3">Bonnet Emblem</option>
           </select>
-          <div class="tag-hint">Tagging a file to a part means the repairer sees it right next to your price for that part — not buried in a generic documents list.</div>
+          <div class="hint">Tagging a file to a part means the repairer sees it right next to your price for that part — not buried in a generic documents list.</div>
         </div>
 
         <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
@@ -273,13 +503,11 @@ table.parts td.desc{text-align:left;font-weight:bold}
         <div class="attach-section-hint">Uploaded by the purchaser — view only, nothing to attach here.</div>
         <div class="thumb-grid"><div class="thumb-section"><div class="thumb-row" id="purchaserThumbRow"></div></div></div>
       </div>
-
     </div>
-    <div class="um-footer">
+    <div class="modal-f">
       <div class="um-footer-info"><strong id="photoTotalCount">0</strong> of your files attached this session &middot; <strong id="purchaserPhotoCount">0</strong> from the purchaser</div>
-      <div class="spacer"></div>
-      <button class="btn btn-ghost" onclick="closeAttachments()">Cancel</button>
-      <button class="btn btn-green" id="doneBtn" onclick="closeAttachments()">Done</button>
+      <button class="btn" onclick="closeAttachments()">Cancel</button>
+      <button class="btn btn-primary" id="doneBtn" onclick="closeAttachments()">Done</button>
     </div>
   </div>
 </div>
@@ -310,25 +538,15 @@ let imgCycle = 0;
 let nextPhotoId = 100;
 // Every part starts with no attached photos
 const partPhotos = {};
-   const taskProgress = { partPhoto:false, quotePhoto:false, purchaserViewed:false };
-   function markProgress(key){
-        if(taskProgress[key]) return;
-        taskProgress[key] = true;
-        if(taskProgress.partPhoto && taskProgress.quotePhoto && taskProgress.purchaserViewed){
-               location.hash = 'task-complete';
-           showTaskToast();
-        }
-      function showTaskToast(){
-  let toast = document.getElementById('taskToast');
-  if(!toast){
-    toast = document.createElement('div');
-    toast.id = 'taskToast';
-    toast.style.cssText = 'position:fixed;top:16px;right:16px;background:#3aa845;color:#fff;padding:12px 18px;border-radius:4px;font-family:"Segoe UI",Arial,sans-serif;font-size:13px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.25);z-index:2000;max-width:280px';
-    document.body.appendChild(toast);
+const taskProgress = { partPhoto:false, quotePhoto:false, purchaserViewed:false };
+function markProgress(key){
+  if(taskProgress[key]) return;
+  taskProgress[key] = true;
+  if(taskProgress.partPhoto && taskProgress.quotePhoto && taskProgress.purchaserViewed){
+    location.hash = 'task-complete';
+    pcToast("All caught up", "You've completed all three tasks — feel free to keep exploring the page.", 'ok');
   }
-  toast.textContent = "You've completed all three tasks — feel free to keep exploring the page.";
 }
-   }
 
 function openAttachments(partId, partName){
   document.getElementById('attachmentsOverlay').classList.add('open');
@@ -345,8 +563,8 @@ function closeAttachments(){
 // task here, so it shouldn't be hidden behind whichever tab was left active last time.
 function switchAttachTab(tab){
   const mine = tab === 'mine';
-  document.getElementById('tabBtnMine').classList.toggle('active', mine);
-  document.getElementById('tabBtnPurchaser').classList.toggle('active', !mine);
+  document.getElementById('tabBtnMine').classList.toggle('on', mine);
+  document.getElementById('tabBtnPurchaser').classList.toggle('on', !mine);
   document.getElementById('tabPanelMine').style.display = mine ? 'block' : 'none';
   document.getElementById('tabPanelPurchaser').style.display = mine ? 'none' : 'block';
   if(!mine) markProgress('purchaserViewed');
@@ -450,7 +668,7 @@ document.addEventListener('keydown', e=>{
 
 function handleFiles(files){
   const partId = document.getElementById('partTagSelect').value;
-   markProgress(partId === 'general' ? 'quotePhoto' : 'partPhoto');
+  markProgress(partId === 'general' ? 'quotePhoto' : 'partPhoto');
   const row = getOrCreateSectionRow(partId);
   Array.from(files).forEach(() => {
     const src = SAMPLE_IMAGES[imgCycle % SAMPLE_IMAGES.length]; imgCycle++;
@@ -483,11 +701,13 @@ function updatePartCell(partId){
   if(!cell) return;
   const photos = partPhotos[partId] || [];
   const partName = PART_NAMES[partId];
+  const addBtn = `<span class="photo-add-btn" onclick="openAttachments(${partId},'${partName}')" title="Add photo to part">+</span>`;
   if(!photos.length){
-    cell.innerHTML = `<span class="photo-link" onclick="openAttachments(${partId},'${partName}')" title="Add photo to part">📷</span><span class="alt-plus photo-add-plus" onclick="openAttachments(${partId},'${partName}')" title="Add photo to part">+</span>`;
+    cell.innerHTML = `<div class="photo-row">${addBtn}</div>`;
   } else {
-    const thumbs = photos.slice(-2).map(p => `<img src="${p.src}">`).join('');
-    cell.innerHTML = `<div class="photo-thumbs-legacy" onclick="openAttachments(${partId},'${partName}')" title="Add photo to part">${thumbs}<span class="photo-count-legacy">${photos.length}</span><span class="photo-add-plus" title="Add photo to part">+</span></div>`;
+    const last = photos[photos.length - 1];
+    const badge = photos.length > 1 ? `<span class="photo-thumb-badge">${photos.length}</span>` : '';
+    cell.innerHTML = `<div class="photo-row"><span class="photo-thumb-wrap" onclick="openAttachments(${partId},'${partName}')" title="View photos"><img src="${last.src}">${badge}</span>${addBtn}</div>`;
   }
 }
 function updateCount(delta){

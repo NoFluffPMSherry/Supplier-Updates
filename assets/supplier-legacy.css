@@ -1,0 +1,440 @@
+/* ═══════════════════════════════════════════════════════════════════
+   PARTSCHECK LEGACY SUPPLIER VARIANT — the PRODUCTION supplier UI
+   (v1.partscheck.com.au) captured as a design system.
+   This is the SECOND design language in this repo. It is not the target
+   look — it is today's look, systematized, so the prototype can show the
+   as-is supplier experience beside the proposed one.
+   ═══════════════════════════════════════════════════════════════════ */
+/* Source of truth for every value below:
+   docs/superpowers/specs/2026-08-06-legacy-supplier-inventory.md — a
+   static extraction from the partscheck-supplier-master repo. Each
+   section names the inventory § it came from. Do not "improve" values
+   here: if production changes, re-extract the inventory first.
+
+   SCOPING RULE. Every custom property in this file is --sl-* and is
+   defined on .sl-scope and body.sl-page ONLY — never on the document
+   root element. The current-look system (assets/tokens.css) owns the
+   unprefixed tokens on the document root, and the two must be able to
+   coexist on one page without a single collision. Likewise every class
+   is sl-* prefixed; the only unprefixed selectors are modifiers
+   compounded onto an sl- class (.sl-pill.red) and the pcModal skin
+   under body.sl-page.
+
+   THREE GREENS. Production does not have one brand green, it has three
+   in simultaneous use, and this variant keeps all three rather than
+   tidying them away — that discrepancy IS the finding:
+     --sl-green        #0FA83E  buttons, dialog title bars, outline buttons
+     --sl-green-bright #13A538  scrollbar, user chip, chosen-type tick
+     --sl-lime         #84BF3F  item-type box underline
+   plus bare `green` for hairlines and #10A639 / #8CD339 one-offs.
+
+   PRODUCTION BUGS ARE NOT REPRODUCED (inventory §G): no stray braces, no
+   `::-moz-scrollbar-*`, no CSS comments written with slashes, one input
+   definition instead of three conflicting ones, and the green-button
+   hover actually applies here (production's trailing-comma kills it).
+   Hover states that production implements with inline onmouseover JS are
+   written as real :hover rules. Bitmap chrome (logo, blue nav pills,
+   ~200 icon PNGs) is recreated in CSS / inline SVG / unicode — no binary
+   assets are copied.
+
+   LAYOUT HONESTY. Production is fixed-width desktop: an 888px centred
+   canvas, zero media queries, no viewport meta. That is reproduced as-is
+   (.sl-shell is 888px), with overflow-x on .sl-scope so a narrow viewport
+   scrolls the canvas rather than breaking it. Small screens really do
+   scroll in production. */
+
+/* ── TOKENS ──────────────────────────────────────────────────────────
+   One definition, two selectors: .sl-scope covers the rendered legacy
+   surface, body.sl-page covers things that escape it (page background,
+   scrollbar, the pcModal overlay). §A1–A3. */
+.sl-scope, body.sl-page {
+  /* surfaces */
+  --sl-page:#EFEFEF; --sl-band:#EEEEEE; --sl-panel:#FFFFFF; --sl-panel-dim:#F4F4F4;
+  /* text */
+  --sl-ink:#000000; --sl-ink-soft:#333333; --sl-muted:#4D4D4D; --sl-faint:#9A9A9A;
+  --sl-linkgrey:#5A595A;
+  /* hairlines (production uses the keywords; keep them honest) */
+  --sl-silver:silver; --sl-gray:gray; --sl-hairline:#CCCCCC;
+  /* greens — production's three-green reality, systematized */
+  --sl-green:#0FA83E; --sl-green-deep:#0B9A41; --sl-green-bright:#13A538;
+  --sl-lime:#84BF3F; --sl-green-rule:green;
+  /* dark chrome */
+  --sl-band-dark:#636363;
+  /* blues */
+  --sl-navy:navy; --sl-head-blue:#018DCA; --sl-section-blue:#1977BF;
+  --sl-dash-navy:#052F66; --sl-tab-hi:#3DA3F3; --sl-tab-lo:#034699;
+  --sl-metric-hi:#43ADFB; --sl-metric-lo:#02489B; --sl-metric-rule:#28A745;
+  --sl-cutoff:#3165C6;
+  /* semantic rows */
+  --sl-row:#F5F5F5; --sl-row-hover:#E9FCE4; --sl-row-extra:beige;
+  --sl-row-opt:#FFF2FF; --sl-row-notes:#E8FFE8; --sl-row-match:lightblue;
+  --sl-row-priority:pink; --sl-row-comp:#EEEEEE; --sl-beige:#F5F5DC;
+  /* chips / badges */
+  --sl-chip:#E5E5E5; --sl-count-hi:#FF8080; --sl-count-lo:#C43639;
+  --sl-pill-orange-hi:#FFA62F; --sl-pill-orange-lo:#EE9A4D; --sl-late:#FF7979;
+  /* type */
+  --sl-sans:Verdana,Geneva,sans-serif; --sl-arial:Arial,Helvetica,sans-serif;
+  --sl-head:'Trebuchet MS','Lucida Grande',sans-serif;
+  /* geometry */
+  --sl-shell:888px; --sl-grid:835px; --sl-col:218px;
+}
+
+/* ── Scope & page (§A2, §A4) ─────────────────────────────────────────
+   Verdana 11px black-on-#EFEFEF is the whole type system outside the
+   dashboard. The design system's global border-box reset (tokens.css)
+   applies inside the scope, so declared widths are outer widths; the
+   handful of legacy chips whose 1–4px borders sat OUTSIDE the box in
+   production opt back into content-box where that matters. */
+.sl-scope{background:var(--sl-page);color:var(--sl-ink);font-family:var(--sl-sans);font-size:11px;
+  line-height:normal;overflow-x:auto;padding-bottom:20px;}
+.sl-scope table{font-size:11px;border-collapse:collapse;}
+.sl-scope button{font-family:var(--sl-sans);font-size:11px;color:inherit;}
+.sl-scope img{max-width:100%;}
+
+body.sl-page{background:var(--sl-page);}
+/* The #13A538 scrollbar is on every production page and is the single
+   most-seen use of the "wrong" brand green. Reproduced without
+   production's stray closing braces or its invented -moz- selectors. */
+body.sl-page::-webkit-scrollbar{width:.5em;height:.5em;}
+body.sl-page::-webkit-scrollbar-button,
+body.sl-page::-webkit-scrollbar-track,
+body.sl-page::-webkit-scrollbar-track-piece{background-color:transparent;}
+body.sl-page::-webkit-scrollbar-thumb{height:50px;background-color:var(--sl-green-bright);border-radius:.3em;}
+body.sl-page::-webkit-scrollbar-corner{background-color:var(--sl-green-bright);}
+body.sl-page::-webkit-resizer{background-color:var(--sl-green-bright);}
+
+/* ── Shell (§B1, §B4) ────────────────────────────────────────────────
+   The 888px table shell from app/lib/template.php. Production's header
+   cell is one 150px band holding the logo row, a 35px spacer and the
+   nav-tab row; here the nav tabs and counter menu are siblings carrying
+   the same band, so the assembly still measures ~150px to the content
+   edge. Nesting them inside .sl-header instead also works. */
+.sl-shell{width:var(--sl-shell);margin:0 auto;}
+.sl-header{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;min-height:96px;padding:18px;
+  background:var(--sl-band);border-left:1px solid var(--sl-silver);border-right:1px solid var(--sl-silver);}
+.sl-header .sl-navtabs,.sl-header .sl-menu{flex-basis:100%;border-left:0;border-right:0;padding-left:0;padding-right:0;}
+
+/* Logo — a recreation, not the 316×60 bitmap (§E). Markup supplies a
+   green tick chevron as inline SVG (styled by .sl-logo svg) or as a
+   CSS mark (.sl-logo i); the wordmark is live text so it stays crisp
+   and searchable: PARTS in #4D4D4D, CHECK in brand green, the
+   "Smart. Simple. Streamlined." tagline in grey beneath. */
+.sl-logo{display:inline-flex;align-items:center;gap:9px;flex:none;margin-right:auto;text-decoration:none;}
+.sl-logo svg{width:36px;height:36px;flex:none;}
+.sl-logo i{width:22px;height:11px;flex:none;border-left:4px solid var(--sl-green);
+  border-bottom:4px solid var(--sl-green);transform:rotate(-45deg);}
+.sl-logo b{display:block;font-family:var(--sl-head);font-size:26px;font-weight:700;line-height:1;
+  color:var(--sl-muted);}
+.sl-logo b span{color:var(--sl-green);}
+.sl-logo small{display:block;margin-top:5px;font-family:var(--sl-arial);font-size:10px;color:var(--sl-faint);}
+
+/* Header links — Arial 13px #5A595A, red on hover. Production does the
+   hover with an inline onmouseover handler (§G); this is the real rule.
+   The 16px PNG bullet icon is a CSS square, so markup carries no glyph. */
+.sl-headerlinks{display:flex;align-items:center;gap:14px;flex:none;}
+.sl-hlink{display:inline-flex;align-items:center;gap:5px;font-family:var(--sl-arial);font-size:13px;
+  color:var(--sl-linkgrey);text-decoration:none;padding-bottom:5px;cursor:pointer;}
+.sl-hlink::before{content:"\25AA";font-size:11px;color:var(--sl-green);}
+.sl-hlink:hover{color:red;}
+
+/* Search — a white box with a borderless 175px grey input and a
+   magnifier submit. The "Search here" placeholder is real markup here;
+   production fakes it with onfocus/onblur value swapping. */
+.sl-search{display:inline-flex;align-items:center;flex:none;background:var(--sl-panel);
+  border:1px solid var(--sl-gray);}
+.sl-search input{width:175px;border-style:none;background:transparent;font-family:var(--sl-sans);
+  font-size:12px;color:var(--sl-gray);padding:5px 10px;}
+.sl-search input:focus{outline:none;}
+.sl-search button{border:0;background:transparent;color:var(--sl-linkgrey);font-size:13px;line-height:1;
+  padding:5px 8px;cursor:pointer;}
+
+/* Fingerprint chip — initials + caret. #8CD339 is a supplier-only
+   override of the #13A538 chip (fingerprint-view.php:614-617), so it is
+   a genuine one-off rather than a token. */
+.sl-fingerprint{display:inline-flex;align-items:center;gap:4px;flex:none;background:#8CD339;color:#fff;
+  font-family:var(--sl-arial);font-size:12px;font-weight:700;text-transform:uppercase;padding:5px 7px;
+  cursor:pointer;}
+
+/* ── Main nav (§B1, §F.2) ────────────────────────────────────────────
+   Four 218×37 tabs. In production these are blue glossy PNGs with the
+   labels baked in — no hover, no active state, the same image on every
+   page. That statelessness is the single largest departure from the
+   current design language, so it is preserved: the gradient is a CSS
+   recreation of the bitmap, and there is deliberately no .active rule. */
+.sl-navtabs{display:flex;background:var(--sl-band);padding:0 6px 8px;
+  border-left:1px solid var(--sl-silver);border-right:1px solid var(--sl-silver);}
+.sl-navtab{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:var(--sl-col);height:37px;
+  background:linear-gradient(var(--sl-tab-hi),var(--sl-tab-lo));border:0;color:#fff;font-family:var(--sl-arial);
+  font-size:13px;font-weight:700;text-decoration:none;cursor:pointer;}
+.sl-navtab.inert{cursor:default;}
+
+/* ── Counter menu (§B1) ──────────────────────────────────────────────
+   Four 218px columns of 35px dotted-rule rows with an absolutely
+   positioned red gradient count. Counts poll every 120s in production. */
+.sl-menu{display:flex;background:var(--sl-band);padding:0 6px;
+  border-left:1px solid var(--sl-silver);border-right:1px solid var(--sl-silver);
+  border-bottom:1px solid var(--sl-silver);}
+.sl-menu-col{width:var(--sl-col);min-height:144px;}
+.sl-menu-item{position:relative;display:block;width:100%;height:35px;line-height:35px;padding-left:20px;
+  background:var(--sl-panel);border:0;border-bottom:1px dotted var(--sl-gray);text-align:left;
+  font-family:var(--sl-sans);font-size:12px;color:var(--sl-muted);cursor:pointer;}
+.sl-menu-item:hover{color:blue;}
+/* The same badge serves the menu rows and any standalone count (.sl-count). */
+.sl-menu-count,.sl-count{box-sizing:content-box;display:inline-block;width:30px;height:20px;line-height:20px;
+  text-align:center;color:#fff;font-size:11px;border:1px solid var(--sl-band);border-radius:10px;
+  background:linear-gradient(var(--sl-count-hi),var(--sl-count-lo));}
+.sl-menu-count{position:absolute;top:5px;right:10px;}
+
+/* ── Sub-tabs (§B1) ──────────────────────────────────────────────────
+   my_tab(): a 33px strip of 200px tabs on a tiled blue-gradient JPG.
+   Inactive tabs are black text going red on hover (inline JS in
+   production, a real :hover here). */
+.sl-subtabs{display:flex;height:33px;background:var(--sl-panel-dim);border:1px solid var(--sl-gray);
+  border-bottom:0;}
+.sl-subtab{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:200px;height:100%;
+  background:transparent;border:0;font-family:var(--sl-sans);font-size:11px;color:var(--sl-ink);
+  text-decoration:none;cursor:pointer;}
+.sl-subtab:hover{color:red;}
+.sl-subtab.on{background:linear-gradient(var(--sl-tab-hi),var(--sl-tab-lo));color:#fff;}
+.sl-subtab.on:hover{color:#fff;}
+
+/* ── Content & feet (§B1, §B3) ───────────────────────────────────────
+   White page body between grey hairlines; a black 11px "Logged in as"
+   strip; and, on the pricing shell, the grey 25/50/25 button bar. */
+.sl-content{min-height:400px;padding:12px;background:var(--sl-panel);
+  border-left:1px solid var(--sl-gray);border-right:1px solid var(--sl-gray);}
+.sl-pagefoot{display:flex;align-items:center;justify-content:space-between;gap:12px;height:25px;padding:0 4px;
+  color:var(--sl-ink);font-size:11px;}
+.sl-pagefoot a{color:var(--sl-ink);text-decoration:underline;}
+.sl-btnbar{display:flex;width:100%;height:55px;background:var(--sl-gray);}
+.sl-btnbar-l{display:flex;align-items:center;gap:6px;width:25%;padding:0 8px;}
+.sl-btnbar-c{display:flex;align-items:center;justify-content:center;gap:8px;width:50%;padding:0 8px;
+  color:#fff;font-size:11px;text-align:center;}
+.sl-btnbar-r{display:flex;align-items:center;justify-content:flex-end;gap:6px;width:25%;padding:0 8px;}
+
+/* ── Buttons (§C1) ───────────────────────────────────────────────────
+   .sl-btn is .baseButton — the grey button suppliers actually see on
+   Back / No Parts Available / Save Prices / Submit Quote / Save
+   Settings, with its lopsided 5px-0-5px-0 radius.
+   .sl-btn-green/-ghost/-blue/-red are the modern l_* set: 32px tall,
+   uppercase bold 13px Arial, radius forced to 0, 110px min width.
+   The green hover is FIXED here — production's rule carries a trailing
+   comma (§G) so the solid-green hover never applies. */
+.sl-btn{background:var(--sl-band-dark);color:#fff;border:1px solid var(--sl-silver);border-radius:5px 0 5px 0;
+  font-family:var(--sl-sans);font-size:12px;margin:5px;padding:5px;cursor:pointer;}
+.sl-btn.right{float:right;}
+.sl-btn:hover{background:var(--sl-silver);color:var(--sl-ink);}
+.sl-btn-green,.sl-btn-ghost,.sl-btn-blue,.sl-btn-red{display:inline-block;height:32px;line-height:30px;
+  min-width:110px;padding:0 12px;border:1px solid transparent;border-radius:0;font-family:var(--sl-arial);
+  font-size:13px;font-weight:700;text-transform:uppercase;text-align:center;text-decoration:none;cursor:pointer;}
+.sl-btn-green{background:var(--sl-green);border-color:var(--sl-green);color:#fff;}
+.sl-btn-green:hover{background:var(--sl-green-deep);border-color:var(--sl-green-deep);}
+.sl-btn-ghost{background:transparent;border-color:var(--sl-green);color:var(--sl-green);}
+.sl-btn-ghost:hover{background:var(--sl-faint);border-color:var(--sl-faint);color:#fff;}
+/* #008AB0 is production's only blue button fill (commonCSS.php:462,505). */
+.sl-btn-blue{background:#008AB0;color:#fff;}
+.sl-btn-red{background:red;color:#fff;}
+.sl-btn-green.wide,.sl-btn-ghost.wide,.sl-btn-blue.wide,.sl-btn-red.wide{min-width:150px;}
+
+/* ── Quotes list (§C2b, §D2) ─────────────────────────────────────────
+   cellpadding-8 table, bold black headers on white with a single green
+   hairline, #F5F5F5 rows tinting to #E9FCE4 on hover (jQuery in
+   production, CSS here) and pink for a priority quote. No pagination
+   anywhere — the list auto-reloads every 120 seconds instead. */
+.sl-listtable{width:100%;border-collapse:collapse;font-size:11px;}
+.sl-listtable th{background:var(--sl-panel);color:var(--sl-ink);font-size:11px;font-weight:700;text-align:left;
+  padding:8px;border-bottom:1px solid var(--sl-green-rule);}
+.sl-listtable td{padding:8px;vertical-align:top;}
+.sl-row{background:var(--sl-row);cursor:pointer;}
+.sl-row:hover{background:var(--sl-row-hover);}
+.sl-row.priority{background:var(--sl-row-priority);}
+.sl-row.priority:hover{background:var(--sl-row-hover);}
+.sl-quotelink{color:var(--sl-navy);font-weight:700;text-decoration:underline;cursor:pointer;}
+.sl-items{color:var(--sl-green-rule);font-size:11px;}
+.sl-reload{color:var(--sl-gray);font-size:11px;font-weight:700;margin-bottom:10px;}
+
+/* ── Pricing grid (§C2a, §D3) ────────────────────────────────────────
+   The 835px line-item table: #636363 header band, 10px white labels,
+   30px rows separated by #CCC. No zebra and no hover — every tint in
+   this grid means something (extra line, optional line, competitor,
+   price match, notes). */
+.sl-grid{width:var(--sl-grid);background:var(--sl-panel);border:1px solid var(--sl-gray);border-collapse:collapse;
+  font-size:11px;}
+.sl-grid thead th{background:var(--sl-band-dark);color:#fff;font-size:10px;font-weight:700;text-align:left;
+  padding:3px;}
+.sl-grid td{padding:3px;}
+.sl-linerow td{border-top:1px solid var(--sl-hairline);line-height:30px;padding:3px;}
+.sl-linerow.extra td{background:var(--sl-row-extra);}
+.sl-linerow.optional td{background:var(--sl-row-opt);}
+.sl-linerow.competitor td{background:var(--sl-row-comp);color:var(--sl-gray);}
+.sl-linerow.pricematch td{background:var(--sl-row-match);}
+.sl-notesrow td{background:var(--sl-row-notes);padding:3px;}
+/* List price below buy price — production shouts on the list cell. */
+.sl-listwarn{color:red;font-weight:700;}
+/* Below agreed target — the same orange wash as .sl-warn-orange, kept as
+   its own name because it appears inline in a grid cell. */
+.sl-targetwarn{display:inline-block;background:orange;padding:5px;border-radius:4px;}
+
+/* ── Item-type chips (§C5) ───────────────────────────────────────────
+   The most distinctive supplier component: a 20×15 box holding the
+   first three letters of a part type (OEM/AFT/USE/REC). A lime
+   underline means the purchaser requested it, red means they did not,
+   and the chosen type carries a green tick. content-box because the
+   4px underline sits outside the 15px box in production. */
+.sl-itemtype{box-sizing:content-box;position:relative;display:inline-block;width:20px;height:15px;margin:0 2px;
+  background:var(--sl-panel);font-size:9px;line-height:13px;text-align:center;color:var(--sl-ink);
+  vertical-align:middle;cursor:pointer;
+  border-top:1px solid var(--sl-silver);border-left:1px solid var(--sl-silver);
+  border-right:1px solid var(--sl-silver);border-bottom:4px solid var(--sl-lime);}
+.sl-itemtype.notreq{border-bottom-color:red;}
+/* Production overlays an 18×18 green tick PNG; this is the unicode tick. */
+.sl-itemtype.chosen::after{content:"\2713";position:absolute;left:0;top:0;width:100%;line-height:15px;
+  color:var(--sl-green-bright);font-size:13px;font-weight:700;}
+.sl-itemtype.title{width:auto;height:auto;border:0;padding:0 4px;color:var(--sl-muted);cursor:default;}
+
+/* ── Chips & badges (§C5, §D2) ───────────────────────────────────────
+   .sl-count shares the red gradient badge defined with .sl-menu-count
+   above. .sl-lockbox and .sl-icobtn are the same green-bordered white
+   box: production puts the owner lock/unlock icon in one and the
+   open/print mini actions in the other. */
+.sl-status{display:inline-block;min-width:60px;max-width:80px;padding:2px;background:var(--sl-chip);
+  border:1px solid var(--sl-silver);font-size:11px;text-align:center;}
+.sl-new{color:red;font-weight:700;}
+.sl-cnt{box-sizing:content-box;display:inline-block;width:25px;height:25px;line-height:25px;text-align:center;
+  background:var(--sl-panel);border:1px solid var(--sl-ink);border-radius:8px;font-size:11px;}
+/* lightgreen / pink keywords, exactly as the "Awaiting Selection" list uses them. */
+.sl-cnt.mine{background:lightgreen;}
+.sl-cnt.theirs{background:var(--sl-row-priority);}
+.sl-lockbox{display:inline-block;padding:3px;background:var(--sl-panel);border:1px solid var(--sl-green-rule);
+  line-height:1;}
+.sl-icobtn{display:inline-block;padding:3px;background:var(--sl-panel);border:1px solid var(--sl-green-rule);
+  color:var(--sl-ink);font-size:12px;line-height:1;cursor:pointer;}
+
+/* ── Pills (orders) (§C5) ────────────────────────────────────────────
+   Bucket counts in the orders accordion. Clicking one filters the
+   bucket; the selected pill gets a 2px black ring. These replace
+   pagination — there is none anywhere in the supplier app. */
+.sl-pill{display:inline-block;padding:5px 10px;border:1px solid var(--sl-band);border-radius:10px;color:#fff;
+  font-size:11px;line-height:1;text-align:center;cursor:pointer;}
+.sl-pill.red{background:linear-gradient(var(--sl-count-hi),var(--sl-count-lo));}
+.sl-pill.orange{background:linear-gradient(var(--sl-pill-orange-hi),var(--sl-pill-orange-lo));}
+.sl-pill.green{background:var(--sl-green-bright);}
+.sl-pill.blue{background:linear-gradient(var(--sl-tab-hi),var(--sl-tab-lo));}
+/* #FEFEFE has no token — it exists only as this gradient's top stop. */
+.sl-pill.white{background:linear-gradient(#FEFEFE,var(--sl-page));color:var(--sl-ink);}
+.sl-pill.sel{border:2px solid var(--sl-ink);}
+
+/* ── Orders accordion (§C2c, §D4) ────────────────────────────────────
+   The v2 order list rendered inside the v1 888px shell. Header cells
+   are bold 10px with NO fill — a third table header treatment, after
+   the pricing grid's dark band and the quote list's green hairline. */
+.sl-orders{width:100%;border-collapse:collapse;border-bottom:1px solid var(--sl-silver);font-size:11px;}
+.sl-orders .sl-headerrow th{height:30px;padding:0 6px;background:transparent;font-size:10px;font-weight:700;
+  text-align:left;}
+.sl-bucket{cursor:pointer;}
+.sl-bucket td{height:40px;padding:6px;border-top:1px solid var(--sl-silver);}
+.sl-bucket.alt{background:var(--sl-row-comp);}
+.sl-orderrow{background:var(--sl-beige);}
+.sl-orderrow td{height:40px;padding:6px;border-top:1px solid var(--sl-silver);}
+/* #888 on beige is production's own empty-state pairing. */
+.sl-empty{padding:20px;background:var(--sl-beige);color:#888888;text-align:center;}
+
+/* ── Cards (§D3) ─────────────────────────────────────────────────────
+   The closest thing production has to a reusable panel: a grey-hairline
+   box with a #636363 title band. The "Required" items card swaps the
+   band for yellow. .sl-kv is the 40/60 label-value row inside it. */
+.sl-card{background:var(--sl-panel);border:1px solid var(--sl-gray);}
+.sl-card-h{padding:5px;background:var(--sl-band-dark);color:#fff;font-size:11px;font-weight:700;}
+.sl-card-h.req{background:yellow;color:var(--sl-ink);}
+.sl-card-b{margin:10px;}
+.sl-kv{display:flex;align-items:baseline;}
+.sl-k{width:40%;font-size:11px;font-weight:700;line-height:20px;}
+.sl-v{width:60%;font-size:11px;line-height:20px;}
+
+/* ── Forms (§C3, §D3) ────────────────────────────────────────────────
+   ONE input definition. Production declares .i three times with
+   conflicting values (§G) and resolves it by load order; the winner is
+   the 11px groove field, so that is the only one here. The width
+   modifiers are production's inline pricing-grid widths. */
+.sl-input{border-style:groove;font-family:var(--sl-sans);font-size:11px;color:var(--sl-ink);
+  background:var(--sl-panel);}
+.sl-input.w-part{width:100px;}
+.sl-input.w-qty{width:25px;}
+.sl-input.w-price{width:50px;}
+.sl-input.w-notes{width:400px;}
+.sl-select{border-style:groove;font-family:var(--sl-sans);font-size:11px;color:var(--sl-ink);
+  background:var(--sl-panel);}
+/* When the supplier changes a part number, the purchaser's original
+   echoes beneath it in italics. */
+.sl-echo{display:block;font-style:italic;font-size:11px;line-height:14px;color:var(--sl-gray);}
+
+/* ── Alerts (§C6) ────────────────────────────────────────────────────
+   Five unrelated message treatments, all live at once. */
+.sl-alert-red{padding:10px;background:red;border:1px solid var(--sl-ink);color:#fff;}
+.sl-note-yellow{padding:5px;background:yellow;border:1px solid var(--sl-ink);color:var(--sl-navy);font-size:12px;
+  font-weight:700;text-align:center;}
+.sl-warn-orange{padding:5px;background:orange;border-radius:4px;}
+.sl-note-beige{padding:3px;background:beige;border:1px solid var(--sl-ink);}
+/* #10A639 — a fourth green, used only on this bar (commonView.php:2216). */
+.sl-alertbar{display:flex;align-items:center;justify-content:space-between;gap:10px;height:40px;padding:0 10px;
+  background:#10A639;color:#fff;font-size:16px;}
+.sl-cutoffchip{display:inline-block;padding:8px;background:var(--sl-cutoff);border:1px solid var(--sl-ink);
+  color:#fff;}
+
+/* ── Dashboard (§D1) ─────────────────────────────────────────────────
+   A different design language inside the same app: Trebuchet MS
+   headings on navy #052F66, a #43ADFB→#02489B gradient tile and a
+   Bootstrap-green #28A745 separator — not one brand token in the
+   flagship metrics strip. The greys below (#F9F9F9 tile, #DDD hairline,
+   #555 label, #777 detail, #505050 card copy) are css2.php one-offs
+   with no equivalent anywhere else in the app. */
+.sl-heading{margin:0 0 10px;font-family:var(--sl-head);font-size:18px;font-weight:700;line-height:1.3;
+  color:var(--sl-dash-navy);}
+.sl-heading::before{content:"\25B8";margin-right:8px;font-size:14px;color:var(--sl-green);}
+.sl-metrics{display:flex;}
+.sl-metric{flex:1;height:125px;padding:10px 0;background:#F9F9F9;border:1px solid #DDDDDD;border-left:0;
+  text-align:center;}
+.sl-metric:first-child{border-left:1px solid #DDDDDD;}
+.sl-metric.gradient{background:linear-gradient(var(--sl-metric-hi),var(--sl-metric-lo));color:#fff;}
+.sl-metric-v{font-family:var(--sl-arial);font-size:36px;line-height:1.2;color:var(--sl-dash-navy);}
+.sl-metric-v.large{font-size:40px;}
+.sl-metric-l{margin-top:10px;font-family:var(--sl-arial);font-size:13px;font-weight:750;color:#555555;}
+.sl-metric-d{font-size:11px;line-height:1.6;color:#777777;}
+.sl-metric-sep{width:60%;margin:auto;border-bottom:2px solid var(--sl-metric-rule);}
+.sl-metric.gradient .sl-metric-v,
+.sl-metric.gradient .sl-metric-l,
+.sl-metric.gradient .sl-metric-d{color:#fff;}
+.sl-cards3{display:flex;gap:20px;}
+.sl-cards3 > *{width:290px;font-family:var(--sl-arial);font-size:13px;line-height:1.5;color:#505050;}
+.sl-cards3 a{color:var(--sl-head-blue);text-decoration:underline;}
+/* Star rating — gold PNGs in production; ".off" greys the empty ones. */
+.sl-stars{color:gold;font-size:15px;letter-spacing:2px;}
+.sl-stars .off{color:var(--sl-silver);}
+
+/* ── Modal skin (§C7) ────────────────────────────────────────────────
+   pcModal markup (assets/ui.js), legacy skin. Production's supplier
+   dialogs are jQuery UI's l_dialogBox: square corners, a 35px #0FA83E
+   Arial title band, a green square OK and a white #333 cancel. The
+   modal renders into document.body, outside .sl-scope, which is why
+   the --sl-* tokens are also defined on body.sl-page. */
+body.sl-page .modal-backdrop .modal{border-radius:0;border:1px solid var(--sl-silver);}
+body.sl-page .modal-backdrop .modal-h{height:35px;padding:0 14px;background:var(--sl-green);border-bottom:0;}
+body.sl-page .modal-backdrop .modal-h h3{font-family:var(--sl-arial);font-size:14px;line-height:35px;
+  letter-spacing:0;text-transform:none;color:#fff;}
+body.sl-page .modal-backdrop .modal-x{color:#fff;}
+body.sl-page .modal-backdrop .modal-b{font-family:var(--sl-sans);font-size:11px;color:var(--sl-ink);}
+body.sl-page .modal-backdrop .modal-f{background:var(--sl-panel);border-top:1px solid var(--sl-hairline);}
+body.sl-page .modal-backdrop .modal-f .btn{height:30px;min-width:110px;border-radius:0;
+  border:1px solid var(--sl-faint);background:var(--sl-panel);color:var(--sl-ink-soft);
+  font-family:var(--sl-arial);font-weight:700;text-transform:uppercase;}
+body.sl-page .modal-backdrop .modal-f .btn-primary{background:var(--sl-green);border-color:var(--sl-green);
+  color:#fff;}
+body.sl-page .modal-backdrop .modal-f .btn-primary:hover{background:var(--sl-green-deep);
+  border-color:var(--sl-green-deep);}
+
+/* ── Placeholder ─────────────────────────────────────────────────────
+   Not a production component: the honest stand-in for a supplier screen
+   that exists in production but is not built in this prototype. */
+.sl-placeholder{padding:60px 20px;background:var(--sl-panel);color:var(--sl-gray);font-size:12px;
+  line-height:1.6;text-align:center;}
+.sl-placeholder .sl-btn{float:none;display:inline-block;margin-top:14px;}
