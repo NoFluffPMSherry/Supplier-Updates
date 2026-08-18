@@ -116,18 +116,25 @@ table.info-table .lbl{background:var(--gauge);font-family:var(--figure);font-wei
 .um-footer-info strong{color:var(--ink)}
 
 /* ===== LIGHTBOX — full-bleed photo viewer, no DS component to extend;
-   tokens carry the brand colour on the interactive chrome. ===== */
-.lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;display:none;align-items:center;justify-content:center}
+   tokens carry the brand colour on the interactive chrome. =====
+   Nav arrows are flex siblings of the image (not absolutely positioned off
+   the viewport edge) so they sit right next to the photo at any image size. */
+.lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;display:none;align-items:center;justify-content:center;gap:20px}
 .lightbox-overlay.open{display:flex}
-.lightbox-overlay img{max-width:90vw;max-height:85vh;border:2px solid #fff}
+.lightbox-img-wrap{max-width:78vw;max-height:85vh;overflow:auto}
+.lightbox-overlay img{display:block;max-width:78vw;max-height:85vh;border:2px solid #fff;cursor:zoom-in}
+.lightbox-overlay img.zoomed{max-width:none;max-height:none;cursor:zoom-out}
 .lightbox-close{position:absolute;top:18px;right:24px;width:32px;height:32px;background:var(--green);color:#fff;border:none;
   font-weight:900;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .lightbox-close:hover{background:var(--green-deep)}
-.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;background:rgba(255,255,255,.15);
+.lightbox-zoom-controls{position:absolute;top:18px;left:24px;display:flex;align-items:center;gap:8px;
+  background:rgba(0,0,0,.5);padding:4px 10px;border-radius:14px;color:#fff;font-size:13px;font-weight:600}
+.lightbox-zoom-controls button{width:24px;height:24px;border-radius:50%;border:none;background:rgba(255,255,255,.15);
+  color:#fff;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.lightbox-zoom-controls button:hover{background:rgba(255,255,255,.3)}
+.lightbox-nav{flex-shrink:0;width:44px;height:44px;background:rgba(255,255,255,.15);
   color:#fff;border:none;font-size:26px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%}
 .lightbox-nav:hover{background:rgba(255,255,255,.3)}
-.lightbox-prev{left:18px}
-.lightbox-next{right:18px}
 .lightbox-counter{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);color:#fff;font-size:13px;font-weight:600;
   background:rgba(0,0,0,.5);padding:4px 12px;border-radius:12px}
 
@@ -515,8 +522,15 @@ table.info-table .lbl{background:var(--gauge);font-family:var(--figure);font-wei
 <!-- LIGHTBOX: full-size view of an attached photo, carousel through the rest of its group -->
 <div class="lightbox-overlay" id="lightboxOverlay" onclick="if(event.target===this)closeLightbox()">
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <div class="lightbox-zoom-controls">
+    <button onclick="event.stopPropagation();lightboxZoom(-1)" title="Zoom out">−</button>
+    <span id="lightboxZoomPct">100%</span>
+    <button onclick="event.stopPropagation();lightboxZoom(1)" title="Zoom in">+</button>
+  </div>
   <button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation();lightboxNav(-1)">‹</button>
-  <img id="lightboxImg" src="">
+  <div class="lightbox-img-wrap" id="lightboxImgWrap">
+    <img id="lightboxImg" src="" onclick="event.stopPropagation();lightboxToggleZoom()">
+  </div>
   <button class="lightbox-nav lightbox-next" onclick="event.stopPropagation();lightboxNav(1)">›</button>
   <div class="lightbox-counter" id="lightboxCounter"></div>
 </div>
@@ -533,6 +547,11 @@ const SAMPLE_IMAGES = [
 const PART_NAMES = {general:'Whole quote (general)',1:'ADAS Calibration - Advise & Qu..',2:'Bonnet',3:'Bonnet Emblem'};
 // Simulates photos the purchaser already uploaded upstream (FlexiQuote) before this quote reached the supplier — read only from the supplier's side
 const PURCHASER_PHOTOS = [SAMPLE_IMAGES[3], SAMPLE_IMAGES[4], SAMPLE_IMAGES[5]];
+// The grid/thumb-card <img> intentionally loads the small w=300 crop for speed — the
+// lightbox is where repairers and suppliers actually judge parts condition, so it needs
+// the full-resolution source, not that same thumbnail stretched up looking soft.
+function toFullRes(url){ return url.replace('w=300&h=300', 'w=1600&h=1600'); }
+const PURCHASER_PHOTOS_FULL = PURCHASER_PHOTOS.map(toFullRes);
 let sessionCount = 0;
 let imgCycle = 0;
 let nextPhotoId = 100;
@@ -635,22 +654,36 @@ function buildThumbCard(photoId, src, partId, isUploading, badgeNum, index){
 let lightboxPhotos = [];
 let lightboxIndex = 0;
 function openLightboxGroup(groupKey, index){
-  const photos = groupKey === 'purchaser' ? PURCHASER_PHOTOS : mineFlat.map(p => p.src);
+  const photos = groupKey === 'purchaser' ? PURCHASER_PHOTOS_FULL : mineFlat.map(p => p.full);
   openLightbox(photos, index);
 }
 function openLightbox(photos, index){
   lightboxPhotos = photos;
   lightboxIndex = index;
-  renderLightbox();
   document.getElementById('lightboxOverlay').classList.add('open');
+  renderLightbox();
 }
 function renderLightbox(){
-  document.getElementById('lightboxImg').src = lightboxPhotos[lightboxIndex];
+  const img = document.getElementById('lightboxImg');
+  img.classList.remove('zoomed');
+  img.style.width = '';
+  img.src = lightboxPhotos[lightboxIndex];
   const multi = lightboxPhotos.length > 1;
   document.querySelectorAll('.lightbox-nav').forEach(btn => btn.style.display = multi ? 'flex' : 'none');
   const counter = document.getElementById('lightboxCounter');
   counter.style.display = multi ? 'block' : 'none';
   counter.textContent = `${lightboxIndex + 1} / ${lightboxPhotos.length}`;
+  lightboxZoomLevel = 1;
+  const captureFitSize = () => {
+    lightboxFitWidth = img.clientWidth;
+    // Cap zoom at the point where displayed width hits the source's native pixel
+    // width — past that we'd be upscaling and softening the image, which defeats
+    // the purpose of zooming in to check part condition.
+    lightboxMaxZoom = img.naturalWidth && lightboxFitWidth ? Math.max(1, img.naturalWidth / lightboxFitWidth) : 1;
+    applyLightboxZoom();
+  };
+  if(img.complete && img.naturalWidth) captureFitSize();
+  else img.onload = captureFitSize;
 }
 function lightboxNav(delta){
   lightboxIndex = (lightboxIndex + delta + lightboxPhotos.length) % lightboxPhotos.length;
@@ -658,6 +691,32 @@ function lightboxNav(delta){
 }
 function closeLightbox(){
   document.getElementById('lightboxOverlay').classList.remove('open');
+}
+// Zoom resizes the <img> itself (not a CSS transform) so the wrap's overflow:auto
+// has an actually-larger scrollable box to pan around — a transform only scales
+// paint, not layout, so it would just clip at the container edge with no way to
+// reach the rest of the photo.
+let lightboxZoomLevel = 1;
+let lightboxFitWidth = 0;
+let lightboxMaxZoom = 1;
+function applyLightboxZoom(){
+  const img = document.getElementById('lightboxImg');
+  if(lightboxZoomLevel <= 1){
+    img.classList.remove('zoomed');
+    img.style.width = '';
+  } else {
+    img.classList.add('zoomed');
+    img.style.width = Math.round(lightboxFitWidth * lightboxZoomLevel) + 'px';
+  }
+  document.getElementById('lightboxZoomPct').textContent = `${Math.round(lightboxZoomLevel * 100)}%`;
+}
+function lightboxZoom(delta){
+  lightboxZoomLevel = Math.min(lightboxMaxZoom, Math.max(1, lightboxZoomLevel + delta * 0.5));
+  applyLightboxZoom();
+}
+function lightboxToggleZoom(){
+  lightboxZoomLevel = lightboxZoomLevel > 1 ? 1 : Math.min(2, lightboxMaxZoom);
+  applyLightboxZoom();
 }
 document.addEventListener('keydown', e=>{
   if(!document.getElementById('lightboxOverlay').classList.contains('open')) return;
@@ -672,9 +731,10 @@ function handleFiles(files){
   const row = getOrCreateSectionRow(partId);
   Array.from(files).forEach(() => {
     const src = SAMPLE_IMAGES[imgCycle % SAMPLE_IMAGES.length]; imgCycle++;
+    const full = toFullRes(src);
     const photoId = nextPhotoId++;
     if(!partPhotos[partId]) partPhotos[partId] = [];
-    partPhotos[partId].push({id:photoId, src});
+    partPhotos[partId].push({id:photoId, src, full});
     const card = buildThumbCard(photoId, src, partId, true, null, mineFlat.length);
     row.appendChild(card);
     const bar = card.querySelector('.thumb-progress');
