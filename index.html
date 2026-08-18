@@ -154,6 +154,12 @@ table.info-table .lbl{background:var(--gauge);font-family:var(--figure);font-wei
 .sl-btnbar .sl-btn:hover{background:#2b2b2b;color:#fff;border-color:#fff}
 .sl-addnotes{color:#3f8fd1;font-size:11px;font-weight:600;text-decoration:none;white-space:nowrap}
 .sl-addnotes:hover{text-decoration:underline}
+.sl-noterow td{background:var(--green-wash);padding:6px 10px;border-top:1px solid rgba(15,168,62,.25)}
+.sl-noterow-inner{display:flex;align-items:center;gap:8px}
+.sl-noterow-inner svg{flex-shrink:0;color:var(--green-deep)}
+.sl-noterow-label{font-style:italic;color:var(--green-deep);font-size:12px;font-weight:600;white-space:nowrap}
+.sl-noterow-input{flex:1;border:1px solid rgba(15,168,62,.35);border-radius:3px;padding:5px 8px;font-size:12px;
+  color:var(--green-deep);background:#fff}
 .sl-altplus{display:inline-block;color:#3f8fd1;font-size:20px;font-weight:700;line-height:1;text-decoration:none}
 .sl-altplus:hover{color:#1a6fb5}
 .sl-directpurchase{background:yellow;border:2px solid var(--sl-ink);padding:8px;text-align:center}
@@ -394,7 +400,7 @@ table.info-table .lbl{background:var(--gauge);font-family:var(--figure);font-wei
             <td style="text-align:center"><span class="sl-itemtype"></span></td>
             <td style="text-align:center"><span class="sl-itemtype chosen"></span></td>
             <td style="text-align:center"><span class="sl-itemtype"></span></td>
-            <td><a href="#" class="sl-addnotes" onclick="return false;">Add Notes</a></td>
+            <td><a href="#" class="sl-addnotes" onclick="toggleNoteRow(this, 1); return false;">Add Notes</a></td>
             <td><a href="#" class="sl-altplus" onclick="return false;" title="Offer an alternative">+</a></td>
             <td class="photo-cell-legacy" id="photoCell-1"><div class="photo-row"><span class="photo-add-btn" onclick="openAttachments(1,'ADAS Calibration - Advise &amp; Qu..')" title="Add photo to part">+</span></div></td>
           </tr>
@@ -410,7 +416,7 @@ table.info-table .lbl{background:var(--gauge);font-family:var(--figure);font-wei
             <td style="text-align:center"><span class="sl-itemtype"></span></td>
             <td style="text-align:center"><span class="sl-itemtype"></span></td>
             <td style="text-align:center"><span class="sl-itemtype"></span></td>
-            <td><a href="#" class="sl-addnotes" onclick="return false;">Add Notes</a></td>
+            <td><a href="#" class="sl-addnotes" onclick="toggleNoteRow(this, 2); return false;">Add Notes</a></td>
             <td><a href="#" class="sl-altplus" onclick="return false;" title="Offer an alternative">+</a></td>
             <td class="photo-cell-legacy" id="photoCell-2"><div class="photo-row"><span class="photo-add-btn" onclick="openAttachments(2,'Bonnet')" title="Add photo to part">+</span></div></td>
           </tr>
@@ -426,7 +432,7 @@ table.info-table .lbl{background:var(--gauge);font-family:var(--figure);font-wei
             <td style="text-align:center"><span class="sl-itemtype"></span></td>
             <td style="text-align:center"><span class="sl-itemtype"></span></td>
             <td style="text-align:center"><span class="sl-itemtype"></span></td>
-            <td><a href="#" class="sl-addnotes" onclick="return false;">Add Notes</a></td>
+            <td><a href="#" class="sl-addnotes" onclick="toggleNoteRow(this, 3); return false;">Add Notes</a></td>
             <td><a href="#" class="sl-altplus" onclick="return false;" title="Offer an alternative">+</a></td>
             <td class="photo-cell-legacy" id="photoCell-3"><div class="photo-row"><span class="photo-add-btn" onclick="openAttachments(3,'Bonnet Emblem')" title="Add photo to part">+</span></div></td>
           </tr>
@@ -724,6 +730,34 @@ document.addEventListener('keydown', e=>{
   if(e.key === 'ArrowRight') lightboxNav(1);
   if(e.key === 'Escape') closeLightbox();
 });
+
+// Matches production: clicking "Add Notes" reveals a "Note for Purchaser" row
+// under that part, rather than opening a separate dialog. Re-clicking just
+// focuses the existing note instead of inserting a second row.
+const NOTE_ROW_COLSPAN = 15;
+function toggleNoteRow(link, partId){
+  const partRow = link.closest('tr');
+  const existing = partRow.nextElementSibling;
+  if(existing && existing.classList.contains('sl-noterow') && existing.dataset.partNote === String(partId)){
+    existing.querySelector('.sl-noterow-input').focus();
+    return;
+  }
+  const noteRow = document.createElement('tr');
+  noteRow.className = 'sl-noterow';
+  noteRow.dataset.partNote = String(partId);
+  noteRow.innerHTML = `<td colspan="${NOTE_ROW_COLSPAN}">
+    <div class="sl-noterow-inner">
+      <svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 1.5C1 1.22386 1.22386 1 1.5 1H8.5L13 5.5V14.5C13 14.7761 12.7761 15 12.5 15H1.5C1.22386 15 1 14.7761 1 14.5V1.5Z" stroke="currentColor" stroke-width="1.1"/>
+        <path d="M8.5 1V5.5H13" stroke="currentColor" stroke-width="1.1"/>
+      </svg>
+      <span class="sl-noterow-label">Note for Purchaser:</span>
+      <input type="text" class="sl-noterow-input" placeholder="Add a note for the purchaser about this part">
+    </div>
+  </td>`;
+  partRow.after(noteRow);
+  noteRow.querySelector('.sl-noterow-input').focus();
+}
 
 function handleFiles(files){
   const partId = document.getElementById('partTagSelect').value;
