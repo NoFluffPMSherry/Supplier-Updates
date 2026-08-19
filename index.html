@@ -330,7 +330,7 @@ table.info-table .lbl{background:var(--gauge);font-family:var(--figure);font-wei
             </div>
             <div class="sl-qo-label">DMS Upload</div>
           </div>
-          <div class="sl-qo-btn" onclick="openAttachments(null)" title="View the purchaser's photos and attach your own photos or files to this quote">
+          <div class="sl-qo-btn" onclick="openAttachments(null)" title="View the repairer's photos and attach your own photos or files to this quote">
             <div class="sl-qo-icon">
               <svg viewBox="0 0 36 36" width="34" height="34">
                 <rect x="5" y="3" width="26" height="30" rx="3" fill="#fff" stroke="#333" stroke-width="1.6"/>
@@ -403,7 +403,7 @@ table.info-table .lbl{background:var(--gauge);font-family:var(--figure);font-wei
             <td style="text-align:center"><span class="sl-itemtype" onclick="selectItemType(this)" aria-label="REC"></span></td>
             <td><a href="#" class="sl-addnotes" onclick="toggleNoteRow(this, 1); return false;">Add Notes</a></td>
             <td><a href="#" class="sl-altplus" onclick="return false;" title="Offer an alternative">+</a></td>
-            <td class="photo-cell-legacy" id="photoCell-1"><div class="photo-row"><span class="photo-add-btn" onclick="openAttachments(1,'ADAS Calibration - Advise &amp; Qu..')" title="Add photo to part">+</span></div></td>
+            <td class="photo-cell-legacy" id="photoCell-1"><div class="photo-row"><span class="photo-add-btn" onclick="openAttachments(1)" title="Add photo to part">+</span></div></td>
           </tr>
           <tr class="sl-linerow" data-part="2">
             <td><input type="checkbox"></td><td>2</td>
@@ -419,7 +419,7 @@ table.info-table .lbl{background:var(--gauge);font-family:var(--figure);font-wei
             <td style="text-align:center"><span class="sl-itemtype" onclick="selectItemType(this)" aria-label="REC"></span></td>
             <td><a href="#" class="sl-addnotes" onclick="toggleNoteRow(this, 2); return false;">Add Notes</a></td>
             <td><a href="#" class="sl-altplus" onclick="return false;" title="Offer an alternative">+</a></td>
-            <td class="photo-cell-legacy" id="photoCell-2"><div class="photo-row"><span class="photo-add-btn" onclick="openAttachments(2,'Bonnet')" title="Add photo to part">+</span></div></td>
+            <td class="photo-cell-legacy" id="photoCell-2"><div class="photo-row"><span class="photo-add-btn" onclick="openAttachments(2)" title="Add photo to part">+</span></div></td>
           </tr>
           <tr class="sl-linerow" data-part="3">
             <td><input type="checkbox"></td><td>3</td>
@@ -435,7 +435,7 @@ table.info-table .lbl{background:var(--gauge);font-family:var(--figure);font-wei
             <td style="text-align:center"><span class="sl-itemtype" onclick="selectItemType(this)" aria-label="REC"></span></td>
             <td><a href="#" class="sl-addnotes" onclick="toggleNoteRow(this, 3); return false;">Add Notes</a></td>
             <td><a href="#" class="sl-altplus" onclick="return false;" title="Offer an alternative">+</a></td>
-            <td class="photo-cell-legacy" id="photoCell-3"><div class="photo-row"><span class="photo-add-btn" onclick="openAttachments(3,'Bonnet Emblem')" title="Add photo to part">+</span></div></td>
+            <td class="photo-cell-legacy" id="photoCell-3"><div class="photo-row"><span class="photo-add-btn" onclick="openAttachments(3)" title="Add photo to part">+</span></div></td>
           </tr>
         </tbody>
       </table>
@@ -484,7 +484,7 @@ table.info-table .lbl{background:var(--gauge);font-family:var(--figure);font-wei
   <div class="modal att-modal" role="dialog" aria-modal="true" aria-label="Attachments">
     <div class="modal-h"><h3>Attachments</h3><button class="modal-x" onclick="closeAttachments()" aria-label="Close">✕</button></div>
     <div class="modal-b">
-      <div class="um-sub" id="umSub">Quote — Toyota Corolla, 1/2017</div>
+      <div class="um-sub" id="umSub">Toyota Corolla, 1/2017 — add photos or files for the repairer to see on this quote.</div>
 
       <div class="tabbar">
         <button class="tab on" id="tabBtnMine" onclick="switchAttachTab('mine')">My Photos <span class="ct" id="mineTabCount">0</span></button>
@@ -514,12 +514,12 @@ table.info-table .lbl{background:var(--gauge);font-family:var(--figure);font-wei
       </div>
 
       <div class="attach-tab-panel" id="tabPanelPurchaser" style="display:none">
-        <div class="attach-section-hint">Uploaded by the purchaser — view only, nothing to attach here.</div>
+        <div class="attach-section-hint">Uploaded by the repairer — view only, nothing to attach here.</div>
         <div class="thumb-grid"><div class="thumb-section"><div class="thumb-row" id="purchaserThumbRow"></div></div></div>
       </div>
     </div>
     <div class="modal-f">
-      <div class="um-footer-info"><strong id="photoTotalCount">0</strong> of your files attached this session &middot; <strong id="purchaserPhotoCount">0</strong> from the purchaser</div>
+      <div class="um-footer-info"><strong id="photoTotalCount">0</strong> of your files attached this session &middot; <strong id="purchaserPhotoCount">0</strong> from the repairer</div>
       <button class="btn" onclick="closeAttachments()">Cancel</button>
       <button class="btn btn-primary" id="doneBtn" onclick="closeAttachments()">Done</button>
     </div>
@@ -574,10 +574,12 @@ function markProgress(key){
   }
 }
 
-function openAttachments(partId, partName){
+// The "Attach to" dropdown below is the one place that shows/controls the tag
+// target — it stays live if the supplier changes it after opening, whereas a
+// tagging claim frozen into this subtitle at open-time could go stale.
+function openAttachments(partId){
   document.getElementById('attachmentsOverlay').classList.add('open');
   document.getElementById('partTagSelect').value = partId ? String(partId) : 'general';
-  document.getElementById('umSub').textContent = partName ? `Quote — Toyota Corolla, 1/2017 · tagging files to "${partName}"` : 'Quote — Toyota Corolla, 1/2017';
   switchAttachTab('mine');
   renderThumbGrid();
   renderPurchaserPhotos();
@@ -803,14 +805,13 @@ function updatePartCell(partId){
   const cell = document.getElementById(`photoCell-${partId}`);
   if(!cell) return;
   const photos = partPhotos[partId] || [];
-  const partName = PART_NAMES[partId];
-  const addBtn = `<span class="photo-add-btn" onclick="openAttachments(${partId},'${partName}')" title="Add photo to part">+</span>`;
+  const addBtn = `<span class="photo-add-btn" onclick="openAttachments(${partId})" title="Add photo to part">+</span>`;
   if(!photos.length){
     cell.innerHTML = `<div class="photo-row">${addBtn}</div>`;
   } else {
     const last = photos[photos.length - 1];
     const badge = photos.length > 1 ? `<span class="photo-thumb-badge">${photos.length}</span>` : '';
-    cell.innerHTML = `<div class="photo-row"><span class="photo-thumb-wrap" onclick="openAttachments(${partId},'${partName}')" title="View photos"><img src="${last.src}">${badge}</span>${addBtn}</div>`;
+    cell.innerHTML = `<div class="photo-row"><span class="photo-thumb-wrap" onclick="openAttachments(${partId})" title="View photos"><img src="${last.src}">${badge}</span>${addBtn}</div>`;
   }
 }
 function updateCount(delta){
