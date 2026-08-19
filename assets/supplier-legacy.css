@@ -73,8 +73,9 @@
   --sl-chip:#E5E5E5; --sl-count-hi:#FF8080; --sl-count-lo:#C43639;
   --sl-pill-orange-hi:#FFA62F; --sl-pill-orange-lo:#EE9A4D; --sl-late:#FF7979;
   /* type */
-  --sl-sans:Verdana,Geneva,sans-serif; --sl-arial:Arial,Helvetica,sans-serif;
-  --sl-head:'Trebuchet MS','Lucida Grande',sans-serif;
+  --sl-sans:Verdana,Geneva,sans-serif; /* @kind font */
+  --sl-arial:Arial,Helvetica,sans-serif; /* @kind font */
+  --sl-head:'Trebuchet MS','Lucida Grande',sans-serif; /* @kind font */
   /* geometry */
   --sl-shell:888px; --sl-grid:835px; --sl-col:218px;
 }

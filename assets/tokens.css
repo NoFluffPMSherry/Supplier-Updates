@@ -46,8 +46,8 @@
      skin's brass sheen and gold-face roundel — current PartsCheck has
      no metallic accent, so these resolve to greys/lime instead). */
   --brass:#9A9A9A; --brass-lt:#EEEEEE; --brass-hi:#F4F4F4; --brass-deep:#636363;
-  --brass-sheen:linear-gradient(90deg,#CCCCCC,#84BF3F 28%,#CCCCCC 60%,#CCCCCC);
-  --brass-ring:conic-gradient(from 218deg,#0b9a41,#0fa83e,#84bf3f,#0fa83e,#0b9a41,#84bf3f,#0b9a41);
+  --brass-sheen:linear-gradient(90deg,#CCCCCC,#84BF3F 28%,#CCCCCC 60%,#CCCCCC); /* @kind other */
+  --brass-ring:conic-gradient(from 218deg,#0b9a41,#0fa83e,#84bf3f,#0fa83e,#0b9a41,#84bf3f,#0b9a41); /* @kind other */
 
   /* ---- chart tones ---- */
   --tone-pc:#0FA83E; --tone-kb:#636363; --tone-admin:#9A9A9A; --tone-muted:#CCCCCC; --tone-alt:#84BF3F;
@@ -64,8 +64,8 @@
   --signal-ok:#13A538; --signal-no:#F7941D;
 
   /* ---- type ---- */
-  --sans:Verdana,Geneva,sans-serif;
-  --figure:Arial,Helvetica,sans-serif;
+  --sans:Verdana,Geneva,sans-serif; /* @kind font */
+  --figure:Arial,Helvetica,sans-serif; /* @kind font */
   --rail:172px;
 }
 *{box-sizing:border-box;}

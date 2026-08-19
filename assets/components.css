@@ -2036,54 +2036,33 @@ td.cg-part{padding:8px 10px;background:#FCFCFC;}
    the chrome above this bar had one removed for exactly that reason, and a
    row of saved height would be a poor trade for reintroducing it here.
    row-gap gives the wrapped state room to breathe when it does happen. */
-/* Its own closed box, held slightly apart from Quick Selection below it
-   (Mat) — was flush against that toolbar (shared border seam, no bottom
-   edge of its own); now a real gap, so it needs its own bottom edge
-   back, and the toolbar gets its own top edge (.qg-actionbar) to match. */
 .rulebar{display:flex;align-items:center;gap:8px;row-gap:6px;flex-wrap:wrap;background:var(--card);
-  border:1px solid var(--line);padding:7px 12px;font-size:11px;margin-bottom:8px;}
+  border:1px solid var(--line);border-bottom:none;padding:7px 12px;font-size:11px;}
 .rulebar-l{font-family:var(--figure);font-size:9px;font-weight:700;letter-spacing:.08em;
   text-transform:uppercase;color:var(--muted);white-space:nowrap;}
-/* The insurer is the answer the bar exists to give, so it leads the row —
-   and, since the margin-rule dropdown was added (Aju: "select from
-   different margins on this screen"), it's a REAL <select>, not a plain
-   title, wrapped in its own green-outline/white-fill pill so the whole
-   "tick + label + insurer" reads as one unit. font-size on both the
-   label and the select is UNCHANGED from the plain-title version (9px /
-   13px) — only the insurer's own container changed, not its type scale.
-   Square-with-rounded-corners, not a lozenge (Mat), and margin-right
-   holds it apart from the rate legend beside it — its own component,
-   not one more item in that row. */
-.rulebar-pill{display:inline-flex;align-items:center;gap:6px;border:1.5px solid #16A34A;
-  border-radius:6px;background:#fff;padding:3px 10px;margin-right:6px;}
-.rulebar-tick{color:#16A34A;font-size:11px;font-weight:700;line-height:1;}
-.rulebar-sep{color:var(--line);font-size:11px;line-height:1;}
-.rulebar-who-select{font-family:var(--figure);font-size:13px;font-weight:700;color:#16A34A;
-  white-space:nowrap;border:none;background:transparent;padding:0;margin:0;cursor:pointer;}
-.rulebar-who-select:focus-visible{outline:2px solid #16A34A;outline-offset:2px;border-radius:3px;}
-/* A custom table pricing this quote — its own insurer rule, or a different
-   one picked from .rulebar-pill's dropdown — highlights the bar (4 Aug):
-   the announce-toast (below) says it once, the outline is what persists.
-   A full green stroke (Mat), not a left-edge divider + tinted fill —
-   green belongs to the insurer select already, so this just extends its
-   outline to the whole bar rather than introducing a second treatment. */
-.rulebar.applied{border:1.5px solid #16A34A;}
-/* Rate legend (Mat): text + a coloured dot per supplier type, not a
-   bordered/filled pill — the dot alone carries the type's own accent
-   (the same blue/purple/green/orange used on the grid's own column
-   headers; Parallel gets its own dark dot here so it stays distinct
-   from AftM's purple now that neither has a border to tell them apart
-   by). "of list" is repeated per item again, on this reading — the
-   legend reads standalone, not leaning on a label stated once above it. */
-.ruletype{display:inline-flex;align-items:center;gap:5px;font-family:var(--figure);
-  font-size:11px;font-weight:700;color:var(--ink);white-space:nowrap;}
-.ruletype b{color:var(--ink);font-weight:700;}
-.ruledot{width:7px;height:7px;border-radius:50%;flex:none;display:inline-block;}
-.ruletype.oem .ruledot{background:#3067CB;}
-.ruletype.par .ruledot{background:#333333;}
-.ruletype.aft .ruledot{background:#A852BA;}
-.ruletype.used .ruledot{background:#6BC23C;}
-.ruletype.recon .ruledot{background:#E99F24;}
+/* The insurer is the answer the bar exists to give, so it leads the row.
+   It was .lgc-ref at 11px — the smallest text here — which inverted the
+   hierarchy against five tinted chips. Its own class now, so sizing it up
+   doesn't disturb .lgc-ref's other uses. */
+.rulebar-who{font-family:var(--figure);font-size:13px;font-weight:700;color:var(--green-deep);
+  white-space:nowrap;margin-right:2px;}
+/* A quote pricing off its OWN insurer rule highlights the bar (4 Aug):
+   the announce-toast says it once on open, the tint is what persists.
+   Green belongs to the insurer name already (.rulebar-who), so the
+   applied state extends the same hue rather than introducing one. */
+.rulebar.applied{border-left:3px solid var(--green-deep);background:#EDF7EE;}
+/* Squarer pills on the rule bar (Aju 5 Aug: "Make the pills on the
+   active margin rule applied more square") — a tag radius, not a lozenge. */
+.rulebar-applied{font-family:var(--figure);font-size:9px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--green-deep);border:1px solid #C2DFC4;border-radius:4px;
+  padding:2px 8px;background:#fff;white-space:nowrap;}
+.rulechip{display:inline-flex;align-items:center;border:1px solid;border-radius:4px;
+  padding:2px 9px;font-family:var(--figure);font-size:10px;font-weight:700;white-space:nowrap;}
+.rulechip.oem{color:#1A4E8F;border-color:#BCD6F2;background:#EEF5FD;}
+.rulechip.aft{color:#7B2E8E;border-color:#DCC3EA;background:#F7EEFB;}
+.rulechip.par{color:#1A4E8F;border-color:#DCC3EA;background:#F7EEFB;}
+.rulechip.used{color:#276B2A;border-color:#C2DFC4;background:#EDF7EE;}
+.rulechip.recon{color:#8F4E00;border-color:#F5CFAE;background:#FDF3E7;}
 
 /* ---- Tab row: trailing action slot ----
    A tab row often carries one navigation action at its far end (the quote
@@ -2217,9 +2196,3 @@ td.cg-part{padding:8px 10px;background:#FCFCFC;}
   font-family:var(--figure);font-size:9px;font-weight:700;}
 .qg-cmp-btn.on{background:var(--green-wash);}
 .qg-cmp-btn svg{flex:none;}
-/* Quick Selection as two selectable buttons, not a <select> (Mat) —
-   whichever one is applied turns SOLID green with a tick, a stronger
-   treatment than Compare's own light-wash .on above: this is "this is
-   the pick in effect", not just an open/closed panel state. */
-.qg-quick-btn.on{background:var(--green);border-color:var(--green);color:#fff;}
-.qg-quick-tick{margin-right:4px;}
